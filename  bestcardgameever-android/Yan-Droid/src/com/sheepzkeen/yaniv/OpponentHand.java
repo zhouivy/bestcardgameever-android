@@ -6,14 +6,9 @@ public class OpponentHand extends Hand {
 		super();
 	}
 
-	@Override
-	public void drop() {
-		// TODO AI
-
-	}
 
 	@Override
-	public void pickup(PlayingCardsCollection deck) {
+	public void pickup() {
 		// TODO AI
 
 	}
@@ -29,19 +24,10 @@ public class OpponentHand extends Hand {
 		// TODO when game ends, should change to visible
 		return false;
 	}
+
 	@Override
-	/**
-	 * no supported here 
-	 */
-	public boolean isCardSelected(int cardIndex) {
-		return false;
-	}
-	@Override
-	/**
-	 * no supported here 
-	 */
-	public boolean isAnyCardSelected() {
-		return false;
+	protected void selectCardsToDrop() {
+		//TODO:AI
 	}
 
 }

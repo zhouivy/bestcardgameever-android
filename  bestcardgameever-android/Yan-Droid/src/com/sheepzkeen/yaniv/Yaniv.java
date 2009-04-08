@@ -83,7 +83,7 @@ public class Yaniv extends Activity {
 		// Drop Cards Listener
 		dropCardsBtn.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v){
-				dropCardsHandler();
+				dropCardsClickHandler();
 			}
 		}
 		);		
@@ -339,9 +339,8 @@ public class Yaniv extends Activity {
 		}
 	}
 
-	private void dropCardsHandler() {
-		p1Hand.drop();
-		PlayingCard[] tempArr = p1Hand.getCardsToDrop();
+	private void dropCardsClickHandler() {
+		PlayingCard[] tempArr = p1Hand.drop();
 		thrownCards.pushMulti(tempArr);
 		dropCardsBtn.setVisibility(View.GONE);
 		

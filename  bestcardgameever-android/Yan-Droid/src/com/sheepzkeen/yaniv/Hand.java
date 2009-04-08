@@ -1,30 +1,80 @@
 package com.sheepzkeen.yaniv;
 
+import java.util.ArrayList;
+
+
 public abstract class Hand {
-	protected PlayingCard[] cards;
+	private PlayingCard[] cards;
 	int firstFreeLocation;
 	private PlayingCard[] compactedArr;
-	public PlayingCard getCardByLocation(int location) {
-		return cards[location];
-	}
+	private boolean[] cardsSelected = {false,false,false,false,false};
+
 	public Hand() {
+
 		this.cards = new PlayingCard[5];
 		firstFreeLocation = 0;
 	}
 	public Hand(PlayingCard[] cards) {
 		this.cards = cards;
-		firstFreeLocation = 5;
+		firstFreeLocation = cards.length;
 	}
-	public abstract void pickup(PlayingCardsCollection deck);
 	
-	//		after Drop compact hand (i.e. if cards 2 and 4 were dropped ,
-	//		compact the deck so it will show the missing cards at the end)
-	public abstract void drop(); 
+	/**
+	 * Hand picks up a card
+	 * first decide if should pick up from deck or thrown cards
+	 * then do it
+	 * AI players will pick up according to AI
+	 * human player will pick up on his own
+	 * @param deck
+	 */
+	public abstract void pickup();
+	
+	public PlayingCard getCardByLocation(int location) {
+		return cards[location];
+	}
+
+	/**
+	 * Selected which cards, and drops them, in case it is a human player, it simply drops the cards he selected
+	 * in case of an opponent, AI decides it
+	 * @return an array of type {@link PlayingCard} which contains the cards to drop 
+	 */
+	public PlayingCard[] drop(){
+		selectCardsToDrop();
+		return dropSelected();
+	}
+
+	/**
+	 * Selects which cards will be dropped and moves them to the 'cardsSelected' array 
+	 */
+	protected abstract void selectCardsToDrop();
+	
+	/**
+	 * returns the selected cards so that they can be thrown
+	 * @return The cards to be thrown
+	 */
+	private PlayingCard[] dropSelected() {
+		ArrayList<PlayingCard> cardsToDrop = new ArrayList<PlayingCard>();
+		for (int cardIndex = 0; cardIndex < cards.length; cardIndex++) {
+			if(cardsSelected[cardIndex]){
+				cardsToDrop.add(cards[cardIndex]);
+				cards[cardIndex]=null;
+			}
+		}
+		compactHand();
+		resetSelectedCards();
+		PlayingCard[] retval = new PlayingCard[cardsToDrop.size()];
+		cardsToDrop.toArray(retval);
+		return retval;
+	}
+
+
 	public boolean canYaniv(){
-		//TODO: This
+		//TODO: This (need to add int value to card objects to sum them)
 		return false;
 	}
+	
 	public abstract void doYaniv();
+	
 	/**
 	 * plays a turn
 	 * @param currentDeck the deck in its current state (missing cards and all)
@@ -38,7 +88,7 @@ public abstract class Hand {
 		}
 		else
 		{
-			pickup(currentDeck);
+			pickup();
 			drop();
 			return false;
 		}
@@ -79,7 +129,31 @@ public abstract class Hand {
 		this.cards = compactedArr;
 		this.firstFreeLocation = idxInComapctedArr;
 	}
-	public abstract boolean isCardSelected(int cardIndex);
-	public abstract boolean isAnyCardSelected();
+	/**
+	 * resets all cards selected status to false
+	 */
+	protected void resetSelectedCards(){
+		for (int i = 0; i < cardsSelected.length; i++) {
+			cardsSelected[i]=false;
+		}
+	}
 	
+	public boolean isCardSelected(int cardIndex){
+		return cardsSelected[cardIndex];
+	}
+	
+	public boolean isAnyCardSelected(){
+		for (int i = 0; i < cardsSelected.length; i++) {
+			if (cardsSelected[i]== true){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void changeSelectionStateOnCard(int cardIndex) {
+		cardsSelected[cardIndex]= ! cardsSelected[cardIndex];
+	}
+
+
 }
