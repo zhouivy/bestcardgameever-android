@@ -25,14 +25,14 @@ public class ThrownCards extends PlayingCardsCollection {
 		System.out.println("pushMulti "+ this.cards.empty() + " size: " + this.cards.size());
 	}
 	
-	public PlayingCard getLastCardThrown() {
-		System.out.println("getLastCardThrown B4: Cards: " + cards.toString());
+	public PlayingCard popLastCardThrown() {
+//		System.out.println("getLastCardThrown B4: Cards: " + cards.toString());
 
 		//if no cards, exception will be thrown, but that shouldn't happen since the views will  not be visible if no cards are thrown
 		PlayingCard retVal = cards.pop();
-
-		System.out.println("getLastCardThrown "+ cards.empty() + " size: " + cards.size());
-		System.out.println("getLastCardThrown Fter: Cards: " + cards.toString());
+//
+//		System.out.println("getLastCardThrown "+ cards.empty() + " size: " + cards.size());
+//		System.out.println("getLastCardThrown Fter: Cards: " + cards.toString());
 		return retVal;
 
 	}
