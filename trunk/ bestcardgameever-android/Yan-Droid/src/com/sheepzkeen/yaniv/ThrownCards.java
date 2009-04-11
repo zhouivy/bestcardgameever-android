@@ -16,8 +16,8 @@ public class ThrownCards extends PlayingCardsCollection {
 	}
 	
 	public void pushMulti(PlayingCard[] cards){
-		if(cards.length >5)
-			throw new RuntimeException("more than 5 cards were thrown " +
+		if(cards.length >Yaniv.YANIV_NUM_CARDS)
+			throw new RuntimeException("more than "+Yaniv.YANIV_NUM_CARDS+" cards were thrown " +
 					"(actually " + cards.length + " cards were thrown");
 		for (PlayingCard playingCard : cards) {
 			push(playingCard);
@@ -45,9 +45,9 @@ public class ThrownCards extends PlayingCardsCollection {
 	@SuppressWarnings("unchecked")
 	public PlayingCard[] peekTopFive() {
 		
-		PlayingCard[] retVal = new PlayingCard[5];
+		PlayingCard[] retVal = new PlayingCard[Yaniv.YANIV_NUM_CARDS];
 		Stack<PlayingCard> tempStack = (Stack<PlayingCard>) cards.clone();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < Yaniv.YANIV_NUM_CARDS; i++) {
 			if(tempStack.isEmpty()){
 				retVal[i]=null;
 			}else{

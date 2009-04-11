@@ -1,14 +1,16 @@
 package com.sheepzkeen.yaniv;
 
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 public class PlayerHand extends Hand {
 
-	private boolean isP1Turn;
 	
 	
 
-	public PlayerHand() {
-		super();
-		isP1Turn = true;//TODO!!!
+	public PlayerHand(View container, ImageView[] cards, TextView name) {
+		super(container,cards,name);
 	}
 
 	@Override
@@ -31,9 +33,8 @@ public class PlayerHand extends Hand {
 	}
 
 	@Override
-	public void pickup() {
-		// TODO this is already implemented in the UI, but in order to play a round, this should be implemented here somehow
-		
+	public void pickup(PlayingCard card) {
+		addCard(card);
 	}
 	
 	
@@ -43,8 +44,12 @@ public class PlayerHand extends Hand {
 	 * @return True iff the player is currently in a state when he can pickup a card (from the thrown or deck)
 	 */
 	public boolean canPickup() {
-		// TODO need to activate the turn param
-		return (isP1Turn && firstFreeLocation != 5);
+		return (firstFreeLocation != Yaniv.YANIV_NUM_CARDS);
+	}
+	
+	@Override
+	public boolean isAwaitingInput() {
+		return true;
 	}
 	
 
