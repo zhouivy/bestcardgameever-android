@@ -89,6 +89,7 @@ public class Yaniv extends Activity {
 	
 	//TODO: remove this
 	private Dialog d;
+	private PlayingCard[] tempThrownArr;
 	//TODO: end remove this
 	
 	/** Called when the activity is first created. */
@@ -275,6 +276,9 @@ public class Yaniv extends Activity {
 				redrawHand(hand);
 			}
 		}
+		// after dealing, put a card on the table for pick up
+		thrownCards.push(deck.dealOneCard());
+		redrawThrownCards();
 	}
 
 	private void redrawHand(Hand hand) {
@@ -406,38 +410,47 @@ public class Yaniv extends Activity {
 	}
 
 	/**
+	 * I - 1
 	 * Drop cards that were previously marked
+	 * RULE: first you drop, then you pickup
 	 */
 	private void dropCardsClickHandler() {
 		if (p1Hand.getCanDrop() == true){
-			PlayingCard[] tempArr = p1Hand.drop();
+			tempThrownArr = p1Hand.drop();
 			// Rule: after drop you are not allowed to drop again
 			p1Hand.setCanDrop(false);
 			// Rule: after drop you are allowed to pickup again 
 			p1Hand.setCanPickup(true);
-			thrownCards.pushMulti(tempArr);
+			
 			dropCardsBtn.setVisibility(View.GONE);
-			redrawThrownCards();
-			redrawHand(p1Hand);
+			//Note, we don't redraw the cards here, since we want the player to see the cards he is throwing until they are down
 		}else{
 			uhOhDialog1.show();
 		}
 	}
 
-
+/**
+ * II - 2
+ * handler for the thrown cards click
+ * RULE: first you drop, then you pickup
+ */
 private void thrownCardsClickHandler() {
 	// When the last thrown card is clicked it is picked up
 	// First verify that it is the player's turn and that he is
 	// eligible for pickup
 	if (p1Hand.canPickup() && turn.peek().isAwaitingInput() == true && turn.peek().getCanPickup() == true ) {
 		// Get one card from the thrown deck
-		PlayingCard tempCard = thrownCards.getLastCardThrown();
+		PlayingCard tempCard = thrownCards.popLastCardThrown();
 		// fill virtual hand on first available place
 		p1Hand.pickup(tempCard);
 		// Rule: after pickup you are allowed to drop again 
 		p1Hand.setCanDrop(true);
 		// Rule: after pickup you are not allowed to pickup again 
 		p1Hand.setCanPickup(false);
+		
+		//Update the thrown cards only after the pickup (RULE)
+		thrownCards.pushMulti(tempThrownArr);
+
 		// redraw it
 		redrawHand(p1Hand);
 		// and the thrown card deck
@@ -448,6 +461,12 @@ private void thrownCardsClickHandler() {
 		uhOhDialog1.show();
 	}
 }
+
+/**
+ * II - 2
+ * handler for the deck click
+ * RULE: first you drop, then you pickup
+ */
 
 private void deckClickHandler() {
 	if (firstDeal) {
@@ -463,6 +482,12 @@ private void deckClickHandler() {
 			p1Hand.setCanDrop(true);
 			// Rule: after pickup you are not allowed to pickup again 
 			p1Hand.setCanPickup(false);
+
+			// Update the thrown cards only after the pickup (RULE)
+			thrownCards.pushMulti(tempThrownArr);
+			// And redraw the thrown deck
+			redrawThrownCards();
+			
 			//and redraw it
 			redrawHand(p1Hand);
 			turn.next();
