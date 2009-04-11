@@ -335,9 +335,11 @@ public class Yaniv extends Activity {
 		System.out.println("redrawThrownCards: " +cards );
 		for (int thrownCardIndex = 0; thrownCardIndex < cards.length; thrownCardIndex++) {
 			if(cards[thrownCardIndex] != null){
+				thrownCardsImgs[thrownCardIndex].setVisibility(View.VISIBLE);
 				thrownCardsImgs[thrownCardIndex].
 				setImageResource(cards[thrownCardIndex].getImageResourceId());
 			}else{
+				thrownCardsImgs[thrownCardIndex].setVisibility(View.INVISIBLE);
 				thrownCardsImgs[thrownCardIndex].
 				setImageResource(R.drawable.back);
 				
