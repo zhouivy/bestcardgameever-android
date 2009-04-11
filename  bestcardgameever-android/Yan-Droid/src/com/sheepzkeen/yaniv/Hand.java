@@ -22,6 +22,8 @@ public abstract class Hand {
 
 	private View container;
 	private String name;
+	private boolean canDrop;
+	private boolean canPickup;
 
 	public Hand(View container, ImageView[] cardsViews, TextView name) {
 
@@ -30,11 +32,14 @@ public abstract class Hand {
 		this.container = container;
 		this.cardsViews = cardsViews;
 		this.name = (String) name.getText();
+		this.canDrop = true;
+		this.canPickup = false;
 	}
-	public Hand(PlayingCard[] cards) {
-		this.cards = cards;
-		firstFreeLocation = cards.length;
-	}
+	
+//	public Hand(PlayingCard[] cards) {
+//		this.cards = cards;
+//		firstFreeLocation = cards.length;
+//	}
 	
 	/**
 	 * Hand picks up a card
@@ -183,6 +188,20 @@ public abstract class Hand {
 		
 		return this.name;
 	}
+	public boolean getCanDrop(){
+		return canDrop;
+	}
+	public void setCanDrop(boolean canDrop) {
+		this.canDrop = canDrop;
+	}
+	public boolean getCanPickup() {
+		return this.canPickup;
+	}
+	public void setCanPickup(boolean canPickup) {
+		this.canPickup = canPickup;
+	}
+	
+	
 	
 
 
