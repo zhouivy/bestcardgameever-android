@@ -1,14 +1,23 @@
 package com.sheepzkeen.yaniv;
 
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 public class OpponentHand extends Hand {
 
-	public OpponentHand() {
-		super();
+	public OpponentHand(View container, ImageView[] cards, TextView name) {
+		super(container,cards,name);
 	}
 
 
 	@Override
-	public void pickup() {
+	public void pickup(PlayingCard card) {
+		if(card != null){
+			addCard(card);
+		}else{
+			//no card given, need to decide which card to pickup
+		}
 		// TODO AI
 
 	}
@@ -30,4 +39,8 @@ public class OpponentHand extends Hand {
 		//TODO:AI
 	}
 
+	@Override
+	public boolean isAwaitingInput() {
+		return false;
+	}
 }

@@ -1,6 +1,11 @@
 package com.sheepzkeen.yaniv;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -8,17 +13,20 @@ import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.sheepzkeen.yaniv.R.id;
 
 public class Yaniv extends Activity {
 	
+	public static final int YANIV_NUM_CARDS = 5;
 	//Deck
 	private ImageView deckImg;
 	int currentCard;
 	SingleDeck deck;
 	
 	// Player 1
+	private TextView p1Name;
 	private PlayerHand p1Hand;
 	private ImageView[] p1Cards;
 	private ImageView p1c1Img;
@@ -29,6 +37,7 @@ public class Yaniv extends Activity {
 	private LinearLayout p1Container;
 
 	// Opponent 1
+	private TextView o1Name;
 	private ImageView o1c1Img;
 	private ImageView o1c2Img;
 	private ImageView o1c3Img;
@@ -39,6 +48,7 @@ public class Yaniv extends Activity {
 	private OpponentHand o1Hand;
 	
 	// Opponent 2
+	private TextView o2Name;
 	private ImageView o2c1Img;
 	private ImageView o2c2Img;
 	private ImageView o2c3Img;
@@ -49,6 +59,7 @@ public class Yaniv extends Activity {
 	private OpponentHand o2Hand;
 		
 	// Opponent 3
+	private TextView o3Name;
 	private ImageView o3c1Img;
 	private ImageView o3c2Img;
 	private ImageView o3c3Img;
@@ -73,6 +84,12 @@ public class Yaniv extends Activity {
 	private boolean firstDeal;
 	private ThrownCards thrownCards;
 	protected MyDialog uhOhDialog1;
+	private ArrayList<Hand> playersInOrder;
+	private Turn<Hand> turn;
+	
+	//TODO: remove this
+	private Dialog d;
+	//TODO: end remove this
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -96,7 +113,7 @@ public class Yaniv extends Activity {
 		});
 
 		// click listener for each card of player 1 
-		for (int cardIndex = 0; cardIndex < 5; cardIndex++) {
+		for (int cardIndex = 0; cardIndex < Yaniv.YANIV_NUM_CARDS; cardIndex++) {
 			final ImageView card = p1Cards[cardIndex];
 			final int finalCardIndex = cardIndex;
 			card.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +131,37 @@ public class Yaniv extends Activity {
 				thrownCardsClickHandler();
 			}
 		});
+		
+		turn.setOnTurnEndedListener(new Turn.OnTurnEndedListener<Hand>(){
+			
+			@Override
+			public void onTurnEnded(Hand hand){
+				if(hand.isAwaitingInput())
+				{
+					//if the hand is awaiting input, there is no point in doing anything
+					return;
+				}else{
+					//this hand has to go through the motions
+					//TODO: remove this
+					d.setCancelable(true);
+					d.setTitle("This is Player " + hand.getPlayerName());
+					d.show();
+					d.setOnCancelListener(new OnCancelListener(){
+
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							// TODO Auto-generated method stub
+							turn.next();							
+						}
+						
+					});
+					
+					//TODO: end remove this
+					
+
+				}
+			}
+		});
 	}
 
 	/**
@@ -121,8 +169,15 @@ public class Yaniv extends Activity {
 	 */
 	private void init() {
 		firstDeal = true;
+
+		//TODO: remove this
+		d = new Dialog(this);
+		d.setTitle("hello");
+		//TODO: end remove this
+
 		uhOhDialog1 = new MyDialog(this);
 		// Player 1
+		p1Name = (TextView) findViewById(id.p1Name);
 		p1c1Img = (ImageView) findViewById(id.p1c1);
 		p1c2Img = (ImageView) findViewById(id.p1c2);
 		p1c3Img = (ImageView) findViewById(id.p1c3);
@@ -133,9 +188,10 @@ public class Yaniv extends Activity {
 
 		p1Cards = new ImageView[] { p1c1Img, p1c2Img, p1c3Img, p1c4Img, p1c5Img };
 
-		p1Hand = new PlayerHand();
+		p1Hand = new PlayerHand(p1Container,p1Cards, p1Name);
 
 		// Opponent 1
+		o1Name = (TextView) findViewById(id.o1Name);
 		o1c1Img = (ImageView) findViewById(id.o1c1);
 		o1c2Img = (ImageView) findViewById(id.o1c2);
 		o1c3Img = (ImageView) findViewById(id.o1c3);
@@ -147,9 +203,10 @@ public class Yaniv extends Activity {
 		o1Cards = new ImageView[] { o1c1Img, o1c2Img, o1c3Img, o1c4Img,
 				o1c5Img };
 
-		o1Hand = new OpponentHand();
+		o1Hand = new OpponentHand(o1Container,o1Cards, o1Name);
 
 		// Opponent 2
+		o2Name = (TextView) findViewById(id.o2Name);
 		o2c1Img = (ImageView) findViewById(id.o2c1);
 		o2c2Img = (ImageView) findViewById(id.o2c2);
 		o2c3Img = (ImageView) findViewById(id.o2c3);
@@ -160,9 +217,10 @@ public class Yaniv extends Activity {
 		o2Cards = new ImageView[] { o2c1Img, o2c2Img, o2c3Img, o2c4Img,
 				o2c5Img };
 
-		o2Hand = new OpponentHand();
+		o2Hand = new OpponentHand(o2Container,o2Cards,o2Name);
 
 		// Opponent 3
+		o3Name = (TextView) findViewById(id.o3Name);
 		o3c1Img = (ImageView) findViewById(id.o3c1);
 		o3c2Img = (ImageView) findViewById(id.o3c2);
 		o3c3Img = (ImageView) findViewById(id.o3c3);
@@ -174,7 +232,7 @@ public class Yaniv extends Activity {
 		o3Cards = new ImageView[] { o3c1Img, o3c2Img, o3c3Img, o3c4Img,
 				o3c5Img };
 
-		o3Hand = new OpponentHand();
+		o3Hand = new OpponentHand(o3Container,o3Cards,o3Name);
 		
 		// Thrown Cards 
 		thrownCards = new ThrownCards();
@@ -194,39 +252,49 @@ public class Yaniv extends Activity {
 		dropCardsBtn = (Button)findViewById(id.DropCards);
 		// will be gone until required
 		dropCardsBtn.setVisibility(View.GONE);
-
+		
+		// array of starting order of players 
+		playersInOrder = new ArrayList<Hand>();
+		playersInOrder.add(p1Hand);
+		playersInOrder.add(o1Hand);
+		playersInOrder.add(o2Hand);
+		playersInOrder.add(o3Hand);
+		
+		// Turn
+		turn = new Turn<Hand>(playersInOrder);
 	}
 
 	protected void dealCards() {
 
 
 		// 5 cards for each player
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < Yaniv.YANIV_NUM_CARDS; i++) {
 			// player - card visible
 			// Get card from deck
 			PlayingCard card = deck.dealOneCard();
 			// Add it to the hand
-			p1Hand.addCard(card);
+			p1Hand.pickup(card);
 			// Redraw it
-			redrawHand(p1Cards, p1Hand, p1Container);
+			redrawHand(p1Hand);
 
 			// opponents - cards not visible, just show that a card was added
-			o1Hand.addCard(deck.dealOneCard());
-			redrawHand(o1Cards, o1Hand, o1Container);
+			o1Hand.pickup(deck.dealOneCard());
+			redrawHand(o1Hand);
 
-			o2Hand.addCard(deck.dealOneCard());
-			redrawHand(o2Cards, o2Hand, o2Container);
+			o2Hand.pickup(deck.dealOneCard());
+			redrawHand(o2Hand);
 
-			o3Hand.addCard(deck.dealOneCard());
-			redrawHand(o3Cards, o3Hand, o3Container);
+			o3Hand.pickup(deck.dealOneCard());
+			redrawHand(o3Hand);
 
 		}
 	}
 
-	private void redrawHand(ImageView[] cardView, Hand hand,
-			LinearLayout container) {
-
-		for (int i = 0; i < 5; i++) {
+	private void redrawHand(Hand hand) {
+		ImageView[] cardView = hand.getCardsViews();
+		View container = hand.getContainer();
+		
+		for (int i = 0; i < Yaniv.YANIV_NUM_CARDS; i++) {
 			if (hand.shouldCardsBeVisible()) {
 				PlayingCard card = hand.getCardByLocation(i);
 				if (card != null){
@@ -288,43 +356,43 @@ public class Yaniv extends Activity {
 
 	}
 	
-	/**
-	 * Plays one round and returns the score
-	 * 
-	 * @param hands
-	 *            An array of hands
-	 * @param firstPlayer
-	 *            index of winner from last round
-	 * @return The score for this round
-	 */
-	public Score playRound(Hand[] hands, int firstPlayer) {
+//	/**
+//	 * Plays one round and returns the score
+//	 * 
+//	 * @param hands
+//	 *            An array of hands
+//	 * @param firstPlayer
+//	 *            index of winner from last round
+//	 * @return The score for this round
+//	 */
+//	public Score playRound(Hand[] hands, int firstPlayer) {
+//
+//		// 10. Deal cards from the deck and put a card in the thrown stack
+//		dealCards();// TODO!!!
+//
+//		int turn = firstPlayer;
+//		Hand currentHand = hands[turn];
+//		boolean gameEnded = false;
+//		// 20. while there are still cards in the deck
+//		while (deck.getRemainingCardsNo() > 0 && !gameEnded) {
+//			// 30.One player plays his hand on each iteration
+//			gameEnded = currentHand.playTurn(deck);// TODO: make sure this
+//			// affects the correct deck
+//			// (by ref)
+//
+//			// 40. advance turn to next player
+//			currentHand = hands[turn++ % 4];
+//		}
+//
+//		firstDeal = true;
+//		return calculateScore();
+//
+//	}
 
-		// 10. Deal cards from the deck and put a card in the thrown stack
-		dealCards();// TODO!!!
-
-		int turn = firstPlayer;
-		Hand currentHand = hands[turn];
-		boolean gameEnded = false;
-		// 20. while there are still cards in the deck
-		while (deck.getRemainingCardsNo() > 0 && !gameEnded) {
-			// 30.One player plays his hand on each iteration
-			gameEnded = currentHand.playTurn(deck);// TODO: make sure this
-			// affects the correct deck
-			// (by ref)
-
-			// 40. advance turn to next player
-			currentHand = hands[turn++ % 4];
-		}
-
-		firstDeal = true;
-		return calculateScore();
-
-	}
-
-	private Score calculateScore() {
-		// TODO this
-		return null;
-	}
+//	private Score calculateScore() {
+//		// TODO this
+//		return null;
+//	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -345,32 +413,12 @@ public class Yaniv extends Activity {
 		dropCardsBtn.setVisibility(View.GONE);
 		
 		redrawThrownCards();
-		redrawHand(p1Cards, p1Hand, p1Container);
+		redrawHand(p1Hand);
 	}
 
 
 
-private void deckClickHandler() {
-	if (firstDeal) {
 
-		dealCards();
-		firstDeal = false;
-	} else {
-		if(p1Hand.canPickup()){
-			PlayingCard currentCard = deck.dealOneCard();
-			// fill virtual hand on first available place
-			/*int insLoc = */p1Hand.addCard(currentCard);
-			//System.out.println("inserted card " +currentCard + " to location "+ insLoc);
-			redrawHand(p1Cards, p1Hand, p1Container);
-		}else{
-			//show a dialog box saying 'cant pick up' or something
-			uhOhDialog1.show();
-			
-
-		}
-		
-	}
-}
 
 /**
  * 	what to do when one of the players cards are clicked
@@ -380,22 +428,50 @@ private void deckClickHandler() {
  */
 private void p1CardsClickHandler(final int cardIndex) {
 	p1Hand.changeSelectionStateOnCard(cardIndex);
-	redrawHand(p1Cards, p1Hand, p1Container);
+	redrawHand(p1Hand);
 }
 
 private void thrownCardsClickHandler() {
 	// When the last thrown card is clicked it is picked up
 	// First verify that it is the player's turn and that he is
 	// eligible for pickup
-	if (p1Hand.canPickup()) {
+	if (p1Hand.canPickup() && turn.peek().isAwaitingInput() == true) {
+		// Get one card from the thrown deck
 		PlayingCard tempCard = thrownCards.getLastCardThrown();
-		p1Hand.addCard(tempCard);
-		redrawHand(p1Cards, p1Hand, p1Container);
+		// fill virtual hand on first available place
+		p1Hand.pickup(tempCard);
+		// redraw it
+		redrawHand(p1Hand);
+		// and the thrown card deck
 		redrawThrownCards();
+		turn.next();
 	} else {
-		
-		// show a dialog box saying wait ur turn or something
+		//show a dialog box saying 'cant pick up' or something
 		uhOhDialog1.show();
+	}
+}
+
+private void deckClickHandler() {
+	if (firstDeal) {
+
+		dealCards();
+		firstDeal = false;
+	} else {
+		if(p1Hand.canPickup() && turn.peek().isAwaitingInput() == true){
+			// Get one card from the deck
+			PlayingCard currentCard = deck.dealOneCard();
+			// fill virtual hand on first available place
+			p1Hand.pickup(currentCard);
+			//and redraw it
+			redrawHand(p1Hand);
+			turn.next();
+		}else{
+			//show a dialog box saying 'cant pick up' or something
+			uhOhDialog1.show();
+			
+
+		}
+		
 	}
 }
 }

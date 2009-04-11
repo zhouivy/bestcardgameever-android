@@ -2,17 +2,34 @@ package com.sheepzkeen.yaniv;
 
 import java.util.ArrayList;
 
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 
 public abstract class Hand {
 	private PlayingCard[] cards;
 	int firstFreeLocation;
 	private PlayingCard[] compactedArr;
 	private boolean[] cardsSelected = {false,false,false,false,false};
+	private ImageView[] cardsViews;
+	public ImageView[] getCardsViews() {
+		return cardsViews;
+	}
+	public View getContainer() {
+		return container;
+	}
 
-	public Hand() {
+	private View container;
+	private String name;
 
-		this.cards = new PlayingCard[5];
+	public Hand(View container, ImageView[] cardsViews, TextView name) {
+
+		this.cards = new PlayingCard[Yaniv.YANIV_NUM_CARDS];
 		firstFreeLocation = 0;
+		this.container = container;
+		this.cardsViews = cardsViews;
+		this.name = (String) name.getText();
 	}
 	public Hand(PlayingCard[] cards) {
 		this.cards = cards;
@@ -27,7 +44,7 @@ public abstract class Hand {
 	 * human player will pick up on his own
 	 * @param deck
 	 */
-	public abstract void pickup();
+	public abstract void pickup(PlayingCard card);
 	
 	public PlayingCard getCardByLocation(int location) {
 		return cards[location];
@@ -75,25 +92,25 @@ public abstract class Hand {
 	
 	public abstract void doYaniv();
 	
-	/**
-	 * plays a turn
-	 * @param currentDeck the deck in its current state (missing cards and all)
-	 * @return true iff the player has declared Yaniv and the game has ended
-	 */
-	public boolean playTurn(PlayingCardsCollection currentDeck) {
-		if(canYaniv())
-		{
-			doYaniv();
-			return true;
-		}
-		else
-		{
-			pickup();
-			drop();
-			return false;
-		}
-		
-	}
+//	/**
+//	 * plays a turn
+//	 * @param currentDeck the deck in its current state (missing cards and all)
+//	 * @return true iff the player has declared Yaniv and the game has ended
+//	 */
+//	public boolean playTurn(PlayingCardsCollection currentDeck) {
+//		if(canYaniv())
+//		{
+//			doYaniv();
+//			return true;
+//		}
+//		else
+//		{
+//			pickup();
+//			drop();
+//			return false;
+//		}
+//		
+//	}
 
 	/**
 	 * returns true for player and false for opponent	
@@ -101,13 +118,14 @@ public abstract class Hand {
 	 */
 	public abstract boolean shouldCardsBeVisible();
 	
+	
 	/**
 	 * adds a card to the hand based on the first free location (@see firstFreeLocation)
 	 * returns the slot it was added in
 	 * @param card
 	 * @return
 	 */
-	public int addCard(PlayingCard card) {
+	protected int addCard(PlayingCard card) {
 		cards[firstFreeLocation] = card;
 		return firstFreeLocation++;
 		
@@ -119,7 +137,7 @@ public abstract class Hand {
 	 * after compacting it will be: {3h,joker,9h,null,null}
 	 */
 	protected void compactHand(){
-		compactedArr = new PlayingCard[5];
+		compactedArr = new PlayingCard[Yaniv.YANIV_NUM_CARDS];
 		int idxInComapctedArr=0;
 		for (int idxInCards = 0; idxInCards < cards.length; idxInCards++) {
 			if (cards[idxInCards]!=null) {
@@ -154,6 +172,18 @@ public abstract class Hand {
 	public void changeSelectionStateOnCard(int cardIndex) {
 		cardsSelected[cardIndex]= ! cardsSelected[cardIndex];
 	}
+	
+	/**
+	 * will return true for a human player
+	 * @return True iff the player is human
+	 */
+	abstract public boolean isAwaitingInput();
+	
+	public String getPlayerName() {
+		
+		return this.name;
+	}
+	
 
 
 }
