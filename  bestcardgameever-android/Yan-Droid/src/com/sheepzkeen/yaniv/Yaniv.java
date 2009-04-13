@@ -86,6 +86,7 @@ public class Yaniv extends Activity {
 	protected MyDialog uhOhDialog1;
 	private ArrayList<Hand> playersInOrder;
 	private Turn<Hand> turn;
+	private Button yanivBtn;
 	
 	//TODO: remove this
 	private Dialog d;
@@ -98,6 +99,20 @@ public class Yaniv extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		init();
+		
+		// Perform Yaniv Listener
+		yanivBtn.setOnClickListener(new Button.OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				//TODO: Perform yaniv (call p1hand.doYaniv()), end game
+				//Note: will only be visibile when yaniv is possible
+				//note 2: this ends the game, need to call score here
+				
+			}
+			
+		});
+		
 		// Drop Cards Listener
 		dropCardsBtn.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v){
@@ -254,6 +269,11 @@ public class Yaniv extends Activity {
 		// will be gone until required
 		dropCardsBtn.setVisibility(View.GONE);
 		
+		// Perform Yaniv Button
+		yanivBtn = (Button)findViewById(id.PerformYaniv);
+		// will be gone until required
+		yanivBtn.setVisibility(View.GONE);
+		
 		// array of starting order of players 
 		playersInOrder = new ArrayList<Hand>();
 		playersInOrder.add(p1Hand);
@@ -313,6 +333,9 @@ public class Yaniv extends Activity {
 					cardView[i].setImageResource(R.drawable.back);
 				}
 			}
+			//TODO: Remove me!
+			p1Name.setText("Player " + p1Hand.countCards());
+			//End remove me!
 		}
 		
 		//and show the drop cards button if needed

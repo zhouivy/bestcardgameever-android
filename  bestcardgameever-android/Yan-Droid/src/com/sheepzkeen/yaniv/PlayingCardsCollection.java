@@ -1,9 +1,18 @@
 package com.sheepzkeen.yaniv;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Stack;
 
 public abstract class PlayingCardsCollection {
+
+//	 public static final Map<String, Integer> cardToValue = new HashMap<String, Integer>();
+//	 static {
+//		 cardToValue.put("1", 1);
+//		 //...
+//	 }
 
 	protected Stack<PlayingCard> cards;
 	protected String[] suits = {"c","s","h","s"};

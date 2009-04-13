@@ -56,6 +56,33 @@ public class PlayingCard {
 		}
 		return id;
 	}
+	
+	/**
+	 * Returns the value of the card with some exceptions
+	 * J, Q, K are each worth 10
+	 * Joker (o) is worth 0
+	 * @return the value of this card.
+	 */
+	public int getIntValue(){
+		int retVal = -1;
+		try{
+			retVal = Integer.parseInt(this.value);
+		} catch (NumberFormatException nfe) {
+			switch (value.charAt(0)) {
+			case 'j':
+			case 'q':
+			case 'k':
+				retVal = 10;
+				break;
+			case 'o':
+				retVal = 0;
+			default:
+				break;
+			}
+		}
+		
+		return retVal;
+	}
 @Override
 public String toString() {
 	return getSuit()+getValue();

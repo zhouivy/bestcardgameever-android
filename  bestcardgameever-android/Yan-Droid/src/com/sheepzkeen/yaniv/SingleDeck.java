@@ -18,8 +18,8 @@ public class SingleDeck extends PlayingCardsCollection {
 			
 		}
 		// Now add the Jokers
-		deckTemp.add(new PlayingCard("j","r"));
-		deckTemp.add(new PlayingCard("j","b"));
+		deckTemp.add(new PlayingCard("o","r"));
+		deckTemp.add(new PlayingCard("o","b"));
 		// Shuffle it
 		Collections.shuffle(deckTemp);
 		// And lets get it on!
