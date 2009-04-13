@@ -201,8 +201,14 @@ public abstract class Hand {
 		this.canPickup = canPickup;
 	}
 	
-	
-	
+	public int countCards() {
+		int retVal = 0;
+		for (PlayingCard card : cards) {
+			if (card != null)
+				retVal+=card.getIntValue();
+		}
+		return retVal;
 
+	}
 
 }

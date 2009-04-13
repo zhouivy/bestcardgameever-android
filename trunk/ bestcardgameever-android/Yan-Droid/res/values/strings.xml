@@ -12,4 +12,5 @@
 	<string name = "msg1Heading">Not Your Turn</string>
 	<string name = "dialogOkMsg">Got it!</string>
 	
+<string name="PerformYaniv">Yaniv!</string>
 </resources>
