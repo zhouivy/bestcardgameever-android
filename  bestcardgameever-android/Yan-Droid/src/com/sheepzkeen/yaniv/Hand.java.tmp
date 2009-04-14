@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 
 public abstract class Hand {
-	protected static final int YANIV_AMOUNT = 7;
 	private PlayingCard[] cards;
 	int firstFreeLocation;
 	private PlayingCard[] compactedArr;
@@ -93,8 +92,7 @@ public abstract class Hand {
 
 	public boolean canYaniv(){
 		//TODO: This (need to add int value to card objects to sum them)
-		
-		return countCards()<=YANIV_AMOUNT;
+		return false;
 	}
 	
 	public abstract void doYaniv();

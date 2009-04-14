@@ -333,9 +333,6 @@ public class Yaniv extends Activity {
 					cardView[i].setImageResource(R.drawable.back);
 				}
 			}
-			//TODO: Remove me!
-			p1Name.setText("Player " + p1Hand.countCards());
-			//End remove me!
 		}
 		
 		//and show the drop cards button if needed
@@ -345,6 +342,14 @@ public class Yaniv extends Activity {
 		}else{
 			dropCardsBtn.setVisibility(View.VISIBLE);
 		}
+		//and the perform yaniv button...
+		if(p1Hand.canYaniv()){
+			yanivBtn.setVisibility(View.VISIBLE);
+		}else
+		{
+			yanivBtn.setVisibility(View.GONE);
+		}
+		
 		//TODO: problematic - this only applies to p1
 		// although i did add the method to hand, this will only affect the button for p1
 		// consider doing this only for p1Hand and not for hand

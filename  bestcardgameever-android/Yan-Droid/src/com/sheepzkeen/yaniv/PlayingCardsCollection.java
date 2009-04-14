@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Stack;
+import com.sheepzkeen.yaniv.PlayingCard.*;
 
 public abstract class PlayingCardsCollection {
+
 
 //	 public static final Map<String, Integer> cardToValue = new HashMap<String, Integer>();
 //	 static {
@@ -14,10 +16,11 @@ public abstract class PlayingCardsCollection {
 //		 //...
 //	 }
 
+	
 	protected Stack<PlayingCard> cards;
-	protected String[] suits = {"c","s","h","s"};
-	protected String[] values = {"1","2","3","4","5","6","7","8","9","10",
-								"j","q","k"};
+	protected char[] suits = {PlayingCard.CLUBS,PlayingCard.SPADES,PlayingCard.HEARTS,PlayingCard.DIAMOND};
+	protected char[] values = {'1','2','3','4','5','6','7','8','9',PlayingCard.TEN,
+			PlayingCard.JACK,PlayingCard.QUEEN,PlayingCard.KING};
 
 	
 
