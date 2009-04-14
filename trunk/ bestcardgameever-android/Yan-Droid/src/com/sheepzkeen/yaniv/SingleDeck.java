@@ -6,20 +6,22 @@ import java.util.Stack;
 public class SingleDeck extends PlayingCardsCollection {
 	
 
+
+
 	public SingleDeck() {
 		super();
 		// Create a temporary deck
 		Stack<PlayingCard> deckTemp = new Stack<PlayingCard>();
 		// Add the 52 suit\value combinations
-		for (String suit : suits)  {
-			for (String value : values) {
+		for (char suit : suits)  {
+			for (char value : values) {
 				deckTemp.add(new PlayingCard(suit,value));
 			}
 			
 		}
 		// Now add the Jokers
-		deckTemp.add(new PlayingCard("o","r"));
-		deckTemp.add(new PlayingCard("o","b"));
+		deckTemp.add(new PlayingCard(PlayingCard.JOKER,PlayingCard.RED_SUIT));
+		deckTemp.add(new PlayingCard(PlayingCard.JOKER,PlayingCard.BLACK_SUIT));
 		// Shuffle it
 		Collections.shuffle(deckTemp);
 		// And lets get it on!

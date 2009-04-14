@@ -205,14 +205,13 @@ android:layout_gravity="center_horizontal"
 android:id="@+id/bottom"
 android:layout_width="fill_parent"
 android:gravity="center"
-   android:layout_gravity="bottom" android:layout_height="wrap_content" android:layout_weight="2">
+   android:layout_gravity="bottom" android:layout_height="wrap_content" android:layout_weight="1">
 <TextView
 	android:id="@+id/p1Name"  
     android:layout_width="wrap_content" 
     android:layout_height="wrap_content" 
     android:text="@string/Player"
-    android:gravity="center_horizontal" 
-    android:layout_gravity="left"/>
+    android:gravity="center_horizontal" android:layout_gravity="left|center_vertical"/>
     
     
 	    		
