@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public abstract class Hand {
+public abstract class Hand implements Comparable<Hand> {
 	protected static final int YANIV_AMOUNT = 7;
 	private PlayingCard[] cards;
 	int firstFreeLocation;
@@ -25,6 +25,7 @@ public abstract class Hand {
 	private String name;
 	private boolean canDrop;
 	private boolean canPickup;
+	private boolean cardVisibility;
 
 	public Hand(View container, ImageView[] cardsViews, TextView name) {
 
@@ -92,12 +93,19 @@ public abstract class Hand {
 
 
 	public boolean canYaniv(){
-		//TODO: This (need to add int value to card objects to sum them)
 		
 		return countCards()<=YANIV_AMOUNT;
 	}
 	
-	public abstract void doYaniv();
+	public void doYaniv(){
+		//Finish game:
+		//TODO: what?
+		
+	}
+	
+//	public interface onYanivPerformedListener{
+//		void onYanivPerformed();
+//	}
 	
 //	/**
 //	 * plays a turn
@@ -123,7 +131,13 @@ public abstract class Hand {
 	 * returns true for player and false for opponent	
 	 * @return true if this is an instance of player, false otherwise
 	 */
-	public abstract boolean shouldCardsBeVisible();
+	public boolean shouldCardsBeShown(){
+		return cardVisibility;
+	}
+
+	public void setShouldCardsBeShown(boolean cardVisibility){
+		this.cardVisibility = cardVisibility;
+	}
 	
 	
 	/**
@@ -211,6 +225,11 @@ public abstract class Hand {
 		}
 		return retVal;
 
+	}
+	
+	@Override
+	public int compareTo(Hand another) {
+		return this.countCards() - another.countCards();
 	}
 
 }

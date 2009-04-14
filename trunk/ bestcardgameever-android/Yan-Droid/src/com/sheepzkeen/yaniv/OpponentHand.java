@@ -8,6 +8,8 @@ public class OpponentHand extends Hand {
 
 	public OpponentHand(View container, ImageView[] cards, TextView name) {
 		super(container,cards,name);
+		//start the game with cards hidden
+		setShouldCardsBeShown(false);
 	}
 
 
@@ -22,17 +24,6 @@ public class OpponentHand extends Hand {
 
 	}
 
-	@Override
-	public void doYaniv() {
-		// TODO AI
-		
-	}
-
-	@Override
-	public boolean shouldCardsBeVisible() {
-		// TODO when game ends, should change to visible
-		return false;
-	}
 
 	@Override
 	protected void selectCardsToDrop() {

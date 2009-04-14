@@ -11,12 +11,11 @@ public class PlayerHand extends Hand {
 
 	public PlayerHand(View container, ImageView[] cards, TextView name) {
 		super(container,cards,name);
+		//cards always visible for p1
+		setShouldCardsBeShown(true);
 	}
 
-	@Override
-	public void doYaniv() {
-		// TODO this
-	}
+	
 
 	//should Override
 	@Override
@@ -26,11 +25,6 @@ public class PlayerHand extends Hand {
 	}
 
 
-	@Override
-	public boolean shouldCardsBeVisible() {
-		// Always true for player
-		return true;
-	}
 
 	@Override
 	public void pickup(PlayingCard card) {

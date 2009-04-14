@@ -1,6 +1,7 @@
 package com.sheepzkeen.yaniv;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -105,10 +106,42 @@ public class Yaniv extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				p1Hand.doYaniv();
 				//TODO: Perform yaniv (call p1hand.doYaniv()), end game
-				//Note: will only be visibile when yaniv is possible
+				//Note: will only be visible when yaniv is possible
 				//note 2: this ends the game, need to call score here
 				
+				// Show everyone's cards
+				o1Hand.setShouldCardsBeShown(true);
+				o2Hand.setShouldCardsBeShown(true);
+				o3Hand.setShouldCardsBeShown(true);
+				// And count the cards for each player
+				int p1Count = p1Hand.countCards();
+				int o1Count = o1Hand.countCards();
+				int o2Count = o2Hand.countCards();
+				int o3Count = o3Hand.countCards();
+				p1Name.setText(String.valueOf(p1Count));
+				o1Name.setText(String.valueOf(o1Count));
+				o2Name.setText(String.valueOf(o2Count));
+				o3Name.setText(String.valueOf(o3Count));
+				//redraw hands
+				redrawHand(p1Hand);
+				redrawHand(o1Hand);
+				redrawHand(o2Hand);
+				redrawHand(o3Hand);
+				
+				//Check if won or lost
+				ArrayList<Hand> playersByPosition = playersInOrder;
+				Collections.sort(playersByPosition);
+				if(playersByPosition.indexOf(p1Hand) == 0){
+					//P1 won
+					
+					d.setTitle("You Won!");
+					d.show();
+				}else{
+					d.setTitle(playersByPosition.get(0).getPlayerName() +" won! (you lost)");
+					d.show();
+				}
 			}
 			
 		});
@@ -158,7 +191,7 @@ public class Yaniv extends Activity {
 					return;
 				}else{
 					//this hand has to go through the motions
-					//TODO: remove this
+					//TODO: remove this (just a simulation of going through the players)
 					d.setCancelable(true);
 					d.setTitle("This is Player " + hand.getPlayerName());
 					d.show();
@@ -306,25 +339,25 @@ public class Yaniv extends Activity {
 		View container = hand.getContainer();
 		
 		for (int i = 0; i < Yaniv.YANIV_NUM_CARDS; i++) {
-			if (hand.shouldCardsBeVisible()) {
+			if (hand.shouldCardsBeShown()) {
 				PlayingCard card = hand.getCardByLocation(i);
 				if (card != null){
 					//Show Card
 					cardView[i].setVisibility(View.VISIBLE);
 					int resId = card.getImageResourceId();
 					cardView[i].setImageResource(resId);
-					//Show isSelected
-					//when selected, move up 10 pixels
-					boolean isSelected = hand.isCardSelected(i);
-					android.view.ViewGroup.LayoutParams currentParams = cardView[i].getLayoutParams();
-					cardView[i].setLayoutParams(
-							new AbsoluteLayout.LayoutParams
-							(currentParams.width,currentParams.height,
-									((AbsoluteLayout.LayoutParams)currentParams).x,
-									 isSelected ? 0 : 10));
-
-					
-					
+					//TODO: Disgusting patch, need to fix asap!!!
+					if (hand == p1Hand){
+						//Show isSelected
+						//when selected, move up 10 pixels
+						boolean isSelected = hand.isCardSelected(i);
+						android.view.ViewGroup.LayoutParams currentParams = cardView[i].getLayoutParams();
+						cardView[i].setLayoutParams(
+								new AbsoluteLayout.LayoutParams
+								(currentParams.width,currentParams.height,
+										((AbsoluteLayout.LayoutParams)currentParams).x,
+										 isSelected ? 0 : 10));
+					}
 				}else{
 					cardView[i].setVisibility(View.INVISIBLE);
 				}
@@ -335,9 +368,10 @@ public class Yaniv extends Activity {
 			}
 		}
 		
+		//TODO: problematic - this only applies to p1:
 		//and show the drop cards button if needed
 		//if this and no other cards are selected, don't show the button
-		if(hand.isAnyCardSelected() == false){
+		if(p1Hand.isAnyCardSelected() == false){
 			dropCardsBtn.setVisibility(View.GONE);
 		}else{
 			dropCardsBtn.setVisibility(View.VISIBLE);
@@ -350,9 +384,6 @@ public class Yaniv extends Activity {
 			yanivBtn.setVisibility(View.GONE);
 		}
 		
-		//TODO: problematic - this only applies to p1
-		// although i did add the method to hand, this will only affect the button for p1
-		// consider doing this only for p1Hand and not for hand
 	
 		container.postInvalidate();
 
