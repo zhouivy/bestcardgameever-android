@@ -61,16 +61,18 @@ public abstract class Hand implements Comparable<Hand> {
 	 * Select which cards, and drops them, in case it is a human player, it simply drops the cards he selected
 	 * (after verifying they can be dropped with rules) in case of an opponent, AI decides it
 	 * @return an array of type {@link PlayingCard} which contains the cards to drop 
+	 * @throws InvalidYanivException when cards selected cannot be dropped
 	 */
-	public PlayingCard[] drop(){
+	public PlayingCard[] drop() throws InvalidYanivException{
 		selectCardsToDrop();
 		return dropSelected();
 	}
 
 	/**
 	 * Selects which cards will be dropped and moves them to the 'cardsSelected' array 
+	 * @throws InvalidYanivException 
 	 */
-	protected abstract void selectCardsToDrop();
+	protected abstract void selectCardsToDrop() throws InvalidYanivException;
 	
 	/**
 	 * returns the selected cards so that they can be thrown

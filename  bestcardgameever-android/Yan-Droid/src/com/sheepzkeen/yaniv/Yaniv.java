@@ -477,7 +477,13 @@ public class Yaniv extends Activity {
 	 */
 	private void dropCardsClickHandler() {
 		if (p1Hand.getCanDrop() == true){
-			tempThrownArr = p1Hand.drop();
+			try {
+				tempThrownArr = p1Hand.drop();
+			} catch (InvalidYanivException e) {
+				// TODO Auto-generated catch block
+				d.setTitle("You Can't Drop This!\nReason: " + e.getMessage());
+				
+			}
 			// Rule: after drop you are not allowed to drop again
 			p1Hand.setCanDrop(false);
 			// Rule: after drop you are allowed to pickup again 
