@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 public abstract class Hand implements Comparable<Hand> {
 	protected static final int YANIV_AMOUNT = 7;
-	private PlayingCard[] cards;
+	protected PlayingCard[] cards;
 	int firstFreeLocation;
 	private PlayingCard[] compactedArr;
-	private boolean[] cardsSelected = {false,false,false,false,false};
+	//private boolean[] cardsSelected = {false,false,false,false,false};
 	private ImageView[] cardsViews;
 	public ImageView[] getCardsViews() {
 		return cardsViews;
@@ -58,8 +58,8 @@ public abstract class Hand implements Comparable<Hand> {
 	}
 
 	/**
-	 * Selected which cards, and drops them, in case it is a human player, it simply drops the cards he selected
-	 * in case of an opponent, AI decides it
+	 * Select which cards, and drops them, in case it is a human player, it simply drops the cards he selected
+	 * (after verifying they can be dropped with rules) in case of an opponent, AI decides it
 	 * @return an array of type {@link PlayingCard} which contains the cards to drop 
 	 */
 	public PlayingCard[] drop(){
@@ -79,7 +79,7 @@ public abstract class Hand implements Comparable<Hand> {
 	private PlayingCard[] dropSelected() {
 		ArrayList<PlayingCard> cardsToDrop = new ArrayList<PlayingCard>();
 		for (int cardIndex = 0; cardIndex < cards.length; cardIndex++) {
-			if(cardsSelected[cardIndex]){
+			if(cards[cardIndex].isSelected()){
 				cardsToDrop.add(cards[cardIndex]);
 				cards[cardIndex]=null;
 			}
@@ -172,26 +172,25 @@ public abstract class Hand implements Comparable<Hand> {
 	 * resets all cards selected status to false
 	 */
 	protected void resetSelectedCards(){
-		for (int i = 0; i < cardsSelected.length; i++) {
-			cardsSelected[i]=false;
+		for (PlayingCard card : cards) {
+			card.setSelected(false);
 		}
 	}
 	
 	public boolean isCardSelected(int cardIndex){
-		return cardsSelected[cardIndex];
+		return cards[cardIndex].isSelected();
 	}
 	
 	public boolean isAnyCardSelected(){
-		for (int i = 0; i < cardsSelected.length; i++) {
-			if (cardsSelected[i]== true){
+		for (PlayingCard card : cards) {
+			if (card.isSelected())
 				return true;
-			}
 		}
 		return false;
 	}
 
 	public void changeSelectionStateOnCard(int cardIndex) {
-		cardsSelected[cardIndex]= ! cardsSelected[cardIndex];
+		cards[cardIndex].setSelected(!cards[cardIndex].isSelected());
 	}
 	
 	/**
@@ -221,7 +220,7 @@ public abstract class Hand implements Comparable<Hand> {
 		int retVal = 0;
 		for (PlayingCard card : cards) {
 			if (card != null)
-				retVal+=card.getIntValue();
+				retVal+=card.getCountValue();
 		}
 		return retVal;
 

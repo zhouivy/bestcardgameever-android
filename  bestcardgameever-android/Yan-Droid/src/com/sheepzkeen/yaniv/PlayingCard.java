@@ -3,7 +3,7 @@ package com.sheepzkeen.yaniv;
 import java.lang.reflect.Field;
 
 
-public class PlayingCard {
+public class PlayingCard implements Comparable<PlayingCard> {
 	
 	//suits
 	protected static final char HEARTS = 'h';
@@ -24,6 +24,7 @@ public class PlayingCard {
 	private char suit;
 	private char value;
 	private boolean isVisible;
+	private boolean isSelected;
 	
 	
 	public boolean isVisible() {
@@ -31,6 +32,12 @@ public class PlayingCard {
 	}
 	public void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+	}
+	protected boolean isSelected(){
+		return isSelected;
+	}
+	protected void setSelected(boolean status){
+		this.isSelected = status;
 	}
 	public void setValue(char value) {
 		this.value = value;
@@ -53,6 +60,7 @@ public class PlayingCard {
 		super();
 		this.suit = suit;
 		this.value = value;
+		this.isSelected = false;
 	}
 	
 	public int getImageResourceId(){
@@ -80,7 +88,7 @@ public class PlayingCard {
 	 * Joker (o) is worth 0
 	 * @return the value of this card.
 	 */
-	public int getIntValue(){
+	public int getCountValue(){
 		int retVal = Character.getNumericValue(this.value);
 		switch (value) {
 			case TEN:
@@ -97,8 +105,43 @@ public class PlayingCard {
 		
 		return retVal;
 	}
+	
+	/**
+	 * returns an integer value of the card.
+	 * 
+	 * @return
+	 */
+	public Integer getIntegerValue(){
+		Integer retVal = Character.getNumericValue(this.value);
+		switch (value) {
+			case TEN:
+				retVal = 10;
+				break;
+			case JACK:
+				retVal = 11;
+				break;
+			case QUEEN:
+				retVal = 12;
+				break;
+			case KING:
+				retVal = 13;
+				break;
+			case JOKER:
+				retVal = null;
+			
+			default:
+				break;
+			}
+		
+		return retVal;
+	}
 @Override
 public String toString() {
 	return new String(new char[]{getSuit(),getValue()});
+}
+@Override
+public int compareTo(PlayingCard other) {
+	
+	return other.getIntegerValue() - this.getIntegerValue();
 }
 }
