@@ -81,7 +81,7 @@ public abstract class Hand implements Comparable<Hand> {
 	private PlayingCard[] dropSelected() {
 		ArrayList<PlayingCard> cardsToDrop = new ArrayList<PlayingCard>();
 		for (int cardIndex = 0; cardIndex < cards.length; cardIndex++) {
-			if(cards[cardIndex].isSelected()){
+			if(cards[cardIndex] != null && cards[cardIndex].isSelected()){
 				cardsToDrop.add(cards[cardIndex]);
 				cards[cardIndex]=null;
 			}
@@ -175,7 +175,9 @@ public abstract class Hand implements Comparable<Hand> {
 	 */
 	protected void resetSelectedCards(){
 		for (PlayingCard card : cards) {
-			card.setSelected(false);
+			if(card != null){
+				card.setSelected(false);
+			}
 		}
 	}
 	
@@ -185,7 +187,7 @@ public abstract class Hand implements Comparable<Hand> {
 	
 	public boolean isAnyCardSelected(){
 		for (PlayingCard card : cards) {
-			if (card.isSelected())
+			if (!(card == null) && card.isSelected())
 				return true;
 		}
 		return false;

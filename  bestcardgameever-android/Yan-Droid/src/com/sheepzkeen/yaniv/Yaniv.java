@@ -101,6 +101,41 @@ public class Yaniv extends Activity {
 		setContentView(R.layout.main);
 		init();
 		
+		  //////////////////
+		 //TESTING/////////
+		//////////////////
+try{
+		TextView t = new TextView(this);
+		t.setText("test");
+		PlayerHand p1h = new PlayerHand(null,null,t);
+			ArrayList<PlayingCard[]> cardsList = new ArrayList<PlayingCard[]>();
+			
+			PlayingCard[] pca = new PlayingCard[5];
+
+			for(Integer i = 0; i<5; i++){
+				PlayingCard c = new PlayingCard(PlayingCard.CLUBS,Character.forDigit(i, 10) );
+				c.setSelected(true);
+				pca[i] = c;
+			}
+			
+			cardsList.add(pca);
+			
+			for (PlayingCard[] playingCards : cardsList) {
+				p1h.cards = playingCards;
+				
+					p1h.selectCardsToDrop();
+				
+			}
+}catch (Exception e) {
+	e.printStackTrace();
+}
+			  //////////////////
+			 //END TESTING/////
+			//////////////////
+
+		
+		
+		
 		// Perform Yaniv Listener
 		yanivBtn.setOnClickListener(new Button.OnClickListener(){
 
@@ -479,11 +514,7 @@ public class Yaniv extends Activity {
 		if (p1Hand.getCanDrop() == true){
 			try {
 				tempThrownArr = p1Hand.drop();
-			} catch (InvalidYanivException e) {
-				// TODO Auto-generated catch block
-				d.setTitle("You Can't Drop This!\nReason: " + e.getMessage());
-				
-			}
+			
 			// Rule: after drop you are not allowed to drop again
 			p1Hand.setCanDrop(false);
 			// Rule: after drop you are allowed to pickup again 
@@ -491,6 +522,12 @@ public class Yaniv extends Activity {
 			
 			dropCardsBtn.setVisibility(View.GONE);
 			//Note, we don't redraw the cards here, since we want the player to see the cards he is throwing until they are down
+			
+			} catch (InvalidYanivException e) {
+				d.setTitle("You Can't Drop This!\nReason: " + e.getMessage());
+				d.show();
+				
+			}
 		}else{
 			uhOhDialog1.show();
 		}
@@ -515,6 +552,12 @@ private void thrownCardsClickHandler() {
 		// Rule: after pickup you are not allowed to pickup again 
 		p1Hand.setCanPickup(false);
 		
+		//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
+		for (PlayingCard card : tempThrownArr) {
+			if (card != null){
+				card.setSelected(false);
+			}
+		}
 		//Update the thrown cards only after the pickup (RULE)
 		thrownCards.pushMulti(tempThrownArr);
 
@@ -550,6 +593,12 @@ private void deckClickHandler() {
 			// Rule: after pickup you are not allowed to pickup again 
 			p1Hand.setCanPickup(false);
 
+			//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
+			for (PlayingCard card : tempThrownArr) {
+				if (card != null){
+					card.setSelected(false);
+				}
+			}
 			// Update the thrown cards only after the pickup (RULE)
 			thrownCards.pushMulti(tempThrownArr);
 			// And redraw the thrown deck
