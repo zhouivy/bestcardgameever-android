@@ -19,7 +19,7 @@ public class PlayingCard implements Comparable<PlayingCard> {
 	protected static final char BLACK_SUIT = 'b';
 	protected static final char RED_SUIT = 'r';
 	protected static final char JOKER = 'o';
-	protected static final Integer ACE = 1;
+	protected static final char ACE = '1';
 	
 	
 	private char suit;

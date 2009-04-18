@@ -98,33 +98,33 @@ public class Yaniv extends Activity {
 	
 	
 
-	private PlayingCard[] createHandForTesting(int c1, char s1, int c2,
-			char s2, int c3, char s3, int c4, char s4, int c5,
+	private PlayingCard[] createHandForTesting(char c1, char s1, char c2,
+			char s2, char c3, char s3, char c4, char s4, char c5,
 			char s5) {
 		PlayingCard[] retVal = new PlayingCard[5];
 
-		if(c1!=0 && s1 != '0'){
-			PlayingCard card1 = new PlayingCard(s1,Character.forDigit(c1, 10) );
+		if(s1 != '0'){
+			PlayingCard card1 = new PlayingCard(s1,c1 );
 			card1.setSelected(true);
 			retVal[0] = card1;
 		}
-		if(c2!=0 && s2 != '0'){
-			PlayingCard card2 = new PlayingCard(s2,Character.forDigit(c2, 10) );
+		if(s2 != '0'){
+			PlayingCard card2 = new PlayingCard(s2,c2 );
 			card2.setSelected(true);
 			retVal[1] = card2;
 		}
-		if(c3!=0 && s3 != '0'){
-			PlayingCard card3 = new PlayingCard(s3,Character.forDigit(c3, 10) );
+		if(s3 != '0'){
+			PlayingCard card3 = new PlayingCard(s3,c3 );
 			card3.setSelected(true);
 			retVal[2] = card3;
 		}
-		if(c4!=0 && s4 != '0'){
-			PlayingCard card4 = new PlayingCard(s4,Character.forDigit(c4, 10) );
+		if(s4 != '0'){
+			PlayingCard card4 = new PlayingCard(s4,c4 );
 			card4.setSelected(true);
 			retVal[3] = card4;
 		}
-		if(c5!=0 && s5 != '0'){
-			PlayingCard card5 = new PlayingCard(s5,Character.forDigit(c5, 10) );
+		if(s5 != '0'){
+			PlayingCard card5 = new PlayingCard(s5,c5 );
 			card5.setSelected(true);
 			retVal[4] = card5;
 		}
@@ -149,13 +149,61 @@ try{
 		PlayerHand p1h = new PlayerHand(null,null,t);
 			ArrayList<PlayingCard[]> cardsList = new ArrayList<PlayingCard[]>();
 			
-			cardsList.add(createHandForTesting(3,PlayingCard.CLUBS,4,PlayingCard.CLUBS,5,PlayingCard.CLUBS,6,PlayingCard.CLUBS,7,PlayingCard.CLUBS));
-			System.out.println("success on 3,4,5,6,7");			
+			cardsList.add(createHandForTesting(
+					'3',PlayingCard.CLUBS,
+					'4',PlayingCard.CLUBS,
+					'5',PlayingCard.CLUBS,
+					'6',PlayingCard.CLUBS,
+					'7',PlayingCard.CLUBS));
+			System.out.println("should succeed on 3,4,5,6,7");			
 			
-			cardsList.add(createHandForTesting(0,'0',0,'0',0,'0',0,'0',7,PlayingCard.SPADES));
-			System.out.println("success on 7");			
+			cardsList.add(createHandForTesting(
+					'0','0',
+					'0','0',
+					'0','0',
+					'0','0',
+					'7',PlayingCard.SPADES));
+			System.out.println("should succeed on 7");	
 			
-			
+//			cardsList.add(createHandForTesting(	'0','0',
+//												'0','0',
+//												'2',PlayingCard.HEARTS,
+//												'2',PlayingCard.DIAMOND,
+//												'1',PlayingCard.SPADES));
+//			System.out.println("should fail on 2,2,1 dif suits");	
+
+			cardsList.add(createHandForTesting(
+					'0','0',
+					'0','0',
+					'2',PlayingCard.HEARTS,
+					'2',PlayingCard.DIAMOND,
+					'2',PlayingCard.SPADES));
+			System.out.println("should succeed on 2,2,2 dif suits");
+
+			cardsList.add(createHandForTesting(	
+					'0','0',
+					'0','0',
+					'3',PlayingCard.HEARTS,
+					'1',PlayingCard.HEARTS,
+					'2',PlayingCard.HEARTS));
+			System.out.println("should succeed on 3,1,2 same suits");
+
+			cardsList.add(createHandForTesting(	
+					'0','0',
+					'0','0',
+					PlayingCard.JOKER,PlayingCard.HEARTS,
+					PlayingCard.QUEEN,PlayingCard.HEARTS,
+					PlayingCard.ACE,PlayingCard.HEARTS));
+			System.out.println("should succeed on q,Joker,1 same suits");
+
+			cardsList.add(createHandForTesting(	
+					'0','0',
+					'0','0',
+					PlayingCard.QUEEN,PlayingCard.HEARTS,
+					PlayingCard.KING,PlayingCard.HEARTS,
+					'1',PlayingCard.HEARTS));
+			System.out.println("should succeed on q,k,1 same suits");
+
 			for (PlayingCard[] playingCards : cardsList) {
 				p1h.cards = playingCards;
 					p1h.selectCardsToDrop();
