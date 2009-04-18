@@ -234,5 +234,18 @@ public abstract class Hand implements Comparable<Hand> {
 	public int compareTo(Hand another) {
 		return this.countCards() - another.countCards();
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Hand " + name + ". [");
+		for (PlayingCard card : cards) {
+			if(card!=null){
+				sb.append(card+" ");
+			}
+		}
+		sb.append("]");
+		return sb.toString();
+	}
 
 }

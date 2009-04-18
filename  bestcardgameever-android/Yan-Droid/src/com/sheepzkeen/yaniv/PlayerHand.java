@@ -30,6 +30,7 @@ public class PlayerHand extends Hand {
 	protected void selectCardsToDrop() throws InvalidYanivException {
 		//Do nothing here, selection was performed by the drop action
 		verifyCardsToDrop();
+		System.out.println("success on " + this.toString());
 	}
 
 
@@ -56,6 +57,7 @@ public class PlayerHand extends Hand {
 
 		//0 - initialize
 		int jokerCount = 0;
+		ArrayList<PlayingCard> jokers = new ArrayList<PlayingCard>();
 		boolean suitsAreDifferent = true;
 		Set<Character> suitsInCards = new HashSet<Character>();
 		PlayingCard aceInCards = null;
@@ -65,12 +67,16 @@ public class PlayerHand extends Hand {
 				cardsToCheck.add(card);
 			}
 		}
-		//1 - jokers?
+		//1 - jokers - existance
 		for (PlayingCard card : cardsToCheck) {
 			if(card.getIntegerValue() == null){
 				jokerCount++;
-				cardsToCheck.remove(card);
+				jokers.add(card);
 			}
+		}
+		// jokers removal
+		if(jokerCount>0){
+			cardsToCheck.removeAll(jokers);
 		}
 		//2 - single card?
 		if(cardsToCheck.size()<=1){
@@ -91,14 +97,16 @@ public class PlayerHand extends Hand {
 		PlayingCard lastCardChecked = null;
 		if(suitsAreDifferent){
 			for (PlayingCard card : cardsToCheck) {
-				if(lastCardChecked != null && lastCardChecked.getIntegerValue() != card.getIntegerValue())
+				if(lastCardChecked != null && lastCardChecked.getIntegerValue() != card.getIntegerValue()){
 					//Reject
 					throw new InvalidYanivException("Cards of different suits must have same value!");
+				}
+				lastCardChecked = card;
 			}
 		}else{
 			//4 check series
 			//4.1 not enough cards
-			if(cardsToCheck.size() < 3 && jokerCount == 0){
+			if(cardsToCheck.size() < 3 && jokerCount == 0){ //todo:change to cardstochek.size()+jokercount<3
 				//Reject
 				throw new InvalidYanivException("Cards have same suit, but are not enough to complete a series! " +
 						"(only " + cardsToCheck.size() + " cards dropped and no jokers)");
@@ -106,7 +114,7 @@ public class PlayerHand extends Hand {
 			//4.2 ace removal
 			
 			for (PlayingCard card : cardsToCheck) {
-				if(card.getIntegerValue() == PlayingCard.ACE){
+				if(card.getIntegerValue() == Character.digit(PlayingCard.ACE, 10)){
 					aceInCards = card;
 					
 				}
@@ -137,9 +145,9 @@ public class PlayerHand extends Hand {
 		}		
 		//5
 		if(aceInCards != null){
-			//highest
-			if((cardsToCheck.get(0).getIntegerValue() + jokerCount == 14) ||
-					(cardsToCheck.get(cardsToCheck.size()).getIntegerValue() -jokerCount == 1)){
+			//highest\lowest 2\13
+			if((cardsToCheck.get(0).getIntegerValue() + jokerCount == 13) ||
+					(cardsToCheck.get(cardsToCheck.size()-1).getIntegerValue() - jokerCount == 2)){
 				//OK
 			}else{
 				//reject
