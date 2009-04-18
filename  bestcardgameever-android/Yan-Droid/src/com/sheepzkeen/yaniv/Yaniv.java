@@ -94,6 +94,45 @@ public class Yaniv extends Activity {
 	private PlayingCard[] tempThrownArr;
 	//TODO: end remove this
 	
+
+	
+	
+
+	private PlayingCard[] createHandForTesting(int c1, char s1, int c2,
+			char s2, int c3, char s3, int c4, char s4, int c5,
+			char s5) {
+		PlayingCard[] retVal = new PlayingCard[5];
+
+		if(c1!=0 && s1 != '0'){
+			PlayingCard card1 = new PlayingCard(s1,Character.forDigit(c1, 10) );
+			card1.setSelected(true);
+			retVal[0] = card1;
+		}
+		if(c2!=0 && s2 != '0'){
+			PlayingCard card2 = new PlayingCard(s2,Character.forDigit(c2, 10) );
+			card2.setSelected(true);
+			retVal[1] = card2;
+		}
+		if(c3!=0 && s3 != '0'){
+			PlayingCard card3 = new PlayingCard(s3,Character.forDigit(c3, 10) );
+			card3.setSelected(true);
+			retVal[2] = card3;
+		}
+		if(c4!=0 && s4 != '0'){
+			PlayingCard card4 = new PlayingCard(s4,Character.forDigit(c4, 10) );
+			card4.setSelected(true);
+			retVal[3] = card4;
+		}
+		if(c5!=0 && s5 != '0'){
+			PlayingCard card5 = new PlayingCard(s5,Character.forDigit(c5, 10) );
+			card5.setSelected(true);
+			retVal[4] = card5;
+		}
+		// TODO Auto-generated method stub
+		return retVal;
+	}
+	
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -110,21 +149,16 @@ try{
 		PlayerHand p1h = new PlayerHand(null,null,t);
 			ArrayList<PlayingCard[]> cardsList = new ArrayList<PlayingCard[]>();
 			
-			PlayingCard[] pca = new PlayingCard[5];
-
-			for(Integer i = 0; i<5; i++){
-				PlayingCard c = new PlayingCard(PlayingCard.CLUBS,Character.forDigit(i, 10) );
-				c.setSelected(true);
-				pca[i] = c;
-			}
+			cardsList.add(createHandForTesting(3,PlayingCard.CLUBS,4,PlayingCard.CLUBS,5,PlayingCard.CLUBS,6,PlayingCard.CLUBS,7,PlayingCard.CLUBS));
+			System.out.println("success on 3,4,5,6,7");			
 			
-			cardsList.add(pca);
+			cardsList.add(createHandForTesting(0,'0',0,'0',0,'0',0,'0',7,PlayingCard.SPADES));
+			System.out.println("success on 7");			
+			
 			
 			for (PlayingCard[] playingCards : cardsList) {
 				p1h.cards = playingCards;
-				
 					p1h.selectCardsToDrop();
-				
 			}
 }catch (Exception e) {
 	e.printStackTrace();
@@ -247,6 +281,7 @@ try{
 			}
 		});
 	}
+
 
 	/**
 	 * Initializes all the components
