@@ -2,6 +2,11 @@ package com.sheepzkeen.yaniv;
 
 import java.util.Stack;
 
+/**
+ * this class represents a stack of cards that have been thrown to the table
+ * @author Elad
+ *
+ */
 public class ThrownCards extends PlayingCardsCollection {
 	public ThrownCards() {
 		super();

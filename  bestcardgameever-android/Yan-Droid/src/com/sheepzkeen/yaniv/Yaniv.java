@@ -18,6 +18,11 @@ import android.widget.TextView;
 
 import com.sheepzkeen.yaniv.R.id;
 
+/**
+ * The main activity of the application
+ * @author Elad
+ *
+ */
 public class Yaniv extends Activity {
 	
 	public static final int YANIV_NUM_CARDS = 5;
@@ -92,6 +97,7 @@ public class Yaniv extends Activity {
 	//TODO: remove this
 	private Dialog d;
 	private PlayingCard[] tempThrownArr;
+	private boolean firstRun;
 	//TODO: end remove this
 	
 
@@ -138,127 +144,102 @@ public class Yaniv extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		init();
+		firstRun = true;
+		
 		
 		  //////////////////
 		 //TESTING/////////
 		//////////////////
-try{
-		TextView t = new TextView(this);
-		t.setText("test");
-		PlayerHand p1h = new PlayerHand(null,null,t);
-			ArrayList<PlayingCard[]> cardsList = new ArrayList<PlayingCard[]>();
-			
-			cardsList.add(createHandForTesting(
-					'3',PlayingCard.CLUBS,
-					'4',PlayingCard.CLUBS,
-					'5',PlayingCard.CLUBS,
-					'6',PlayingCard.CLUBS,
-					'7',PlayingCard.CLUBS));
-			System.out.println("should succeed on 3,4,5,6,7");			
-			
-			cardsList.add(createHandForTesting(
-					'0','0',
-					'0','0',
-					'0','0',
-					'0','0',
-					'7',PlayingCard.SPADES));
-			System.out.println("should succeed on 7");	
-			
-//			cardsList.add(createHandForTesting(	'0','0',
-//												'0','0',
-//												'2',PlayingCard.HEARTS,
-//												'2',PlayingCard.DIAMOND,
-//												'1',PlayingCard.SPADES));
-//			System.out.println("should fail on 2,2,1 dif suits");	
-
-			cardsList.add(createHandForTesting(
-					'0','0',
-					'0','0',
-					'2',PlayingCard.HEARTS,
-					'2',PlayingCard.DIAMOND,
-					'2',PlayingCard.SPADES));
-			System.out.println("should succeed on 2,2,2 dif suits");
-
-			cardsList.add(createHandForTesting(	
-					'0','0',
-					'0','0',
-					'3',PlayingCard.HEARTS,
-					'1',PlayingCard.HEARTS,
-					'2',PlayingCard.HEARTS));
-			System.out.println("should succeed on 3,1,2 same suits");
-
-			cardsList.add(createHandForTesting(	
-					'0','0',
-					'0','0',
-					PlayingCard.JOKER,PlayingCard.HEARTS,
-					PlayingCard.QUEEN,PlayingCard.HEARTS,
-					PlayingCard.ACE,PlayingCard.HEARTS));
-			System.out.println("should succeed on q,Joker,1 same suits");
-
-			cardsList.add(createHandForTesting(	
-					'0','0',
-					'0','0',
-					PlayingCard.QUEEN,PlayingCard.HEARTS,
-					PlayingCard.KING,PlayingCard.HEARTS,
-					'1',PlayingCard.HEARTS));
-			System.out.println("should succeed on q,k,1 same suits");
-
-			for (PlayingCard[] playingCards : cardsList) {
-				p1h.cards = playingCards;
-					p1h.selectCardsToDrop();
-			}
-}catch (Exception e) {
-	e.printStackTrace();
-}
+//try{
+//		TextView t = new TextView(this);
+//		t.setText("test");
+//		PlayerHand p1h = new PlayerHand(null,null,t);
+//			ArrayList<PlayingCard[]> cardsList = new ArrayList<PlayingCard[]>();
+//			
+//			cardsList.add(createHandForTesting(
+//					'3',PlayingCard.CLUBS,
+//					'4',PlayingCard.CLUBS,
+//					'5',PlayingCard.CLUBS,
+//					'6',PlayingCard.CLUBS,
+//					'7',PlayingCard.CLUBS));
+//			System.out.println("should succeed on 3,4,5,6,7");			
+//			
+//			cardsList.add(createHandForTesting(
+//					'0','0',
+//					'0','0',
+//					'0','0',
+//					'0','0',
+//					'7',PlayingCard.SPADES));
+//			System.out.println("should succeed on 7");	
+//			
+////			cardsList.add(createHandForTesting(	'0','0',
+////												'0','0',
+////												'2',PlayingCard.HEARTS,
+////												'2',PlayingCard.DIAMOND,
+////												'1',PlayingCard.SPADES));
+////			System.out.println("should fail on 2,2,1 dif suits");	
+//
+//			cardsList.add(createHandForTesting(
+//					'0','0',
+//					'0','0',
+//					'2',PlayingCard.HEARTS,
+//					'2',PlayingCard.DIAMOND,
+//					'2',PlayingCard.SPADES));
+//			System.out.println("should succeed on 2,2,2 dif suits");
+//
+//			cardsList.add(createHandForTesting(	
+//					'0','0',
+//					'0','0',
+//					'3',PlayingCard.HEARTS,
+//					'1',PlayingCard.HEARTS,
+//					'2',PlayingCard.HEARTS));
+//			System.out.println("should succeed on 3,1,2 same suits");
+//
+//			cardsList.add(createHandForTesting(	
+//					'0','0',
+//					'0','0',
+//					PlayingCard.JOKER,PlayingCard.HEARTS,
+//					PlayingCard.QUEEN,PlayingCard.HEARTS,
+//					PlayingCard.ACE,PlayingCard.HEARTS));
+//			System.out.println("should succeed on q,Joker,1 same suits");
+//
+//			cardsList.add(createHandForTesting(	
+//					'0','0',
+//					'0','0',
+//					PlayingCard.QUEEN,PlayingCard.HEARTS,
+//					PlayingCard.KING,PlayingCard.HEARTS,
+//					'1',PlayingCard.HEARTS));
+//			System.out.println("should succeed on q,k,1 same suits");
+//
+//			for (PlayingCard[] playingCards : cardsList) {
+//				p1h.cards = playingCards;
+//					p1h.selectCardsToDrop();
+//			}
+//}catch (Exception e) {
+//	e.printStackTrace();
+//}
 			  //////////////////
 			 //END TESTING/////
 			//////////////////
 
 		
-		
+	}
+	
+	protected void onStart() {
+		super.onStart();
+		if (firstRun) {
+			init();
+			firstRun = false;
+		}
+
+		//TODO: implement save\reload here
 		
 		// Perform Yaniv Listener
 		yanivBtn.setOnClickListener(new Button.OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				p1Hand.doYaniv();
-				//TODO: Perform yaniv (call p1hand.doYaniv()), end game
-				//Note: will only be visible when yaniv is possible
-				//note 2: this ends the game, need to call score here
-				
-				// Show everyone's cards
-				o1Hand.setShouldCardsBeShown(true);
-				o2Hand.setShouldCardsBeShown(true);
-				o3Hand.setShouldCardsBeShown(true);
-				// And count the cards for each player
-				int p1Count = p1Hand.countCards();
-				int o1Count = o1Hand.countCards();
-				int o2Count = o2Hand.countCards();
-				int o3Count = o3Hand.countCards();
-				p1Name.setText(String.valueOf(p1Count));
-				o1Name.setText(String.valueOf(o1Count));
-				o2Name.setText(String.valueOf(o2Count));
-				o3Name.setText(String.valueOf(o3Count));
-				//redraw hands
-				redrawHand(p1Hand);
-				redrawHand(o1Hand);
-				redrawHand(o2Hand);
-				redrawHand(o3Hand);
-				
-				//Check if won or lost
-				ArrayList<Hand> playersByPosition = playersInOrder;
-				Collections.sort(playersByPosition);
-				if(playersByPosition.indexOf(p1Hand) == 0){
-					//P1 won
-					
-					d.setTitle("You Won!");
-					d.show();
-				}else{
-					d.setTitle(playersByPosition.get(0).getPlayerName() +" won! (you lost)");
-					d.show();
-				}
+				performYanivHandler();
 			}
 			
 		});
@@ -302,30 +283,7 @@ try{
 			
 			@Override
 			public void onTurnEnded(Hand hand){
-				if(hand.isAwaitingInput())
-				{
-					//if the hand is awaiting input, there is no point in doing anything
-					return;
-				}else{
-					//this hand has to go through the motions
-					//TODO: remove this (just a simulation of going through the players)
-					d.setCancelable(true);
-					d.setTitle("This is Player " + hand.getPlayerName());
-					d.show();
-					d.setOnCancelListener(new OnCancelListener(){
-
-						@Override
-						public void onCancel(DialogInterface dialog) {
-							// TODO Auto-generated method stub
-							turn.next();							
-						}
-						
-					});
-					
-					//TODO: end remove this
-					
-
-				}
+				turnEndedHandler(hand);
 			}
 		});
 	}
@@ -526,43 +484,7 @@ try{
 
 	}
 	
-//	/**
-//	 * Plays one round and returns the score
-//	 * 
-//	 * @param hands
-//	 *            An array of hands
-//	 * @param firstPlayer
-//	 *            index of winner from last round
-//	 * @return The score for this round
-//	 */
-//	public Score playRound(Hand[] hands, int firstPlayer) {
-//
-//		// 10. Deal cards from the deck and put a card in the thrown stack
-//		dealCards();// TODO!!!
-//
-//		int turn = firstPlayer;
-//		Hand currentHand = hands[turn];
-//		boolean gameEnded = false;
-//		// 20. while there are still cards in the deck
-//		while (deck.getRemainingCardsNo() > 0 && !gameEnded) {
-//			// 30.One player plays his hand on each iteration
-//			gameEnded = currentHand.playTurn(deck);// TODO: make sure this
-//			// affects the correct deck
-//			// (by ref)
-//
-//			// 40. advance turn to next player
-//			currentHand = hands[turn++ % 4];
-//		}
-//
-//		firstDeal = true;
-//		return calculateScore();
-//
-//	}
 
-//	private Score calculateScore() {
-//		// TODO this
-//		return null;
-//	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -576,7 +498,22 @@ try{
 			System.out.println("Orientation Landscape");
 		}
 	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		//TODO: save everything
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//TODO: restore everything
+	}
 
+	
+///////////////////////////////////////////////////////////////////////////////
+/////////////////////Handlers//////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////	
 	/**
 	 * 	what to do when one of the players cards are clicked
 	 *  mark as selected \ unselected in gameplay and update the hand
@@ -697,4 +634,109 @@ private void deckClickHandler() {
 		
 	}
 }
+
+
+private void performYanivHandler() {
+	p1Hand.doYaniv();
+	//TODO: Perform yaniv (call p1hand.doYaniv()), end game
+	//Note: will only be visible when yaniv is possible
+	//note 2: this ends the game, need to call score here
+	
+	// Show everyone's cards
+	o1Hand.setShouldCardsBeShown(true);
+	o2Hand.setShouldCardsBeShown(true);
+	o3Hand.setShouldCardsBeShown(true);
+	// And count the cards for each player
+	int p1Count = p1Hand.countCards();
+	int o1Count = o1Hand.countCards();
+	int o2Count = o2Hand.countCards();
+	int o3Count = o3Hand.countCards();
+	p1Name.setText(String.valueOf(p1Count));
+	o1Name.setText(String.valueOf(o1Count));
+	o2Name.setText(String.valueOf(o2Count));
+	o3Name.setText(String.valueOf(o3Count));
+	//redraw hands
+	redrawHand(p1Hand);
+	redrawHand(o1Hand);
+	redrawHand(o2Hand);
+	redrawHand(o3Hand);
+	
+	//Check if won or lost
+	ArrayList<Hand> playersByPosition = playersInOrder;
+	Collections.sort(playersByPosition);
+	if(playersByPosition.indexOf(p1Hand) == 0){
+		//P1 won
+		
+		d.setTitle("You Won!");
+		d.show();
+	}else{
+		d.setTitle(playersByPosition.get(0).getPlayerName() +" won! (you lost)");
+		d.show();
+	}
+}
+
+
+private void turnEndedHandler(Hand hand) {
+	if(hand.isAwaitingInput())
+	{
+		//if the hand is awaiting input, there is no point in doing anything
+		return;
+	}else{
+		//this hand has to go through the motions
+		//TODO: remove this (just a simulation of going through the players)
+		d.setCancelable(true);
+		d.setTitle("This is Player " + hand.getPlayerName());
+		d.show();
+		d.setOnCancelListener(new OnCancelListener(){
+
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				// TODO Auto-generated method stub
+				turn.next();							
+			}
+			
+		});
+		
+		//TODO: end remove this
+		
+
+	}
+}
+///**
+//* Plays one round and returns the score
+//* 
+//* @param hands
+//*            An array of hands
+//* @param firstPlayer
+//*            index of winner from last round
+//* @return The score for this round
+//*/
+//public Score playRound(Hand[] hands, int firstPlayer) {
+//
+//	// 10. Deal cards from the deck and put a card in the thrown stack
+//	dealCards();// TODO!!!
+//
+//	int turn = firstPlayer;
+//	Hand currentHand = hands[turn];
+//	boolean gameEnded = false;
+//	// 20. while there are still cards in the deck
+//	while (deck.getRemainingCardsNo() > 0 && !gameEnded) {
+//		// 30.One player plays his hand on each iteration
+//		gameEnded = currentHand.playTurn(deck);// TODO: make sure this
+//		// affects the correct deck
+//		// (by ref)
+//
+//		// 40. advance turn to next player
+//		currentHand = hands[turn++ % 4];
+//	}
+//
+//	firstDeal = true;
+//	return calculateScore();
+//
+//}
+
+//private Score calculateScore() {
+//	// TODO this
+//	return null;
+//}
 }

@@ -11,6 +11,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 
+/**
+ * A dialog box to show messages.
+ * @author Elad
+ *
+ */
 public class MyDialog extends Dialog implements OnClickListener {
 	private Button okButton;
 	public MyDialog(Context context) {

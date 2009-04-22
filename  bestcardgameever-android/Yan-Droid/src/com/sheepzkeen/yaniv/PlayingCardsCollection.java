@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.Stack;
 import com.sheepzkeen.yaniv.PlayingCard.*;
 
+/**
+ * this abstract class represents a collection of cards
+ * @author Elad
+ *
+ */
 public abstract class PlayingCardsCollection {
 
 

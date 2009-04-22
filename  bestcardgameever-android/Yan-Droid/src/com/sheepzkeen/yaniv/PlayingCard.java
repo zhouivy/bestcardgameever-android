@@ -3,6 +3,13 @@ package com.sheepzkeen.yaniv;
 import java.lang.reflect.Field;
 
 
+/**
+ * This class represents a Playing card
+ * Each card has a suit and 2 values - one is the actual value of the card
+ * and the other is the score count value (i.e. king is 13 actual and 10 scorewise)
+ * @author Elad
+ *
+ */
 public class PlayingCard implements Comparable<PlayingCard> {
 	
 	//suits
