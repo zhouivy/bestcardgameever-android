@@ -3,6 +3,12 @@ package com.sheepzkeen.yaniv;
 import java.util.Collections;
 import java.util.Stack;
 
+/**
+ * This class represents a deck of 54 cards that includes 13 cards X 4 suits + 2 jokers
+ * it has the ability to dispense a card
+ * @author Elad
+ *
+ */
 public class SingleDeck extends PlayingCardsCollection {
 	
 

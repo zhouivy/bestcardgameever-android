@@ -7,6 +7,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+/**
+ * Represents a hand of cards
+ * This abstract class is an implementation of a hand of cards that holds the cards and the UI elements
+ * and allows for basic hand actions such as pick up and drop.
+ * it also dictates the visibility and other UI properties
+ * @author Elad
+ *
+ */
 public abstract class Hand implements Comparable<Hand> {
 	protected static final int YANIV_AMOUNT = 7;
 	protected PlayingCard[] cards;

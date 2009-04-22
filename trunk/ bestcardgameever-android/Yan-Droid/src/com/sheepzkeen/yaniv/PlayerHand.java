@@ -12,6 +12,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Descendant of the Hand class @see {@link Hand}
+ * This is a hand that is controlled by a human player
+ * @author Elad
+ *
+ */
 public class PlayerHand extends Hand {
 
 	
