@@ -328,7 +328,7 @@ public class Yaniv extends Activity {
 		o1Cards = new ImageView[] { o1c1Img, o1c2Img, o1c3Img, o1c4Img,
 				o1c5Img };
 
-		o1Hand = new OpponentHand(o1Container,o1Cards, o1Name);
+		o1Hand = new OpponentHand(new BasicYanivStrategy(), o1Container,o1Cards, o1Name);
 
 		// Opponent 2
 		o2Name = (TextView) findViewById(id.o2Name);
@@ -342,7 +342,7 @@ public class Yaniv extends Activity {
 		o2Cards = new ImageView[] { o2c1Img, o2c2Img, o2c3Img, o2c4Img,
 				o2c5Img };
 
-		o2Hand = new OpponentHand(o2Container,o2Cards,o2Name);
+		o2Hand = new OpponentHand(new BasicYanivStrategy(), o2Container,o2Cards,o2Name);
 
 		// Opponent 3
 		o3Name = (TextView) findViewById(id.o3Name);
@@ -357,7 +357,7 @@ public class Yaniv extends Activity {
 		o3Cards = new ImageView[] { o3c1Img, o3c2Img, o3c3Img, o3c4Img,
 				o3c5Img };
 
-		o3Hand = new OpponentHand(o3Container,o3Cards,o3Name);
+		o3Hand = new OpponentHand(new BasicYanivStrategy(), o3Container,o3Cards,o3Name);
 		
 		// Thrown Cards 
 		thrownCards = new ThrownCards();
