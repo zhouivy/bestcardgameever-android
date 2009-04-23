@@ -46,11 +46,6 @@ public abstract class Hand implements Comparable<Hand> {
 		this.canPickup = false;
 	}
 	
-//	public Hand(PlayingCard[] cards) {
-//		this.cards = cards;
-//		firstFreeLocation = cards.length;
-//	}
-	
 	/**
 	 * Hand picks up a card
 	 * first decide if should pick up from deck or thrown cards
@@ -109,7 +104,7 @@ public abstract class Hand implements Comparable<Hand> {
 	
 	public void doYaniv(){
 		//Finish game:
-		//TODO: what?
+		//TODO: something here...
 		
 	}
 	

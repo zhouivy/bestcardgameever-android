@@ -12,7 +12,7 @@ import android.widget.TextView;
  */
 public class OpponentHand extends Hand {
 
-	public OpponentHand(View container, ImageView[] cards, TextView name) {
+	public OpponentHand(YanivStrategy strategy, View container, ImageView[] cards, TextView name) {
 		super(container,cards,name);
 		//start the game with cards hidden
 		setShouldCardsBeShown(false);
