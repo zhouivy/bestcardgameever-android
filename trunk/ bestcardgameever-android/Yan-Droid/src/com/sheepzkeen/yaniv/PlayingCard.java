@@ -150,6 +150,6 @@ public String toString() {
 @Override
 public int compareTo(PlayingCard other) {
 	
-	return other.getIntegerValue() - this.getIntegerValue();
+	return (other==null? -1 : (other.getIntegerValue()==null? 0 : other.getIntegerValue()) ) - (this.getIntegerValue()==null? 0: this.getIntegerValue());
 }
 }
