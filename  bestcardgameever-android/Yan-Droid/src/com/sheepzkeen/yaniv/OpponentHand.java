@@ -12,10 +12,13 @@ import android.widget.TextView;
  */
 public class OpponentHand extends Hand {
 
+	private YanivStrategy strategy;
+
 	public OpponentHand(YanivStrategy strategy, View container, ImageView[] cards, TextView name) {
 		super(container,cards,name);
 		//start the game with cards hidden
 		setShouldCardsBeShown(false);
+		this.strategy = strategy;
 	}
 
 
@@ -35,6 +38,7 @@ public class OpponentHand extends Hand {
 	protected void selectCardsToDrop() {
 		//TODO:AI
 		//here the hand needs to decide what to do - which card to drop - highest value X (series, sameVal or card)
+		strategy.decideDrop(cards);
 	}
 
 	@Override

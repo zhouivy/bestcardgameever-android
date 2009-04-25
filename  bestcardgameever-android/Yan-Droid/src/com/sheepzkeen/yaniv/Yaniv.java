@@ -415,13 +415,18 @@ public class Yaniv extends Activity {
 		View container = hand.getContainer();
 		
 		for (int i = 0; i < Yaniv.YANIV_NUM_CARDS; i++) {
-			if (hand.shouldCardsBeShown()) {
 				PlayingCard card = hand.getCardByLocation(i);
 				if (card != null){
 					//Show Card
 					cardView[i].setVisibility(View.VISIBLE);
-					int resId = card.getImageResourceId();
+					int resId;
+					if (hand.shouldCardsBeShown()) {
+						resId = card.getImageResourceId();
+					}else{
+						resId = R.drawable.back;
+					}
 					cardView[i].setImageResource(resId);
+
 					//TODO: Disgusting patch, need to fix asap!!!
 					if (hand == p1Hand){
 						//Show isSelected
@@ -437,14 +442,10 @@ public class Yaniv extends Activity {
 				}else{
 					cardView[i].setVisibility(View.INVISIBLE);
 				}
-			} else {
-				if (hand.getCardByLocation(i) != null) {
-					cardView[i].setImageResource(R.drawable.back);
-				}
-			}
 		}
 		
 		//TODO: problematic - this only applies to p1:
+		
 		//and show the drop cards button if needed
 		//if this and no other cards are selected, don't show the button
 		if(p1Hand.isAnyCardSelected() == false){
@@ -676,7 +677,7 @@ private void performYanivHandler() {
 }
 
 
-private void turnEndedHandler(Hand hand) {
+private void turnEndedHandler(final Hand hand) {
 	if(hand.isAwaitingInput())
 	{
 		//if the hand is awaiting input, there is no point in doing anything
@@ -691,7 +692,25 @@ private void turnEndedHandler(Hand hand) {
 
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				// TODO Auto-generated method stub
+				try {
+					//TODO: move from here and integrate with p1's mechanism for dropping and picking up.
+					tempThrownArr = hand.drop();
+					//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
+					for (PlayingCard card : tempThrownArr) {
+						if (card != null){
+							card.setSelected(false);
+						}
+					}
+					// Update the thrown cards only after the pickup (RULE)
+					thrownCards.pushMulti(tempThrownArr);
+					// And redraw the thrown deck
+					redrawThrownCards();
+					//and redraw it
+					redrawHand(hand);
+				} catch (InvalidYanivException e) {
+					d.setTitle(e.getMessage());
+					d.show();//i know it's a bug, bug it should happen irl - no way that the ai will do an invalid yaniv...
+				}
 				turn.next();							
 			}
 			
