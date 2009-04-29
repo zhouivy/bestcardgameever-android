@@ -8,6 +8,6 @@ package com.sheepzkeen.yaniv;
  */
 public interface YanivStrategy {
 	public void decideDrop(PlayingCard[] cards);
-	public PlayingCard decidePickUp();
+	public PlayingCard decidePickUp(PlayingCardsCollection thrown,PlayingCardsCollection deck);
 	public boolean decideYaniv(PlayingCard[] cards);
 }

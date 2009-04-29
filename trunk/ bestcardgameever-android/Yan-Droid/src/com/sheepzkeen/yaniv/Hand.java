@@ -34,7 +34,9 @@ public abstract class Hand implements Comparable<Hand> {
 	private boolean canDrop;
 	private boolean canPickup;
 	private boolean cardVisibility;
-
+	
+	protected YanivStrategy strategy;
+	
 	public Hand(View container, ImageView[] cardsViews, TextView name) {
 
 		this.cards = new PlayingCard[Yaniv.YANIV_NUM_CARDS];
@@ -54,7 +56,26 @@ public abstract class Hand implements Comparable<Hand> {
 	 * human player will pick up on his own
 	 * @param deck
 	 */
-	public abstract void pickup(PlayingCard card);
+	public void pickup(PlayingCardsCollection thrownCards, PlayingCardsCollection deck, PickupMethod method){
+		switch (method) {
+			case fromDeck:
+				//pickup from deck
+				addCard(deck.popTopCard());
+				break;
+			case fromThrown:
+				//pickup from thrown
+				addCard(thrownCards.popTopCard());
+				break;
+			case decidePickup:
+				//decide and add
+				if (strategy!=null){
+					addCard(strategy.decidePickUp(thrownCards,deck));
+				}else{
+					addCard(deck.popTopCard());
+				}
+				break;
+		}
+	}
 	
 	public PlayingCard getCardByLocation(int location) {
 		return cards[location];
