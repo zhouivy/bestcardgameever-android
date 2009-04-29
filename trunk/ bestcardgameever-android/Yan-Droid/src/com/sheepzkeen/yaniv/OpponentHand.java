@@ -32,4 +32,9 @@ public class OpponentHand extends Hand {
 	public boolean isAwaitingInput() {
 		return false;
 	}
+
+	@Override
+	protected boolean shouldYaniv() {
+		return strategy.decideYaniv(cards);
+	}
 }

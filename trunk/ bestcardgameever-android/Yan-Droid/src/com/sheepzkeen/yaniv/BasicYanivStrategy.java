@@ -45,14 +45,14 @@ public class BasicYanivStrategy implements YanivStrategy {
 		
 		
 		// find highest set (7,7,7 etc.)
-		// first go over all cards and add 1 for each card value
+		// first go over all cards and add 1 in the appropriate bucket for each card found
 		int[] buckets = new int[14];
 		for (int i = 0; i < cardsWithoutNulls.length; i++) {
 			PlayingCard card = cardsWithoutNulls[i];
 			int location = card.getIntegerValue()==null ? 0:card.getIntegerValue();
 			buckets[location]++;
 		}
-		// now find the highest value set by multiplying the value with the number of occurences
+		// now find the highest value set by multiplying the value with the number of occurrences
 		int highestValSetCardVal=-1;
 		for (int i = 1; i < buckets.length; i++) {
 			int numCardsInBucket = buckets[i];
@@ -66,7 +66,7 @@ public class BasicYanivStrategy implements YanivStrategy {
 		// (assuming a set was found)
 		if(highestValSetCardVal != -1){
 			for (PlayingCard card : cardsWithoutNulls) {
-				if(card.getIntegerValue() == highestValSetCardVal){
+				if(card.getIntegerValue() != null && card.getIntegerValue()== highestValSetCardVal){
 					highestValSet.add(card);
 				}
 			}
@@ -152,9 +152,11 @@ public class BasicYanivStrategy implements YanivStrategy {
 		return retVal;
 	}
 
+	
+	//TODO: this method does not drop QKA types of series because does not recognize 'A' as 14 - need to fix!
 	/**
 	 * returns an {@link ArrayList} of cards which represents a series of cards that can be thrown
-	 * if there is none, returns an empty {@link ArrayList} object
+	 * if there is none, returns an empty {@link ArrayList} (not null) object
 	 * @param cards the playing cards in the hand
 	 * @param jokers the jokers in the hand
 	 * @param suitedCardList cards of the same suit
@@ -172,22 +174,36 @@ public class BasicYanivStrategy implements YanivStrategy {
 			for (int i = 1; i < suitedCardList.size(); i++) {
 				PlayingCard currentCard = suitedCardList.get(i);
 				PlayingCard previousSuitedCard = suitedCardList.get(i-1);
-				if(previousSuitedCard.getIntegerValue() -currentCard.getIntegerValue() - 1 <=numAvailableJokers){
+
+				int diff = previousSuitedCard.getIntegerValue() - currentCard.getIntegerValue();
+				//check if this card and the one before it are separated by the number of jokers (can be a series)
+				if(diff  <= 1 + numAvailableJokers){
+					//add the previous card (if not added before) to the list
 					if(!tmpHighestValSeries.contains(previousSuitedCard)){
 						tmpHighestValSeries.add(previousSuitedCard);
 					}
-					int diff = previousSuitedCard.getIntegerValue() - currentCard.getIntegerValue();
-					if(diff >1){
-						numAvailableJokers-=diff;
-						tmpHighestValSeries.add(jokers.get(jokerIndex++));
+					//if the difference is more than one, add the jokers to the list and remove appropriate amount of jokers from numAvailableJokers
+					if(diff > 1){
+						for (int j = 0; j < diff-1; j++) {
+							numAvailableJokers--;
+							tmpHighestValSeries.add(jokers.get(jokerIndex++));
+						}
+						
 					}
+					//then add the current card
 					tmpHighestValSeries.add(currentCard);
 					
 				}
 			}
-		}
-		if(tmpHighestValSeries.size()==2){
-			tmpHighestValSeries.add(jokers.get(jokerIndex));//TODO KEEP DEBUG ON!
+			//add jokers to ends - because this is a basic strategy - this is allowed, otherwise - it would be stupid to drop a joker for the next player to pick up
+			if(tmpHighestValSeries.size()==2){
+					if(numAvailableJokers>0){
+						tmpHighestValSeries.add(jokers.get(jokerIndex));//TODO KEEP DEBUG ON! possible bug here!
+					}else{
+						//series is size 2 and not enough jokers to make it 3 - reset it
+						tmpHighestValSeries = new ArrayList<PlayingCard>();
+					}
+			}
 		}
 		return tmpHighestValSeries;
 	}
@@ -211,6 +227,7 @@ public class BasicYanivStrategy implements YanivStrategy {
 	 */
 	@Override
 	public boolean decideYaniv(PlayingCard[] cards) {
+		//basic strategy, always do yaniv. (in more elaborate strategies, will count turns or other people's card count and decide according to that)
 		return true;
 	}
 

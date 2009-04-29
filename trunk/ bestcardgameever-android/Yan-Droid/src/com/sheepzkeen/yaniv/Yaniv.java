@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
@@ -98,6 +100,8 @@ public class Yaniv extends Activity {
 	private Dialog d;
 	private PlayingCard[] tempThrownArr;
 	private boolean firstRun;
+	private boolean isCheating;
+	private String cheatString;
 	//TODO: end remove this
 	
 
@@ -294,7 +298,7 @@ public class Yaniv extends Activity {
 	 */
 	private void init() {
 		firstDeal = true;
-
+		cheatString = new String();
 		//TODO: remove this
 		d = new Dialog(this);
 		d.setTitle("hello");
@@ -461,7 +465,7 @@ public class Yaniv extends Activity {
 			yanivBtn.setVisibility(View.GONE);
 		}
 		
-	
+		
 		container.postInvalidate();
 
 	}
@@ -650,6 +654,9 @@ private void performYanivHandler() {
 		d.setTitle(playersByPosition.get(0).getPlayerName() +" won! (you lost)");
 		d.show();
 	}
+	//end game and add to scores
+	//playersInOrder = winner is first and others after him clockwise 
+	//turn = new Turn<Hand>(playersInOrder);
 }
 
 
@@ -669,6 +676,9 @@ private void turnEndedHandler(final Hand hand) {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				try {
+					//First perform yaniv if startegy dictates it
+					hand.doYaniv();
+					
 					//TODO: move from here and integrate with p1's mechanism for dropping and picking up.
 					tempThrownArr = hand.drop();
 					//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
@@ -678,13 +688,7 @@ private void turnEndedHandler(final Hand hand) {
 						}
 					}
 					
-					
-					//3rd approach
 					hand.pickup(thrownCards,deck,PickupMethod.decidePickup);
-					//PickupMethod --> PickupFromDeck, PickupFromThrown, DecidePickup
-					// deckClickHandler & ThrownCardsClickHandler will both call the same method only with PickupFromDeck and PickupFromThrown accrodingly 
-					
-					
 					
 					// Update the thrown cards only after the pickup (RULE)
 					thrownCards.pushMulti(tempThrownArr);
@@ -743,4 +747,56 @@ private void turnEndedHandler(final Hand hand) {
 //	// TODO this
 //	return null;
 //}
+
+private void toggleCheat() {
+	isCheating = !isCheating;
+	if(isCheating){
+		d.setTitle("Cheater!");
+		d.show();
+	}
+		// Show everyone's cards
+		o1Hand.setShouldCardsBeShown(isCheating);
+		redrawHand(o1Hand);
+		o2Hand.setShouldCardsBeShown(isCheating);
+		redrawHand(o2Hand);
+		o3Hand.setShouldCardsBeShown(isCheating);
+		redrawHand(o3Hand);
+
+}
+
+@Override
+public boolean onKeyDown(int keyCode, KeyEvent event) {
+switch (keyCode) {
+case KeyEvent.KEYCODE_E:
+	cheatString = "e";
+	break;
+case KeyEvent.KEYCODE_L:
+	if(cheatString.equals("e")){
+		cheatString = "el";
+	}else{
+		cheatString = "";
+	}
+	break;
+case KeyEvent.KEYCODE_A:
+	if(cheatString.equals("el")){
+		cheatString = "ela";
+	}else{
+		cheatString = "";
+	}
+	break;
+case KeyEvent.KEYCODE_D:
+	if(cheatString.equals("ela")){
+		toggleCheat();
+	}
+	cheatString = "";
+
+	break;
+default:
+	cheatString = "";
+	break;
+}
+	
+	Log.d("CHEATING", "Key pressed:"+ (char)keyCode + ", cheatString is now:"+cheatString+", cheat is "+(isCheating? "en":"dis")+"abled.");
+	return false;
+}
 }
