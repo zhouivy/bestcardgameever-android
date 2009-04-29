@@ -217,7 +217,7 @@ public abstract class Hand implements Comparable<Hand> {
 		return cards[cardIndex].isSelected();
 	}
 	
-	public boolean isAnyCardSelected(){
+	public boolean hasSelectedCard(){
 		for (PlayingCard card : cards) {
 			if (!(card == null) && card.isSelected())
 				return true;
