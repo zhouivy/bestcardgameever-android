@@ -120,10 +120,18 @@ public abstract class Hand implements Comparable<Hand> {
 
 	public boolean canYaniv(){
 		
-		return countCards()<=YANIV_AMOUNT;
+		if (countCards()<=YANIV_AMOUNT) {
+			return shouldYaniv();
+		}else{
+			return false;
+		}
+		
 	}
 	
+	protected abstract boolean shouldYaniv();
+	
 	public void doYaniv(){
+
 		//Finish game:
 		//TODO: something here...
 		

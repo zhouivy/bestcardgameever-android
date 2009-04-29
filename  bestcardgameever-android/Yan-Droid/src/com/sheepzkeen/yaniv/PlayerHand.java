@@ -172,6 +172,14 @@ public class PlayerHand extends Hand {
 	public boolean isAwaitingInput() {
 		return true;
 	}
+
+
+
+	@Override
+	protected boolean shouldYaniv() {
+		// depends on the players judgment, therefore always true
+		return true;
+	}
 	
 
 	
