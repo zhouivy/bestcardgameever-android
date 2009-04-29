@@ -452,7 +452,7 @@ public class Yaniv extends Activity {
 		
 		//and show the drop cards button if needed
 		//if this and no other cards are selected, don't show the button
-		if(p1Hand.isAnyCardSelected() == false){
+		if(p1Hand.hasSelectedCard() == false){
 			dropCardsBtn.setVisibility(View.GONE);
 		}else{
 			dropCardsBtn.setVisibility(View.VISIBLE);
@@ -585,6 +585,10 @@ private void deckClickHandler() {
 
 private void p1Pickup(PickupMethod method){
 
+	//usability fix:
+	if(p1Hand.hasSelectedCard()){
+		dropCardsClickHandler();
+	}
 	// First verify that it is the player's turn and that he is
 	// eligible for pickup
 	if(p1Hand.canPickup() && turn.peek().isAwaitingInput() == true && turn.peek().getCanPickup() == true){

@@ -180,6 +180,9 @@ public class PlayerHand extends Hand {
 		// depends on the players judgment, therefore always true
 		return true;
 	}
+
+
+
 	
 
 	
