@@ -104,40 +104,40 @@ public class Yaniv extends Activity {
 	
 	
 
-	private PlayingCard[] createHandForTesting(char c1, char s1, char c2,
-			char s2, char c3, char s3, char c4, char s4, char c5,
-			char s5) {
-		PlayingCard[] retVal = new PlayingCard[5];
-
-		if(s1 != '0'){
-			PlayingCard card1 = new PlayingCard(s1,c1 );
-			card1.setSelected(true);
-			retVal[0] = card1;
-		}
-		if(s2 != '0'){
-			PlayingCard card2 = new PlayingCard(s2,c2 );
-			card2.setSelected(true);
-			retVal[1] = card2;
-		}
-		if(s3 != '0'){
-			PlayingCard card3 = new PlayingCard(s3,c3 );
-			card3.setSelected(true);
-			retVal[2] = card3;
-		}
-		if(s4 != '0'){
-			PlayingCard card4 = new PlayingCard(s4,c4 );
-			card4.setSelected(true);
-			retVal[3] = card4;
-		}
-		if(s5 != '0'){
-			PlayingCard card5 = new PlayingCard(s5,c5 );
-			card5.setSelected(true);
-			retVal[4] = card5;
-		}
-		// TODO Auto-generated method stub
-		return retVal;
-	}
-	
+//	private PlayingCard[] createHandForTesting(char c1, char s1, char c2,
+//			char s2, char c3, char s3, char c4, char s4, char c5,
+//			char s5) {
+//		PlayingCard[] retVal = new PlayingCard[5];
+//
+//		if(s1 != '0'){
+//			PlayingCard card1 = new PlayingCard(s1,c1 );
+//			card1.setSelected(true);
+//			retVal[0] = card1;
+//		}
+//		if(s2 != '0'){
+//			PlayingCard card2 = new PlayingCard(s2,c2 );
+//			card2.setSelected(true);
+//			retVal[1] = card2;
+//		}
+//		if(s3 != '0'){
+//			PlayingCard card3 = new PlayingCard(s3,c3 );
+//			card3.setSelected(true);
+//			retVal[2] = card3;
+//		}
+//		if(s4 != '0'){
+//			PlayingCard card4 = new PlayingCard(s4,c4 );
+//			card4.setSelected(true);
+//			retVal[3] = card4;
+//		}
+//		if(s5 != '0'){
+//			PlayingCard card5 = new PlayingCard(s5,c5 );
+//			card5.setSelected(true);
+//			retVal[4] = card5;
+//		}
+//		// TODO Auto-generated method stub
+//		return retVal;
+//	}
+//	
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -401,12 +401,12 @@ public class Yaniv extends Activity {
 		for (int i = 0; i < Yaniv.YANIV_NUM_CARDS; i++) {
 			
 			for (Hand hand : playersInOrder) {
-				hand.pickup(deck.dealOneCard());
+				hand.addCard(deck.popTopCard());
 				redrawHand(hand);
 			}
 		}
 		// after dealing, put a card on the table for pick up
-		thrownCards.push(deck.dealOneCard());
+		thrownCards.push(deck.popTopCard());
 		redrawThrownCards();
 	}
 
@@ -561,36 +561,7 @@ public class Yaniv extends Activity {
  */
 private void thrownCardsClickHandler() {
 	// When the last thrown card is clicked it is picked up
-	// First verify that it is the player's turn and that he is
-	// eligible for pickup
-	if (p1Hand.canPickup() && turn.peek().isAwaitingInput() == true && turn.peek().getCanPickup() == true ) {
-		// Get one card from the thrown deck
-		PlayingCard tempCard = thrownCards.popLastCardThrown();
-		// fill virtual hand on first available place
-		p1Hand.pickup(tempCard);
-		// Rule: after pickup you are allowed to drop again 
-		p1Hand.setCanDrop(true);
-		// Rule: after pickup you are not allowed to pickup again 
-		p1Hand.setCanPickup(false);
-		
-		//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
-		for (PlayingCard card : tempThrownArr) {
-			if (card != null){
-				card.setSelected(false);
-			}
-		}
-		//Update the thrown cards only after the pickup (RULE)
-		thrownCards.pushMulti(tempThrownArr);
-
-		// redraw it
-		redrawHand(p1Hand);
-		// and the thrown card deck
-		redrawThrownCards();
-		turn.next();
-	} else {
-		//show a dialog box saying 'cant pick up' or something
-		uhOhDialog1.show();
-	}
+	p1Pickup(PickupMethod.fromThrown);
 }
 
 /**
@@ -604,35 +575,40 @@ private void deckClickHandler() {
 		dealCards();
 		firstDeal = false;
 	} else {
-		if(p1Hand.canPickup() && turn.peek().isAwaitingInput() == true && turn.peek().getCanPickup() == true){
-			// Get one card from the deck
-			PlayingCard currentCard = deck.dealOneCard();
-			// fill virtual hand on first available place
-			p1Hand.pickup(currentCard);
-			// Rule: after pickup you are allowed to drop again
-			p1Hand.setCanDrop(true);
-			// Rule: after pickup you are not allowed to pickup again 
-			p1Hand.setCanPickup(false);
+		p1Pickup(PickupMethod.fromDeck);
+	}
+}
 
-			//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
-			for (PlayingCard card : tempThrownArr) {
-				if (card != null){
-					card.setSelected(false);
-				}
+private void p1Pickup(PickupMethod method){
+
+	// First verify that it is the player's turn and that he is
+	// eligible for pickup
+	if(p1Hand.canPickup() && turn.peek().isAwaitingInput() == true && turn.peek().getCanPickup() == true){
+		// fill virtual hand on first available place
+		p1Hand.pickup(thrownCards,deck,method);
+
+		// Rule: after pickup you are allowed to drop again
+		p1Hand.setCanDrop(true);
+		// Rule: after pickup you are not allowed to pickup again 
+		p1Hand.setCanPickup(false);
+
+		//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
+		for (PlayingCard card : tempThrownArr) {
+			if (card != null){
+				card.setSelected(false);
 			}
-			// Update the thrown cards only after the pickup (RULE)
-			thrownCards.pushMulti(tempThrownArr);
-			// And redraw the thrown deck
-			redrawThrownCards();
-			
-			//and redraw it
-			redrawHand(p1Hand);
-			turn.next();
-		}else{
-			//show a dialog box saying 'cant pick up' or something
-			uhOhDialog1.show();
 		}
-		
+		// Update the thrown cards only after the pickup (RULE)
+		thrownCards.pushMulti(tempThrownArr);
+		// redraw the thrown deck
+		redrawThrownCards();
+		// redraw the hand
+		redrawHand(p1Hand);
+		//and advance a turn
+		turn.next();
+	}else{
+		//show a dialog box saying 'cant pick up' or something
+		uhOhDialog1.show();
 	}
 }
 
@@ -701,6 +677,15 @@ private void turnEndedHandler(final Hand hand) {
 							card.setSelected(false);
 						}
 					}
+					
+					
+					//3rd approach
+					hand.pickup(thrownCards,deck,PickupMethod.decidePickup);
+					//PickupMethod --> PickupFromDeck, PickupFromThrown, DecidePickup
+					// deckClickHandler & ThrownCardsClickHandler will both call the same method only with PickupFromDeck and PickupFromThrown accrodingly 
+					
+					
+					
 					// Update the thrown cards only after the pickup (RULE)
 					thrownCards.pushMulti(tempThrownArr);
 					// And redraw the thrown deck

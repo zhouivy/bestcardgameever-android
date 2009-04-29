@@ -35,15 +35,6 @@ public class SingleDeck extends PlayingCardsCollection {
 		
 	}
 	
-	/**
-	 * returns the next card from the deck and removes it
-	 * @return The next card from the deck and removes it
-	 */
-	public PlayingCard dealOneCard(){
-		return cards.pop();
-		
-		
-		
-	}
+
 
 }

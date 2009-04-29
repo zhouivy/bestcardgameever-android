@@ -12,7 +12,7 @@ import android.widget.TextView;
  */
 public class OpponentHand extends Hand {
 
-	private YanivStrategy strategy;
+
 
 	public OpponentHand(YanivStrategy strategy, View container, ImageView[] cards, TextView name) {
 		super(container,cards,name);
@@ -20,19 +20,6 @@ public class OpponentHand extends Hand {
 		setShouldCardsBeShown(false);
 		this.strategy = strategy;
 	}
-
-
-	@Override
-	public void pickup(PlayingCard card) {
-		if(card != null){
-			addCard(card);
-		}else{
-			//no card given, need to decide which card to pickup
-		}
-		// TODO AI
-
-	}
-
 
 	@Override
 	protected void selectCardsToDrop() {

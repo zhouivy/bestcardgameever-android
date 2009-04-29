@@ -14,6 +14,8 @@ import java.util.Arrays;
  */
 public class BasicYanivStrategy implements YanivStrategy {
 
+	private static final Integer PICKUP_THRESHOLD = 7;
+
 	/* (non-Javadoc)
 	 * @see com.sheepzkeen.yaniv.YanivStrategy#decideDrop()
 	 */
@@ -194,8 +196,12 @@ public class BasicYanivStrategy implements YanivStrategy {
 	 * @see com.sheepzkeen.yaniv.YanivStrategy#decidePickUp()
 	 */
 	@Override
-	public PlayingCard decidePickUp() {
-		return null;
+	public PlayingCard decidePickUp(PlayingCardsCollection thrown, PlayingCardsCollection deck) {
+		if (thrown.peekTopCard().getIntegerValue()<PICKUP_THRESHOLD){
+			return thrown.popTopCard();
+		}else{
+			return deck.popTopCard();
+		}
 		// TODO Auto-generated method stub
 
 	}

@@ -1,10 +1,8 @@
 package com.sheepzkeen.yaniv;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -161,15 +159,6 @@ public class PlayerHand extends Hand {
 			}
 		}
 	}
-
-
-
-	@Override
-	public void pickup(PlayingCard card) {
-		addCard(card);
-	}
-	
-	
 
 	/**
 	 * returns true iff the player is currently in a state when he can pickup a card (from the thrown or deck)

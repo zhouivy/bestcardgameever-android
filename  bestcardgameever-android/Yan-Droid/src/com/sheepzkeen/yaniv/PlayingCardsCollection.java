@@ -1,11 +1,7 @@
 package com.sheepzkeen.yaniv;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Stack;
-import com.sheepzkeen.yaniv.PlayingCard.*;
 
 /**
  * this abstract class represents a collection of cards
@@ -36,5 +32,19 @@ public abstract class PlayingCardsCollection {
 	public int getRemainingCardsNo() {
 		return cards.toArray().length;
 	}
+	
+	/**
+	 * Returns the next card from the Collection and removes it
+	 * @return The next card from the Collection and removes it
+	 */
+	public PlayingCard popTopCard() {
+		//if no cards, exception will be thrown - TODO: fix this bug for deck! (won't happen on thrown cards)
+		PlayingCard retVal = cards.pop();
+		return retVal;
 
+	}
+	
+	protected final PlayingCard peekTopCard(){
+		return cards.peek();
+	}
 }
