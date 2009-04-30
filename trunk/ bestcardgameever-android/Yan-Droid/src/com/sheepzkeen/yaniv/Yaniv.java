@@ -104,45 +104,8 @@ public class Yaniv extends Activity {
 	private String cheatString;
 	//TODO: end remove this
 	
-
-	
 	
 
-//	private PlayingCard[] createHandForTesting(char c1, char s1, char c2,
-//			char s2, char c3, char s3, char c4, char s4, char c5,
-//			char s5) {
-//		PlayingCard[] retVal = new PlayingCard[5];
-//
-//		if(s1 != '0'){
-//			PlayingCard card1 = new PlayingCard(s1,c1 );
-//			card1.setSelected(true);
-//			retVal[0] = card1;
-//		}
-//		if(s2 != '0'){
-//			PlayingCard card2 = new PlayingCard(s2,c2 );
-//			card2.setSelected(true);
-//			retVal[1] = card2;
-//		}
-//		if(s3 != '0'){
-//			PlayingCard card3 = new PlayingCard(s3,c3 );
-//			card3.setSelected(true);
-//			retVal[2] = card3;
-//		}
-//		if(s4 != '0'){
-//			PlayingCard card4 = new PlayingCard(s4,c4 );
-//			card4.setSelected(true);
-//			retVal[3] = card4;
-//		}
-//		if(s5 != '0'){
-//			PlayingCard card5 = new PlayingCard(s5,c5 );
-//			card5.setSelected(true);
-//			retVal[4] = card5;
-//		}
-//		// TODO Auto-generated method stub
-//		return retVal;
-//	}
-//	
-	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -151,77 +114,14 @@ public class Yaniv extends Activity {
 		firstRun = true;
 		
 		
-		  //////////////////
-		 //TESTING/////////
-		//////////////////
-//try{
-//		TextView t = new TextView(this);
-//		t.setText("test");
-//		PlayerHand p1h = new PlayerHand(null,null,t);
-//			ArrayList<PlayingCard[]> cardsList = new ArrayList<PlayingCard[]>();
-//			
-//			cardsList.add(createHandForTesting(
-//					'3',PlayingCard.CLUBS,
-//					'4',PlayingCard.CLUBS,
-//					'5',PlayingCard.CLUBS,
-//					'6',PlayingCard.CLUBS,
-//					'7',PlayingCard.CLUBS));
-//			System.out.println("should succeed on 3,4,5,6,7");			
-//			
-//			cardsList.add(createHandForTesting(
-//					'0','0',
-//					'0','0',
-//					'0','0',
-//					'0','0',
-//					'7',PlayingCard.SPADES));
-//			System.out.println("should succeed on 7");	
-//			
-////			cardsList.add(createHandForTesting(	'0','0',
-////												'0','0',
-////												'2',PlayingCard.HEARTS,
-////												'2',PlayingCard.DIAMOND,
-////												'1',PlayingCard.SPADES));
-////			System.out.println("should fail on 2,2,1 dif suits");	
-//
-//			cardsList.add(createHandForTesting(
-//					'0','0',
-//					'0','0',
-//					'2',PlayingCard.HEARTS,
-//					'2',PlayingCard.DIAMOND,
-//					'2',PlayingCard.SPADES));
-//			System.out.println("should succeed on 2,2,2 dif suits");
-//
-//			cardsList.add(createHandForTesting(	
-//					'0','0',
-//					'0','0',
-//					'3',PlayingCard.HEARTS,
-//					'1',PlayingCard.HEARTS,
-//					'2',PlayingCard.HEARTS));
-//			System.out.println("should succeed on 3,1,2 same suits");
-//
-//			cardsList.add(createHandForTesting(	
-//					'0','0',
-//					'0','0',
-//					PlayingCard.JOKER,PlayingCard.HEARTS,
-//					PlayingCard.QUEEN,PlayingCard.HEARTS,
-//					PlayingCard.ACE,PlayingCard.HEARTS));
-//			System.out.println("should succeed on q,Joker,1 same suits");
-//
-//			cardsList.add(createHandForTesting(	
-//					'0','0',
-//					'0','0',
-//					PlayingCard.QUEEN,PlayingCard.HEARTS,
-//					PlayingCard.KING,PlayingCard.HEARTS,
-//					'1',PlayingCard.HEARTS));
-//			System.out.println("should succeed on q,k,1 same suits");
-//
-//			for (PlayingCard[] playingCards : cardsList) {
-//				p1h.cards = playingCards;
-//					p1h.selectCardsToDrop();
-//			}
-//}catch (Exception e) {
-//	e.printStackTrace();
-//}
+			  //////////////////
+			 //TESTING/////////
+			//////////////////
+		
+		TestDropCardsAlgorithm tests = new TestDropCardsAlgorithm(this);
+		tests.testCardsCombination();
+		
+
 			  //////////////////
 			 //END TESTING/////
 			//////////////////
