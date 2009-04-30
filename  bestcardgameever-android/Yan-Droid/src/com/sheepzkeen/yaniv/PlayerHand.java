@@ -34,7 +34,7 @@ public class PlayerHand extends Hand {
 	protected void selectCardsToDrop() throws InvalidYanivException {
 		//Do nothing here, selection was performed by the drop action
 		verifyCardsToDrop();
-		System.out.println("success on " + this.toString());
+		//System.out.println("success on " + this.toString());
 	}
 
 
@@ -62,7 +62,7 @@ public class PlayerHand extends Hand {
 		//0 - initialize
 		int jokerCount = 0;
 		ArrayList<PlayingCard> jokers = new ArrayList<PlayingCard>();
-		boolean suitsAreDifferent = true;
+		boolean suitsAreDifferent = false;//true;
 		Set<Character> suitsInCards = new HashSet<Character>();
 		PlayingCard aceInCards = null;
 		List<PlayingCard> cardsToCheck = new ArrayList<PlayingCard>();
@@ -87,15 +87,17 @@ public class PlayerHand extends Hand {
 			//allow
 			return;
 		}
+		
 		//3	different suits?
-		for (PlayingCard card : cardsToCheck) {
-			if(suitsInCards.contains(card.getSuit())){
-				//this suit has already appeared once
-				suitsAreDifferent = false;
-			}else{
-				suitsInCards.add(card.getSuit());//TODO: Bug here - change to count after inserts - if less in set than in list - there are duplicates -> different suits
+		char suit = cardsToCheck.get(0).getSuit(); // get the suit of the first card
+		for (PlayingCard card : cardsToCheck) 
+		    {
+			    if(suit != card.getSuit())
+				{
+					suitsAreDifferent = true;
+					break;
+			    }
 			}
-		}
 		
 		//3.1 check same value
 		PlayingCard lastCardChecked = null;
@@ -103,7 +105,7 @@ public class PlayerHand extends Hand {
 			for (PlayingCard card : cardsToCheck) {
 				if(lastCardChecked != null && lastCardChecked.getIntegerValue() != card.getIntegerValue()){
 					//Reject
-					throw new InvalidYanivException("Cards of different suits must have same value!");
+					throw new InvalidYanivException("(YE001)Cards of different suits must have same value!");
 				}
 				lastCardChecked = card;
 			}
@@ -112,7 +114,7 @@ public class PlayerHand extends Hand {
 			//4.1 not enough cards
 			if(cardsToCheck.size() < 3 && jokerCount == 0){ //todo:change to cardstochek.size()+jokercount<3
 				//Reject
-				throw new InvalidYanivException("Cards have same suit, but are not enough to complete a series! " +
+				throw new InvalidYanivException("(YE002)Cards have same suit, but are not enough to complete a series! " +
 						"(only " + cardsToCheck.size() + " cards dropped and no jokers)");
 			}
 			//4.2 ace removal
@@ -137,11 +139,11 @@ public class PlayerHand extends Hand {
 					//4.4.1.2
 					if(differenceBetweenThisAndNextCardVal - 1 > jokerCount){
 						//reject
-						throw new InvalidYanivException("Cards have same suit, " +
+						throw new InvalidYanivException("(YE003) Cards have same suit, " +
 								"but the difference between them is too big"+ (jokerCount>0? ", even with your jokers. ":".") +
 								"(cards: "+ cardsToCheck.get(i) + " and " + cardsToCheck.get(i+1)+")");
 					}else{
-						jokerCount = jokerCount - differenceBetweenThisAndNextCardVal - 1;
+						jokerCount = jokerCount - (differenceBetweenThisAndNextCardVal - 1);
 					}
 				}
 					
@@ -151,12 +153,15 @@ public class PlayerHand extends Hand {
 		if(aceInCards != null){
 			//highest\lowest 2\13
 			if((cardsToCheck.get(0).getIntegerValue() + jokerCount == 13) ||
-					(cardsToCheck.get(cardsToCheck.size()-1).getIntegerValue() - jokerCount == 2)){
+					(cardsToCheck.get(cardsToCheck.size()-1).getIntegerValue() - jokerCount == 2) ||
+					(cardsToCheck.get(0).getIntegerValue() == 13) ||
+					(cardsToCheck.get(cardsToCheck.size()-1).getIntegerValue() == 2)){
 				//OK
 			}else{
 				//reject
-				throw new InvalidYanivException("Cards have at least one ace that cannot be attached to series.");
+				throw new InvalidYanivException("(YE004)Cards have at least one ace that cannot be attached to series.");
 			}
+			
 		}
 	}
 
