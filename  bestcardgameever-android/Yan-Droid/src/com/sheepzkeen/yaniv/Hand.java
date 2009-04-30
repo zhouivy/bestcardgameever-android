@@ -2,6 +2,7 @@ package com.sheepzkeen.yaniv;
 
 import java.util.ArrayList;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -131,7 +132,10 @@ public abstract class Hand implements Comparable<Hand> {
 	protected abstract boolean shouldYaniv();
 	
 	public void doYaniv(){
-
+		if(shouldYaniv()){
+			//do yaniv...
+			Log.e("Yaniv", "This is where the yaniv would have been performed by the AI");
+		}
 		//Finish game:
 		//TODO: something here...
 		

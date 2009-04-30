@@ -146,7 +146,7 @@ public class BasicYanivStrategy implements YanivStrategy {
 		if(currentSeries.size()>=3){
 			retVal=0;
 			for (PlayingCard card : currentSeries) {
-				retVal+=card.getIntegerValue();
+				retVal+=card.getIntegerValue();//TODO: bug here - card is null
 			}
 		}
 		return retVal;
