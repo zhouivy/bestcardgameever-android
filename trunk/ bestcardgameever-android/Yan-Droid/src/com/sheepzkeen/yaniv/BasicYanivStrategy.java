@@ -37,13 +37,13 @@ public class BasicYanivStrategy implements YanivStrategy {
 		}
 		PlayingCard[] cardsWithoutNulls = new PlayingCard[tmpCards.size()];
 		tmpCards.toArray(cardsWithoutNulls);
-		
+
 		// find highest single card
 		Arrays.sort(cardsWithoutNulls);
 		highestValCard.add(cardsWithoutNulls[0]);
 		highestValCardWorth = highestValCard.get(0).getCountValue();
-		
-		
+
+
 		// find highest set (7,7,7 etc.)
 		// first go over all cards and add 1 in the appropriate bucket for each card found
 		int[] buckets = new int[14];
@@ -71,8 +71,8 @@ public class BasicYanivStrategy implements YanivStrategy {
 				}
 			}
 		}
-		
-		
+
+
 		// divide cards by suit and find highest value series
 		ArrayList<PlayingCard> clubs = new ArrayList<PlayingCard>();
 		ArrayList<PlayingCard> spades = new ArrayList<PlayingCard>();		
@@ -101,7 +101,7 @@ public class BasicYanivStrategy implements YanivStrategy {
 			default:
 				break;
 			}
-			
+
 		}
 		//for each suit - get the set that is possible to make from it
 		ArrayList<PlayingCard> spadesSeries = checkSeriesInSuit(jokers, spades);
@@ -122,13 +122,13 @@ public class BasicYanivStrategy implements YanivStrategy {
 				highestValSeries = currentSeries;
 			}
 		}
-		
+
 		//decide best option
-		if(highestValSeriesWorth> highestValSetWorth
-				&& highestValSeriesWorth > highestValCardWorth){
+		if(highestValSeriesWorth>= highestValSetWorth
+				&& highestValSeriesWorth >= highestValCardWorth){
 			//series
 			cardsToDrop = highestValSeries;
-		}else if(highestValSetWorth>highestValCardWorth){
+		}else if(highestValSetWorth>=highestValCardWorth){
 			//set
 			cardsToDrop = highestValSet;
 		}else{
@@ -138,6 +138,9 @@ public class BasicYanivStrategy implements YanivStrategy {
 		//and mark as selected
 		for (PlayingCard card : cardsToDrop) {
 			card.setSelected(true);
+
+			//for testing only!!
+			TestDecideDropCardsAlgorithm.addCardToDropCardList(card);
 		}
 	}
 
@@ -146,14 +149,15 @@ public class BasicYanivStrategy implements YanivStrategy {
 		if(currentSeries.size()>=3){
 			retVal=0;
 			for (PlayingCard card : currentSeries) {
-				retVal+=card.getIntegerValue();//TODO: bug here - card is null
+				retVal+=card.getCountValue();
 			}
 		}
 		return retVal;
 	}
 
-	
-	//TODO: this method does not drop QKA types of series because does not recognize 'A' as 14 - need to fix!
+
+
+
 	/**
 	 * returns an {@link ArrayList} of cards which represents a series of cards that can be thrown
 	 * if there is none, returns an empty {@link ArrayList} (not null) object
@@ -168,6 +172,8 @@ public class BasicYanivStrategy implements YanivStrategy {
 		ArrayList<PlayingCard> tmpHighestValSeries = new ArrayList<PlayingCard>();
 		int jokerIndex=0;
 		int numAvailableJokers = jokers.size();
+		PlayingCard aceInCards = null;
+
 		//first check if the series is possible - cards + jokers >=3
 		if (suitedCardList.size()+jokers.size()>=3){
 			//go over the cards
@@ -175,36 +181,75 @@ public class BasicYanivStrategy implements YanivStrategy {
 				PlayingCard currentCard = suitedCardList.get(i);
 				PlayingCard previousSuitedCard = suitedCardList.get(i-1);
 
-				int diff = previousSuitedCard.getIntegerValue() - currentCard.getIntegerValue();
-				//check if this card and the one before it are separated by the number of jokers (can be a series)
-				if(diff  <= 1 + numAvailableJokers){
-					//add the previous card (if not added before) to the list
-					if(!tmpHighestValSeries.contains(previousSuitedCard)){
-						tmpHighestValSeries.add(previousSuitedCard);
+				//ace removal
+				for (PlayingCard card : suitedCardList) {
+					if(card.getIntegerValue() == Character.digit(PlayingCard.ACE, 10)){
+						aceInCards = card;
 					}
-					//if the difference is more than one, add the jokers to the list and remove appropriate amount of jokers from numAvailableJokers
-					if(diff > 1){
-						for (int j = 0; j < diff-1; j++) {
-							numAvailableJokers--;
-							tmpHighestValSeries.add(jokers.get(jokerIndex++));
+				}
+				if(aceInCards !=null){
+					suitedCardList.remove(aceInCards);
+				}
+
+				if(suitedCardList.size() > 1){
+					//calc diff between the remaining cards
+					int diff = previousSuitedCard.getIntegerValue() - currentCard.getIntegerValue();
+
+
+					//check if this card and the one before it are separated by the number of jokers (can be a series)
+					if(diff  <= 1 + numAvailableJokers){
+						//add the previous card (if not added before) to the list
+						if(!tmpHighestValSeries.contains(previousSuitedCard)){
+							tmpHighestValSeries.add(previousSuitedCard);
 						}
-						
+						//if the difference is more than one, add the jokers to the list and remove appropriate amount of jokers from numAvailableJokers
+						if(diff > 1){
+							for (int j = 0; j < diff-1; j++) {
+								numAvailableJokers--;
+								tmpHighestValSeries.add(jokers.get(jokerIndex++));
+							}
+						}
+						//then add the current card
+						tmpHighestValSeries.add(currentCard);
 					}
-					//then add the current card
-					tmpHighestValSeries.add(currentCard);
-					
+				}else{
+					tmpHighestValSeries.add(suitedCardList.get(0));
 				}
 			}
+
+
+			//TODO:  write comment
+			if(aceInCards != null)
+			{
+				//TODO: lowest and highest card
+				if(     
+						//in case of series:   highest card = Q , jokerCount = 1 , ACE (ex. q,joker,1)
+						(suitedCardList.get(0).getIntegerValue() + jokers.size() == 13) ||
+						//in case of series:   lowest card = 3 , jokerCount = 1 , ACE (ex. 3,joker,1)
+						(suitedCardList.get(suitedCardList.size()-1).getIntegerValue() - jokers.size() == 2) ||
+						//in case of at least 3 cards series, and the highest card = K  - can join ACE after the king (ex. j,q,k,1)
+						(suitedCardList.get(0).getIntegerValue() == 13) ||
+						//in case of at least 3 cards series, and the lowest card = 2  - can join ACE before 2. (ex. 1,2,3,4)
+						(suitedCardList.get(suitedCardList.size()-1).getIntegerValue() == 2)
+				){
+					//TODO: write comment
+					tmpHighestValSeries.add(aceInCards);
+				}
+			}
+
 			//add jokers to ends - because this is a basic strategy - this is allowed, otherwise - it would be stupid to drop a joker for the next player to pick up
-			if(tmpHighestValSeries.size()==2){
-					if(numAvailableJokers>0){
-						tmpHighestValSeries.add(jokers.get(jokerIndex));//TODO KEEP DEBUG ON! possible bug here!
-					}else{
-						//series is size 2 and not enough jokers to make it 3 - reset it
-						tmpHighestValSeries = new ArrayList<PlayingCard>();
-					}
+			//TODO: remove the 3 next line and run the test to see the error and fix it!
+			if(numAvailableJokers > 0){
+				for (PlayingCard joker : jokers) {
+					tmpHighestValSeries.add(joker);
+				}
+			}
+			else if(tmpHighestValSeries.size()==2 && numAvailableJokers == 0){
+				//series is size 2 and not enough jokers to make it 3 - reset it
+				tmpHighestValSeries = new ArrayList<PlayingCard>();
 			}
 		}
+
 		return tmpHighestValSeries;
 	}
 

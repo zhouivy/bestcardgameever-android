@@ -25,6 +25,19 @@ public class OpponentHand extends Hand {
 	protected void selectCardsToDrop() {
 		//TODO:AI
 		//here the hand needs to decide what to do - which card to drop - highest value X (series, sameVal or card)
+		
+		 //////////////////
+		 //TESTING/////////
+		//////////////////
+	
+//	TestDecideDropCardsAlgorithm tests = new TestDecideDropCardsAlgorithm(strategy);
+//	tests.testCardsCombination();
+	
+
+		  //////////////////
+		 //END TESTING/////
+		//////////////////
+	
 		strategy.decideDrop(cards);
 	}
 

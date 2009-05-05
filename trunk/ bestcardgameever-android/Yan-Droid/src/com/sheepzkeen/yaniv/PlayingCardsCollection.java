@@ -20,7 +20,7 @@ public abstract class PlayingCardsCollection {
 	
 	protected Stack<PlayingCard> cards;
 	protected char[] suits = {PlayingCard.CLUBS,PlayingCard.SPADES,PlayingCard.HEARTS,PlayingCard.DIAMOND};
-	protected char[] values = {'1','2','3','4','5','6','7','8','9',PlayingCard.TEN,
+	protected char[] values = {PlayingCard.ACE,'2','3','4','5','6','7','8','9',PlayingCard.TEN,
 			PlayingCard.JACK,PlayingCard.QUEEN,PlayingCard.KING};
 
 	

@@ -100,6 +100,8 @@ public class TestDropCardsAlgorithm {
 		performTest("2c", "3c", "ob", "5c", "6c", null);
 		performTest("1c", "2c", "ob", "4c", "5c", null);
 		performTest("tc", "jc", "ob", "kc", "1c", null);
+		performTest("or", "qc", "ob", "1c", "00", null);
+		performTest("1c", "ob", "3c", "or", "00", null);
 		
 		//series of five cards
 		performTest("2c", "3c", "4c", "5c", "6c", null);
