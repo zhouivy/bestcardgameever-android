@@ -10,6 +10,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsoluteLayout;
@@ -296,6 +297,7 @@ public class Yaniv extends Activity {
 		
 		// Turn
 		turn = new Turn<Hand>(playersInOrder);
+
 	}
 
 	protected void dealCards() {
@@ -336,12 +338,11 @@ public class Yaniv extends Activity {
 						//Show isSelected
 						//when selected, move up 10 pixels
 						boolean isSelected = hand.isCardSelected(i);
-						android.view.ViewGroup.LayoutParams currentParams = cardView[i].getLayoutParams();
-						cardView[i].setLayoutParams(
-								new AbsoluteLayout.LayoutParams
-								(currentParams.width,currentParams.height,
-										((AbsoluteLayout.LayoutParams)currentParams).x,
-										 isSelected ? 0 : 10));
+						System.out.println("Card number "+i+": is "+ (isSelected? "":"NOT ")+"Selcted");
+						System.out.println("Card number "+i+":bottom margin"+((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin);
+						((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin =
+							isSelected? 10 : 0 ; 
+						System.out.println("Card number "+i+":bottom margin"+((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin);
 					}
 				}else{
 					cardView[i].setVisibility(View.INVISIBLE);
@@ -366,7 +367,7 @@ public class Yaniv extends Activity {
 		}
 		
 		
-		container.postInvalidate();
+		container.requestLayout();
 
 	}
 	

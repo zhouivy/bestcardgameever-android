@@ -64,8 +64,6 @@ android:layout_gravity="center_horizontal"
 	<LinearLayout
 	android:id="@+id/leftCol"
 	android:orientation="vertical"
-	
-	
 	android:layout_weight="1"
 	android:layout_width="fill_parent" android:layout_height="wrap_content">
 	<TextView
@@ -116,55 +114,39 @@ android:layout_gravity="center_horizontal"
     			android:src="@drawable/deck" android:paddingRight="15px"/>
 	    		
 	
-	<AbsoluteLayout
+	<LinearLayout
 	android:id="@+id/cardsThrown"
-	android:layout_height="wrap_content"
-	android:layout_width="wrap_content"
-
-	android:layout_toRightOf="@+id/deck">
+	android:layout_toRightOf="@+id/deck" android:layout_height="96px" android:layout_width="130px">
 	    		 
 	    		<ImageView
 	    			android:layout_width="72px"
 					android:layout_height="96px"
+					
 	    			
 	    			android:id="@+id/card5"
-	    			android:layout_x="0px"
-	    			android:layout_y="0px"
 	    		/>
 	    		<ImageView
 	    			android:layout_width="72px"
 					android:layout_height="96px"
 	    			
-	    			android:id="@+id/card4"
-	    			android:layout_x="12px"
-	    			android:layout_y="0px"
-	    		/>
+	    			android:id="@+id/card4" android:layout_marginLeft="-60px"/>
 	    		<ImageView
 	    			android:layout_width="72px"
 					android:layout_height="96px"
-	    			android:id="@+id/card3"
-	    			android:layout_x="24px"
-	    			android:layout_y="0px"
-	    		/>
+	    			android:id="@+id/card3" android:layout_marginLeft="-60px"/>
 	    		<ImageView
 	    			android:layout_width="72px"
 					android:layout_height="96px"
 	    			
-	    			android:id="@+id/card2"
-	    			android:layout_x="36px"
-	    			android:layout_y="0px"
-	    		/>
+	    			android:id="@+id/card2" android:layout_marginLeft="-60px"/>
 	    		<ImageView
 	    			android:layout_width="72px"
 					android:layout_height="96px"
 						    			
-	    			android:id="@+id/card1"
-	    			android:layout_x="48px"
-	    			android:layout_y="0px"
-	    		/>
+	    			android:id="@+id/card1" android:layout_marginLeft="-60px"/>
 	    		
 	    		 
-	</AbsoluteLayout>
+	</LinearLayout>
 	</RelativeLayout>
 	<LinearLayout
 	android:id="@+id/rightCol"
@@ -202,6 +184,7 @@ android:layout_gravity="center_horizontal"
 </TableRow>
 <LinearLayout
 android:id="@+id/bottom"
+android:orientation="vertical"
 android:layout_width="fill_parent"
 android:gravity="center"
    android:layout_gravity="bottom" android:layout_height="wrap_content" android:layout_weight="1">
@@ -213,52 +196,38 @@ android:gravity="center"
     android:gravity="center_horizontal" android:layout_gravity="left|center_vertical"/>
     
     
-	    		
-<AbsoluteLayout 
+<TableLayout android:id="@+id/p1CardsAndActionButtonContainer"
+ android:layout_width="wrap_content" android:layout_height="wrap_content" 
+ android:orientation="horizontal" >	    		
+<TableRow>
+<LinearLayout 
 android:id="@+id/p1cardscontainer" 
-android:layout_gravity="center"
-    android:layout_width="wrap_content" 
-android:layout_height="wrap_content">
+android:layout_width="wrap_content" 
+android:layout_gravity = "left" android:gravity="left" android:layout_height="70px">
 	    		
 <ImageView android:id="@+id/p1c1"
- android:layout_gravity="bottom" 
- 					android:layout_width="45px"
-					android:layout_height="60px"
-	    			android:layout_x="0px"
-	    			android:layout_y="10px">
+ android:layout_height="@dimen/cardHeight"
+  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="0px">
   </ImageView>
 <ImageView android:id="@+id/p1c2"
- android:layout_gravity="bottom" 
-  					android:layout_width="45px"
-					android:layout_height="60px"
-	    			android:layout_x="45px"
-	    			android:layout_y="10px">
+ android:layout_height="@dimen/cardHeight"
+  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="0px">
   </ImageView>
 <ImageView android:id="@+id/p1c3"
- android:layout_gravity="bottom" 
-  					android:layout_width="45px"
-					android:layout_height="60px"
-	    			android:layout_x="90px"
-	    			android:layout_y="10px">
+ android:layout_height="@dimen/cardHeight"
+  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="10px">
   </ImageView>
 <ImageView android:id="@+id/p1c4"
- android:layout_gravity="bottom" 
-  					android:layout_width="45px"
-					android:layout_height="60px"
-	    			android:layout_x="135px"
-	    			android:layout_y="10px">
+ android:layout_height="@dimen/cardHeight"
+  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="0px">
   </ImageView>
 <ImageView android:id="@+id/p1c5"
- android:layout_gravity="bottom" 
-  					android:layout_width="45px"
-					android:layout_height="60px"
-	    			android:layout_x="180px"
-	    			android:layout_y="10px"
- >
+ android:layout_height="@dimen/cardHeight"
+  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="10px" >
   </ImageView>
 
-</AbsoluteLayout>
-	<LinearLayout android:id="@+id/ActionButtonContainer" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="right" android:orientation="vertical" android:clipChildren="true" android:gravity="top">
+</LinearLayout>
+	<LinearLayout android:id="@+id/ActionButtonContainer" android:layout_height="wrap_content" android:clipChildren="true" android:gravity="right" android:layout_gravity="right" android:orientation="vertical" android:layout_width="75px">
 
 		<Button android:id="@+id/DropCards"
 			android:layout_height="wrap_content"
@@ -267,17 +236,18 @@ android:layout_height="wrap_content">
 			android:layout_width="wrap_content"
 			android:soundEffectsEnabled="true"
 			android:gravity="center" 
-			android:textScaleX="0.75" 
-			android:layout_gravity="top">
+			android:layout_gravity="top" android:textScaleX="1">
 		</Button>
 		<Button android:layout_width="wrap_content" 
 			android:layout_height="wrap_content" 
 			android:text="@string/PerformYaniv" 
 			android:id="@+id/PerformYaniv" 
 			android:clickable="true" 
-			android:layout_gravity="bottom" 
-			android:gravity="center" android:textScaleX="0.75">
+			android:gravity="center" android:textScaleX="1" android:layout_gravity="bottom|center">
 		</Button>
 	</LinearLayout>
+</TableRow>
+</TableLayout>
 </LinearLayout>
 </TableLayout>
+
