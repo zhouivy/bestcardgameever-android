@@ -151,10 +151,17 @@ public class PlayerHand extends Hand {
 		}		
 		//5
 		if(aceInCards != null){
-			//highest\lowest 2\13
-			if((cardsToCheck.get(0).getIntegerValue() + jokerCount == 13) ||
+					//in case of:   highest card = Q , jokerCount = 1
+			if(     (cardsToCheck.get(0).getIntegerValue() + jokerCount == 13) ||
+					//in case of:   highest card = Q , jokerCount = 2
+					(cardsToCheck.get(0).getIntegerValue() + jokerCount == 14)||
+					//in case of:   lowest card = 3 , jokerCount = 1
 					(cardsToCheck.get(cardsToCheck.size()-1).getIntegerValue() - jokerCount == 2) ||
+					//in case of:   lowest card = 3 , jokerCount = 2
+					(cardsToCheck.get(cardsToCheck.size()-1).getIntegerValue() - jokerCount == 1) ||
+					//in case of:   highest card = K
 					(cardsToCheck.get(0).getIntegerValue() == 13) ||
+					//in case of:   lowest card = 2
 					(cardsToCheck.get(cardsToCheck.size()-1).getIntegerValue() == 2)){
 				//OK
 			}else{

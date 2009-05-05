@@ -119,8 +119,9 @@ public class Yaniv extends Activity {
 			 //TESTING/////////
 			//////////////////
 		
-		TestDropCardsAlgorithm tests = new TestDropCardsAlgorithm(this);
-		tests.testCardsCombination();
+		//TestDropCardsAlgorithm tests = new TestDropCardsAlgorithm(this);
+		//tests.testCardsCombination();
+		
 		
 
 			  //////////////////
@@ -191,6 +192,10 @@ public class Yaniv extends Activity {
 				turnEndedHandler(hand);
 			}
 		});
+		//testing
+//		deckClickHandler();
+//		p1CardsClickHandler(0);
+//		deckClickHandler();
 	}
 
 
@@ -338,11 +343,8 @@ public class Yaniv extends Activity {
 						//Show isSelected
 						//when selected, move up 10 pixels
 						boolean isSelected = hand.isCardSelected(i);
-						System.out.println("Card number "+i+": is "+ (isSelected? "":"NOT ")+"Selcted");
-						System.out.println("Card number "+i+":bottom margin"+((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin);
 						((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin =
 							isSelected? 10 : 0 ; 
-						System.out.println("Card number "+i+":bottom margin"+((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin);
 					}
 				}else{
 					cardView[i].setVisibility(View.INVISIBLE);
