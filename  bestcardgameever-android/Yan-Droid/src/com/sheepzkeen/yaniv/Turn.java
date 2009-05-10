@@ -1,7 +1,7 @@
 package com.sheepzkeen.yaniv;
 
 import java.util.ArrayList;
-
+//TODO make into singleton!
 /**
  * This class is used to determine whose turn it is
  * it will be populated with a cyclic array of hands and will allow asking : who's turn is it
