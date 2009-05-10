@@ -8,12 +8,11 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,14 +28,11 @@ import com.sheepzkeen.yaniv.R.id;
 public class Yaniv extends Activity {
 	
 	public static final int YANIV_NUM_CARDS = 5;
-	//Deck
+	//Deck - UI elements
 	private ImageView deckImg;
-	int currentCard;
-	SingleDeck deck;
 	
-	// Player 1
+	// Player 1 - UI elements
 	private TextView p1Name;
-	private PlayerHand p1Hand;
 	private ImageView[] p1Cards;
 	private ImageView p1c1Img;
 	private ImageView p1c2Img;
@@ -45,7 +41,7 @@ public class Yaniv extends Activity {
 	private ImageView p1c5Img;
 	private LinearLayout p1Container;
 
-	// Opponent 1
+	// Opponent 1  - UI elements
 	private TextView o1Name;
 	private ImageView o1c1Img;
 	private ImageView o1c2Img;
@@ -54,9 +50,8 @@ public class Yaniv extends Activity {
 	private ImageView o1c5Img;
 	private LinearLayout o1Container;
 	private ImageView[] o1Cards;
-	private OpponentHand o1Hand;
 	
-	// Opponent 2
+	// Opponent 2 - UI elements
 	private TextView o2Name;
 	private ImageView o2c1Img;
 	private ImageView o2c2Img;
@@ -65,9 +60,8 @@ public class Yaniv extends Activity {
 	private ImageView o2c5Img;
 	private LinearLayout o2Container;
 	private ImageView[] o2Cards;
-	private OpponentHand o2Hand;
 		
-	// Opponent 3
+	// Opponent 3 - UI elements
 	private TextView o3Name;
 	private ImageView o3c1Img;
 	private ImageView o3c2Img;
@@ -76,9 +70,8 @@ public class Yaniv extends Activity {
 	private ImageView o3c5Img;
 	private LinearLayout o3Container;
 	private ImageView[] o3Cards;
-	private OpponentHand o3Hand;
 
-	//Thrown Cards
+	//Thrown Cards - UI elements
 	private ImageView c1Thrown;
 	private ImageView c2Thrown;
 	private ImageView c3Thrown;
@@ -86,23 +79,23 @@ public class Yaniv extends Activity {
 	private ImageView c5Thrown;
 	private ImageView[] thrownCardsImgs;
 	private View thrownCardsContainer;
-	
-	
+
+	//Turn
+	private ArrayList<Hand> playersInOrder;
+
 	//Misc.
 	private Button dropCardsBtn;
 	private boolean firstDeal;
-	private ThrownCards thrownCards;
 	protected MyDialog uhOhDialog1;
-	private ArrayList<Hand> playersInOrder;
-	private Turn<Hand> turn;
 	private Button yanivBtn;
+	private boolean firstRun;
+	private boolean isCheating;
+	private String cheatString;
 	
 	//TODO: remove this
 	private Dialog d;
 	private PlayingCard[] tempThrownArr;
-	private boolean firstRun;
-	private boolean isCheating;
-	private String cheatString;
+	private GameData gameData;
 	//TODO: end remove this
 	
 	
@@ -185,7 +178,7 @@ public class Yaniv extends Activity {
 			}
 		});
 		
-		turn.setOnTurnEndedListener(new Turn.OnTurnEndedListener<Hand>(){
+		gameData.getTurn().setOnTurnEndedListener(new Turn.OnTurnEndedListener<Hand>(){
 			
 			@Override
 			public void onTurnEnded(Hand hand){
@@ -205,6 +198,7 @@ public class Yaniv extends Activity {
 	private void init() {
 		firstDeal = true;
 		cheatString = new String();
+		
 		//TODO: remove this
 		d = new Dialog(this);
 		d.setTitle("hello");
@@ -223,7 +217,6 @@ public class Yaniv extends Activity {
 
 		p1Cards = new ImageView[] { p1c1Img, p1c2Img, p1c3Img, p1c4Img, p1c5Img };
 
-		p1Hand = new PlayerHand(p1Container,p1Cards, p1Name);
 
 		// Opponent 1
 		o1Name = (TextView) findViewById(id.o1Name);
@@ -238,7 +231,6 @@ public class Yaniv extends Activity {
 		o1Cards = new ImageView[] { o1c1Img, o1c2Img, o1c3Img, o1c4Img,
 				o1c5Img };
 
-		o1Hand = new OpponentHand(new BasicYanivStrategy(), o1Container,o1Cards, o1Name);
 
 		// Opponent 2
 		o2Name = (TextView) findViewById(id.o2Name);
@@ -252,8 +244,6 @@ public class Yaniv extends Activity {
 		o2Cards = new ImageView[] { o2c1Img, o2c2Img, o2c3Img, o2c4Img,
 				o2c5Img };
 
-		o2Hand = new OpponentHand(new BasicYanivStrategy(), o2Container,o2Cards,o2Name);
-
 		// Opponent 3
 		o3Name = (TextView) findViewById(id.o3Name);
 		o3c1Img = (ImageView) findViewById(id.o3c1);
@@ -266,11 +256,8 @@ public class Yaniv extends Activity {
 
 		o3Cards = new ImageView[] { o3c1Img, o3c2Img, o3c3Img, o3c4Img,
 				o3c5Img };
-
-		o3Hand = new OpponentHand(new BasicYanivStrategy(), o3Container,o3Cards,o3Name);
 		
 		// Thrown Cards 
-		thrownCards = new ThrownCards();
 		c5Thrown = (ImageView) findViewById(id.card5);
 		c4Thrown = (ImageView) findViewById(id.card4);
 		c3Thrown = (ImageView) findViewById(id.card3);
@@ -281,7 +268,6 @@ public class Yaniv extends Activity {
 
 		// Deck
 		deckImg = (ImageView) findViewById(id.deck);
-		deck = new SingleDeck();
 
 		// Drop Cards Button
 		dropCardsBtn = (Button)findViewById(id.DropCards);
@@ -293,16 +279,27 @@ public class Yaniv extends Activity {
 		// will be gone until required
 		yanivBtn.setVisibility(View.GONE);
 		
-		// array of starting order of players 
+		// array of order of players in the beginning of the game (p1 is first) 
 		playersInOrder = new ArrayList<Hand>();
+		PlayerHand p1Hand = new PlayerHand(p1Container,p1Cards, p1Name);
 		playersInOrder.add(p1Hand);
+		OpponentHand o1Hand = new OpponentHand(new BasicYanivStrategy(), o1Container,o1Cards, o1Name);
 		playersInOrder.add(o1Hand);
+		OpponentHand o2Hand = new OpponentHand(new BasicYanivStrategy(), o2Container,o2Cards,o2Name);
 		playersInOrder.add(o2Hand);
+		OpponentHand o3Hand = new OpponentHand(new BasicYanivStrategy(), o3Container,o3Cards,o3Name);
 		playersInOrder.add(o3Hand);
 		
-		// Turn
-		turn = new Turn<Hand>(playersInOrder);
 
+		
+		this.gameData = GameData.getInstance();
+		gameData.init(p1Hand,
+				o1Hand,
+				o2Hand,
+				o3Hand,
+				new ThrownCards(),
+				new SingleDeck(),
+				new Turn<Hand>(playersInOrder));
 	}
 
 	protected void dealCards() {
@@ -312,12 +309,12 @@ public class Yaniv extends Activity {
 		for (int i = 0; i < Yaniv.YANIV_NUM_CARDS; i++) {
 			
 			for (Hand hand : playersInOrder) {
-				hand.addCard(deck.popTopCard());
+				hand.addCard(gameData.getDeck().popTopCard());
 				redrawHand(hand);
 			}
 		}
 		// after dealing, put a card on the table for pick up
-		thrownCards.push(deck.popTopCard());
+		gameData.getThrownCards().push(gameData.getDeck().popTopCard());
 		redrawThrownCards();
 	}
 
@@ -339,7 +336,7 @@ public class Yaniv extends Activity {
 					cardView[i].setImageResource(resId);
 
 					//TODO: Disgusting patch, need to fix asap!!!
-					if (hand == p1Hand){
+					if (hand == gameData.getP1Hand()){
 						//Show isSelected
 						//when selected, move up 10 pixels
 						boolean isSelected = hand.isCardSelected(i);
@@ -355,13 +352,13 @@ public class Yaniv extends Activity {
 		
 		//and show the drop cards button if needed
 		//if this and no other cards are selected, don't show the button
-		if(p1Hand.hasSelectedCard() == false){
+		if(gameData.getP1Hand().hasSelectedCard() == false){
 			dropCardsBtn.setVisibility(View.GONE);
 		}else{
 			dropCardsBtn.setVisibility(View.VISIBLE);
 		}
 		//and the perform yaniv button...
-		if(p1Hand.canYaniv()){
+		if(gameData.getP1Hand().canYaniv()){
 			yanivBtn.setVisibility(View.VISIBLE);
 		}else
 		{
@@ -374,7 +371,7 @@ public class Yaniv extends Activity {
 	}
 	
 	private void redrawThrownCards() {
-		PlayingCard[] cards = thrownCards.peekTopFive();
+		PlayingCard[] cards = gameData.getThrownCards().peekTopFive();
 		System.out.println("redrawThrownCards: " +cards );
 		for (int thrownCardIndex = 0; thrownCardIndex < cards.length; thrownCardIndex++) {
 			if(cards[thrownCardIndex] != null){
@@ -429,8 +426,8 @@ public class Yaniv extends Activity {
 	 * @param cardIndex the index of the selected card
 	 */
 	private void p1CardsClickHandler(final int cardIndex) {
-		p1Hand.changeSelectionStateOnCard(cardIndex);
-		redrawHand(p1Hand);
+		gameData.getP1Hand().changeSelectionStateOnCard(cardIndex);
+		redrawHand(gameData.getP1Hand());
 	}
 
 	/**
@@ -439,14 +436,14 @@ public class Yaniv extends Activity {
 	 * RULE: first you drop, then you pickup
 	 */
 	private void dropCardsClickHandler() {
-		if (p1Hand.getCanDrop() == true){
+		if (gameData.getP1Hand().getCanDrop() == true){
 			try {
-				tempThrownArr = p1Hand.drop();
+				tempThrownArr = gameData.getP1Hand().drop();
 			
 			// Rule: after drop you are not allowed to drop again
-			p1Hand.setCanDrop(false);
+				gameData.getP1Hand().setCanDrop(false);
 			// Rule: after drop you are allowed to pickup again 
-			p1Hand.setCanPickup(true);
+				gameData.getP1Hand().setCanPickup(true);
 			
 			dropCardsBtn.setVisibility(View.GONE);
 			//Note, we don't redraw the cards here, since we want the player to see the cards he is throwing until they are down
@@ -489,19 +486,20 @@ private void deckClickHandler() {
 private void p1Pickup(PickupMethod method){
 
 	//usability fix:
-	if(p1Hand.hasSelectedCard()){
+	if(gameData.getP1Hand().hasSelectedCard()){
 		dropCardsClickHandler();
 	}
+	Hand currentHand = gameData.getTurn().peek();
 	// First verify that it is the player's turn and that he is
 	// eligible for pickup
-	if(p1Hand.canPickup() && turn.peek().isAwaitingInput() == true && turn.peek().getCanPickup() == true){
+	if(gameData.getP1Hand().canPickup() && currentHand.isAwaitingInput() == true && currentHand .getCanPickup() == true){
 		// fill virtual hand on first available place
-		p1Hand.pickup(thrownCards,deck,method);
+		gameData.getP1Hand().pickup(method);
 
 		// Rule: after pickup you are allowed to drop again
-		p1Hand.setCanDrop(true);
+		gameData.getP1Hand().setCanDrop(true);
 		// Rule: after pickup you are not allowed to pickup again 
-		p1Hand.setCanPickup(false);
+		gameData.getP1Hand().setCanPickup(false);
 
 		//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
 		for (PlayingCard card : tempThrownArr) {
@@ -510,13 +508,13 @@ private void p1Pickup(PickupMethod method){
 			}
 		}
 		// Update the thrown cards only after the pickup (RULE)
-		thrownCards.pushMulti(tempThrownArr);
+		gameData.getThrownCards().pushMulti(tempThrownArr);
 		// redraw the thrown deck
 		redrawThrownCards();
 		// redraw the hand
-		redrawHand(p1Hand);
+		redrawHand(gameData.getP1Hand());
 		//and advance a turn
-		turn.next();
+		gameData.getTurn().next();
 	}else{
 		//show a dialog box saying 'cant pick up' or something
 		uhOhDialog1.show();
@@ -525,34 +523,34 @@ private void p1Pickup(PickupMethod method){
 
 
 private void performYanivHandler() {
-	p1Hand.doYaniv();
+	gameData.getP1Hand().doYaniv();
 	//TODO: Perform yaniv (call p1hand.doYaniv()), end game
 	//Note: will only be visible when yaniv is possible
 	//note 2: this ends the game, need to call score here
 	
 	// Show everyone's cards
-	o1Hand.setShouldCardsBeShown(true);
-	o2Hand.setShouldCardsBeShown(true);
-	o3Hand.setShouldCardsBeShown(true);
+	gameData.getO1Hand().setShouldCardsBeShown(true);
+	gameData.getO2Hand().setShouldCardsBeShown(true);
+	gameData.getO3Hand().setShouldCardsBeShown(true);
 	// And count the cards for each player
-	int p1Count = p1Hand.countCards();
-	int o1Count = o1Hand.countCards();
-	int o2Count = o2Hand.countCards();
-	int o3Count = o3Hand.countCards();
+	int p1Count = gameData.getP1Hand().countCards();
+	int o1Count = gameData.getO1Hand().countCards();
+	int o2Count = gameData.getO2Hand().countCards();
+	int o3Count = gameData.getO3Hand().countCards();
 	p1Name.setText(String.valueOf(p1Count));
 	o1Name.setText(String.valueOf(o1Count));
 	o2Name.setText(String.valueOf(o2Count));
 	o3Name.setText(String.valueOf(o3Count));
 	//redraw hands
-	redrawHand(p1Hand);
-	redrawHand(o1Hand);
-	redrawHand(o2Hand);
-	redrawHand(o3Hand);
+	redrawHand(gameData.getP1Hand());
+	redrawHand(gameData.getO1Hand());
+	redrawHand(gameData.getO2Hand());
+	redrawHand(gameData.getO3Hand());
 	
 	//Check if won or lost
 	ArrayList<Hand> playersByPosition = playersInOrder;
 	Collections.sort(playersByPosition);
-	if(playersByPosition.indexOf(p1Hand) == 0){
+	if(playersByPosition.indexOf(gameData.getP1Hand()) == 0){
 		//P1 won
 		
 		d.setTitle("You Won!");
@@ -567,21 +565,24 @@ private void performYanivHandler() {
 }
 
 
-private void turnEndedHandler(final Hand hand) {
+private void turnEndedHandler(Hand hand) {
 	if(hand.isAwaitingInput())
 	{
 		//if the hand is awaiting input, there is no point in doing anything
 		return;
 	}else{
-		//this hand has to go through the motions
-		//TODO: remove this (just a simulation of going through the players)
-		d.setCancelable(true);
-		d.setTitle("This is Player " + hand.getPlayerName());
-		d.show();
-		d.setOnCancelListener(new OnCancelListener(){
 
-			@Override
-			public void onCancel(DialogInterface dialog) {
+		//this hand has to go through the motions
+		//test color
+		hand.getContainer().setBackgroundColor(Color.RED);
+		//TODO: remove this (just a simulation of going through the players)
+//		d.setCancelable(true);
+//		d.setTitle("This is Player " + hand.getPlayerName());
+//		d.show();
+//		d.setOnCancelListener(new OnCancelListener(){
+//
+//			@Override
+//			public void onCancel(DialogInterface dialog) {
 				try {
 					//First perform yaniv if startegy dictates it
 					hand.doYaniv();
@@ -595,10 +596,10 @@ private void turnEndedHandler(final Hand hand) {
 						}
 					}
 					
-					hand.pickup(thrownCards,deck,PickupMethod.decidePickup);
+					hand.pickup(PickupMethod.decidePickup);
 					
 					// Update the thrown cards only after the pickup (RULE)
-					thrownCards.pushMulti(tempThrownArr);
+					gameData.getThrownCards().pushMulti(tempThrownArr);
 					// And redraw the thrown deck
 					redrawThrownCards();
 					//and redraw it
@@ -607,15 +608,16 @@ private void turnEndedHandler(final Hand hand) {
 					d.setTitle(e.getMessage());
 					d.show();//i know it's a bug, bug it should happen irl - no way that the ai will do an invalid yaniv...
 				}
-				turn.next();							
+				gameData.getTurn().next();							
 			}
 			
-		});
-		
-		//TODO: end remove this
-		
-
-	}
+//		});
+//		
+//		//TODO: end remove this
+//		
+//
+//	}
+	hand.getContainer().setBackgroundDrawable(null);
 }
 ///**
 //* Plays one round and returns the score
@@ -662,12 +664,12 @@ private void toggleCheat() {
 		d.show();
 	}
 		// Show everyone's cards
-		o1Hand.setShouldCardsBeShown(isCheating);
-		redrawHand(o1Hand);
-		o2Hand.setShouldCardsBeShown(isCheating);
-		redrawHand(o2Hand);
-		o3Hand.setShouldCardsBeShown(isCheating);
-		redrawHand(o3Hand);
+	gameData.getO1Hand().setShouldCardsBeShown(isCheating);
+		redrawHand(gameData.getO1Hand());
+		gameData.getO2Hand().setShouldCardsBeShown(isCheating);
+		redrawHand(gameData.getO2Hand());
+		gameData.getO3Hand().setShouldCardsBeShown(isCheating);
+		redrawHand(gameData.getO3Hand());
 
 }
 

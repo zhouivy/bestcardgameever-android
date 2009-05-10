@@ -140,7 +140,7 @@ public class BasicYanivStrategy implements YanivStrategy {
 			card.setSelected(true);
 
 			//for testing only!!
-			TestDecideDropCardsAlgorithm.addCardToDropCardList(card);
+//			TestDecideDropCardsAlgorithm.addCardToDropCardList(card);
 		}
 	}
 
@@ -257,13 +257,19 @@ public class BasicYanivStrategy implements YanivStrategy {
 	 * @see com.sheepzkeen.yaniv.YanivStrategy#decidePickUp()
 	 */
 	@Override
-	public PlayingCard decidePickUp(PlayingCardsCollection thrown, PlayingCardsCollection deck) {
+	public PlayingCard decidePickUp() {
+		GameData gameData = GameData.getInstance();
+		// Lets check the thrown cards and see if any of the cards can help us 
+		//ROEY_TODO
+		
+		ThrownCards thrown = gameData.getThrownCards();
+		SingleDeck deck = gameData.getDeck();
+		//TODO: Make smarter!
 		if (thrown.peekTopCard().getIntegerValue()<PICKUP_THRESHOLD){
 			return thrown.popTopCard();
 		}else{
 			return deck.popTopCard();
 		}
-		// TODO Auto-generated method stub
 
 	}
 

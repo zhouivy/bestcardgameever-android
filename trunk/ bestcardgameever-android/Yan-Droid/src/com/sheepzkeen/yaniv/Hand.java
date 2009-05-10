@@ -57,22 +57,23 @@ public abstract class Hand implements Comparable<Hand> {
 	 * human player will pick up on his own
 	 * @param deck
 	 */
-	public void pickup(PlayingCardsCollection thrownCards, PlayingCardsCollection deck, PickupMethod method){
+	public void pickup(PickupMethod method){
+		GameData gameData = GameData.getInstance();
 		switch (method) {
 			case fromDeck:
 				//pickup from deck
-				addCard(deck.popTopCard());
+				addCard(gameData.getDeck().popTopCard());
 				break;
 			case fromThrown:
 				//pickup from thrown
-				addCard(thrownCards.popTopCard());
+				addCard(gameData.getThrownCards().popTopCard());
 				break;
 			case decidePickup:
 				//decide and add
 				if (strategy!=null){
-					addCard(strategy.decidePickUp(thrownCards,deck));
+					addCard(strategy.decidePickUp());
 				}else{
-					addCard(deck.popTopCard());
+					addCard(gameData.getDeck().popTopCard());
 				}
 				break;
 		}
@@ -132,9 +133,9 @@ public abstract class Hand implements Comparable<Hand> {
 	protected abstract boolean shouldYaniv();
 	
 	public void doYaniv(){
-		if(shouldYaniv()){
+		if(canYaniv() && shouldYaniv()){
 			//do yaniv...
-			Log.e("Yaniv", "This is where the yaniv would have been performed by the AI");
+			Log.e("Yaniv", "Player " + name + " can and should do yaniv according to strategy" );
 		}
 		//Finish game:
 		//TODO: something here...

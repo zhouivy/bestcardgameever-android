@@ -2,9 +2,7 @@ package com.sheepzkeen.yaniv;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -62,8 +60,7 @@ public class PlayerHand extends Hand {
 		//0 - initialize
 		int jokerCount = 0;
 		ArrayList<PlayingCard> jokers = new ArrayList<PlayingCard>();
-		boolean suitsAreDifferent = false;//true;
-		Set<Character> suitsInCards = new HashSet<Character>();
+		boolean suitsAreDifferent = false;
 		PlayingCard aceInCards = null;
 		List<PlayingCard> cardsToCheck = new ArrayList<PlayingCard>();
 		for (PlayingCard card : cards) {
@@ -71,7 +68,7 @@ public class PlayerHand extends Hand {
 				cardsToCheck.add(card);
 			}
 		}
-		//1 - jokers - existance
+		//1 - jokers - existence
 		for (PlayingCard card : cardsToCheck) {
 			if(card.getIntegerValue() == null){
 				jokerCount++;
