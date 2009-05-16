@@ -47,4 +47,9 @@ public abstract class PlayingCardsCollection {
 	protected final PlayingCard peekTopCard(){
 		return cards.peek();
 	}
+	
+	public int count() {
+		return cards.size();
+	}
+
 }

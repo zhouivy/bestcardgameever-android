@@ -183,7 +183,7 @@ public class TestDropCardsAlgorithm {
 									exceptionNumber + "]"));
 		
 			
-		} catch (InvalidYanivException iye) {
+		} catch (InvalidDropException iye) {
 			if(iye.getMessage().contains(exceptionNumber))
 			{
 				sb.append(NEXT_LINE+("success on Hand test: [" +

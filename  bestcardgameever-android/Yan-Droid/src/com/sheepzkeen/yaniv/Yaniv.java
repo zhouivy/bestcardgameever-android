@@ -5,14 +5,13 @@ import java.util.Collections;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -85,13 +84,14 @@ public class Yaniv extends Activity {
 
 	//Misc.
 	private Button dropCardsBtn;
+	private Button nextPlayerBtn;
 	private boolean firstDeal;
 	protected MyDialog uhOhDialog1;
 	private Button yanivBtn;
 	private boolean firstRun;
 	private boolean isCheating;
 	private String cheatString;
-	
+	private TextView headingTv;
 	//TODO: remove this
 	private Dialog d;
 	private PlayingCard[] tempThrownArr;
@@ -151,6 +151,14 @@ public class Yaniv extends Activity {
 		}
 		);		
 
+		// Drop Cards Listener
+		nextPlayerBtn.setOnClickListener(new Button.OnClickListener() {
+			public void onClick(View v){
+				gameData.getTurn().next();
+			}
+		}
+		);		
+
 		// add a click listener to the deck
 		deckImg.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -204,6 +212,9 @@ public class Yaniv extends Activity {
 		d.setTitle("hello");
 		//TODO: end remove this
 
+		headingTv = (TextView) findViewById(id.headingText);
+		
+		
 		uhOhDialog1 = new MyDialog(this);
 		// Player 1
 		p1Name = (TextView) findViewById(id.p1Name);
@@ -274,6 +285,13 @@ public class Yaniv extends Activity {
 		// will be gone until required
 		dropCardsBtn.setVisibility(View.GONE);
 		
+		// Next Player Button
+		nextPlayerBtn = (Button)findViewById(id.NextPlayer);
+		// will be gone until required
+		nextPlayerBtn.setVisibility(View.GONE);
+		
+		
+		
 		// Perform Yaniv Button
 		yanivBtn = (Button)findViewById(id.PerformYaniv);
 		// will be gone until required
@@ -304,15 +322,39 @@ public class Yaniv extends Activity {
 
 	protected void dealCards() {
 
-
+		int startOffset = 0;
 		// 5 cards for each player
 		for (int i = 0; i < Yaniv.YANIV_NUM_CARDS; i++) {
 			
 			for (Hand hand : playersInOrder) {
 				hand.addCard(gameData.getDeck().popTopCard());
+				
+				//anim
+				int[] handLocation = {0,0};
+				hand.getContainer().getLocationInWindow(handLocation);
+				Log.e("COOR","Hand: ["+handLocation[0]+","+handLocation[1]+"]");
+				int[] deckLocation = {0,0};
+				deckImg.getLocationInWindow(deckLocation);
+				Log.e("COOR","Deck: ["+deckLocation[0]+","+deckLocation[1]+"]");
+				//move from deck location to hand location
+				TranslateAnimation dealCardAnimation = new TranslateAnimation(Animation.ABSOLUTE,deckLocation[0],
+						Animation.ABSOLUTE,handLocation[0],
+						Animation.ABSOLUTE,deckLocation[1],
+						Animation.ABSOLUTE,handLocation[1]);
+				dealCardAnimation.setDuration(300); 
+				dealCardAnimation.setStartOffset(300*startOffset++);
+				//try to change the z-order
+				hand.getCardsViews()[i].bringToFront();
+				//end 
+				
+				hand.getCardsViews()[i].startAnimation(dealCardAnimation);
+				
+				//mina
+
 				redrawHand(hand);
 			}
 		}
+		
 		// after dealing, put a card on the table for pick up
 		gameData.getThrownCards().push(gameData.getDeck().popTopCard());
 		redrawThrownCards();
@@ -427,7 +469,12 @@ public class Yaniv extends Activity {
 	 */
 	private void p1CardsClickHandler(final int cardIndex) {
 		gameData.getP1Hand().changeSelectionStateOnCard(cardIndex);
+		
+
+		
 		redrawHand(gameData.getP1Hand());
+
+		
 	}
 
 	/**
@@ -448,7 +495,7 @@ public class Yaniv extends Activity {
 			dropCardsBtn.setVisibility(View.GONE);
 			//Note, we don't redraw the cards here, since we want the player to see the cards he is throwing until they are down
 			
-			} catch (InvalidYanivException e) {
+			} catch (InvalidDropException e) {
 				d.setTitle("You Can't Drop This!\nReason: " + e.getMessage());
 				d.show();
 				
@@ -520,7 +567,67 @@ private void p1Pickup(PickupMethod method){
 		uhOhDialog1.show();
 	}
 }
+/**
+ * Drops a card\s and picks up a card
+ * Drops a single card a set or a series to the table and then picks up either from the deck or from the table
+ * @param hand the hand performing the switch
+ */
+private void switchCards(Hand hand) throws InvalidDropException {
+	//Drop
+	tempThrownArr = hand.drop();
+	//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
+	for (PlayingCard card : tempThrownArr) {
+		if (card != null){
+			card.setSelected(false);
+		}
+	}
+	int numCardsInDeckBeforePickup = gameData.deck.count();
+	//Pickup
+	hand.pickup(PickupMethod.decidePickup);
+	int numCardsInDeckAfterPickup = gameData.deck.count();
+	// Update the thrown cards only after the pickup (RULE)
+	gameData.getThrownCards().pushMulti(tempThrownArr);
 
+	//TODO: Drop animation here
+	int startOffset = 0;
+	int thrownCardsSize = gameData.getThrownCards().count() > 4? 4:gameData.getThrownCards().count();
+	// And redraw the thrown deck
+	redrawThrownCards();
+	
+	//and redraw it
+	redrawHand(hand);
+	for (int firstCardThrownIndex =  thrownCardsSize - tempThrownArr.length;
+				firstCardThrownIndex < thrownCardsSize; firstCardThrownIndex++) {
+	
+		//anim
+		int[] handLocation = {0,0};
+		hand.getContainer().getLocationOnScreen(handLocation);
+		Log.e("DROPANIM","Hand: ["+handLocation[0]+","+handLocation[1]+"]");
+		int[] thrownCardsLocation = {0,0};
+		thrownCardsImgs[firstCardThrownIndex].getLocationOnScreen(thrownCardsLocation);
+		Log.e("DROPANIM","thrownCardsContainer: ["+thrownCardsLocation[0]+","+thrownCardsLocation[1]+"]");
+		//move from deck location to hand location
+		TranslateAnimation dealCardAnimation = new TranslateAnimation(
+				Animation.ABSOLUTE,handLocation[0],
+				Animation.ABSOLUTE,thrownCardsLocation[0],
+				Animation.ABSOLUTE,handLocation[1],
+				Animation.ABSOLUTE,thrownCardsLocation[1]
+				                				);
+		dealCardAnimation.setDuration(300); 
+		dealCardAnimation.setStartOffset(300*startOffset++);
+		thrownCardsImgs[firstCardThrownIndex++].startAnimation(dealCardAnimation);
+		
+		//mina
+
+	}
+	//TODO: end drop animation here
+	headingTv.setText(hand.getPlayerName() + " dropped " + tempThrownArr.length +" card"+( tempThrownArr.length >1? "s":"" )+" and picked up from the "+ 
+			(numCardsInDeckBeforePickup == numCardsInDeckAfterPickup? "thrown cards":"deck"));
+	
+
+	
+
+}
 
 private void performYanivHandler() {
 	gameData.getP1Hand().doYaniv();
@@ -568,57 +675,28 @@ private void performYanivHandler() {
 private void turnEndedHandler(Hand hand) {
 	if(hand.isAwaitingInput())
 	{
-		//if the hand is awaiting input, there is no point in doing anything
+		//if the hand is awaiting input, there is no point in doing anything (human player)
+		nextPlayerBtn.setVisibility(View.GONE);
 		return;
 	}else{
+		nextPlayerBtn.setVisibility(View.VISIBLE);
 
-		//this hand has to go through the motions
-		//test color
-		hand.getContainer().setBackgroundColor(Color.RED);
-		//TODO: remove this (just a simulation of going through the players)
-//		d.setCancelable(true);
-//		d.setTitle("This is Player " + hand.getPlayerName());
-//		d.show();
-//		d.setOnCancelListener(new OnCancelListener(){
-//
-//			@Override
-//			public void onCancel(DialogInterface dialog) {
-				try {
-					//First perform yaniv if startegy dictates it
-					hand.doYaniv();
-					
-					//TODO: move from here and integrate with p1's mechanism for dropping and picking up.
-					tempThrownArr = hand.drop();
-					//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
-					for (PlayingCard card : tempThrownArr) {
-						if (card != null){
-							card.setSelected(false);
-						}
-					}
-					
-					hand.pickup(PickupMethod.decidePickup);
-					
-					// Update the thrown cards only after the pickup (RULE)
-					gameData.getThrownCards().pushMulti(tempThrownArr);
-					// And redraw the thrown deck
-					redrawThrownCards();
-					//and redraw it
-					redrawHand(hand);
-				} catch (InvalidYanivException e) {
-					d.setTitle(e.getMessage());
-					d.show();//i know it's a bug, bug it should happen irl - no way that the ai will do an invalid yaniv...
-				}
-				gameData.getTurn().next();							
-			}
+		try {
+			//First perform yaniv if strategy dictates it
+			hand.doYaniv();
+
+			switchCards(hand);
+		} catch (InvalidDropException e) {
+			d.setTitle(e.getMessage());
+			d.show();//i know it's a bug, bug it should happen irl - no way that the ai will do an invalid drop...
+		}
+										
+		}
 			
-//		});
-//		
-//		//TODO: end remove this
-//		
-//
-//	}
 	hand.getContainer().setBackgroundDrawable(null);
 }
+
+
 ///**
 //* Plays one round and returns the score
 //* 

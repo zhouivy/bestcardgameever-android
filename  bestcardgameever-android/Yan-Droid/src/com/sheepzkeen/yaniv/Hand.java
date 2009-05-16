@@ -87,18 +87,18 @@ public abstract class Hand implements Comparable<Hand> {
 	 * Select which cards, and drops them, in case it is a human player, it simply drops the cards he selected
 	 * (after verifying they can be dropped with rules) in case of an opponent, AI decides it
 	 * @return an array of type {@link PlayingCard} which contains the cards to drop 
-	 * @throws InvalidYanivException when cards selected cannot be dropped
+	 * @throws InvalidDropException when cards selected cannot be dropped
 	 */
-	public PlayingCard[] drop() throws InvalidYanivException{
+	public PlayingCard[] drop() throws InvalidDropException{
 		selectCardsToDrop();
 		return dropSelected();
 	}
 
 	/**
-	 * Selects which cards will be dropped and moves them to the 'cardsSelected' array 
-	 * @throws InvalidYanivException 
+	 * Selects which cards will be dropped and marks them as 'Selected' 
+	 * @throws InvalidDropException 
 	 */
-	protected abstract void selectCardsToDrop() throws InvalidYanivException;
+	protected abstract void selectCardsToDrop() throws InvalidDropException;
 	
 	/**
 	 * returns the selected cards so that they can be thrown
@@ -134,7 +134,7 @@ public abstract class Hand implements Comparable<Hand> {
 	
 	public void doYaniv(){
 		if(canYaniv() && shouldYaniv()){
-			//do yaniv...
+			//TODO:do yaniv...
 			Log.e("Yaniv", "Player " + name + " can and should do yaniv according to strategy" );
 		}
 		//Finish game:
