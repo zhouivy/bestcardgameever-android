@@ -2,7 +2,7 @@
 <resources>
     <string name="hello">Hello World, Yaniv</string>
     <string name="app_name">Yan-Droid</string>
-<string name="Heading">Yaniv - A Card Game Demo</string>
+<string name="Heading">Yaniv - A Card Game </string>
 	<string name = "DropSelected">Drop Cards</string>
 	<string name = "Player">Player</string>
 	<string name = "Opponent1">Sivan</string>
@@ -13,4 +13,5 @@
 	<string name = "dialogOkMsg">Got it!</string>
 	
 <string name="PerformYaniv">Yaniv!</string>
+<string name="NextPlayer">Next!</string>
 </resources>

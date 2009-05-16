@@ -29,7 +29,7 @@ public class PlayerHand extends Hand {
 
 	//should Override
 	@Override
-	protected void selectCardsToDrop() throws InvalidYanivException {
+	protected void selectCardsToDrop() throws InvalidDropException {
 		//Do nothing here, selection was performed by the drop action
 		verifyCardsToDrop();
 		//System.out.println("success on " + this.toString());
@@ -41,7 +41,7 @@ public class PlayerHand extends Hand {
 
 
 
-	private void verifyCardsToDrop() throws InvalidYanivException {
+	private void verifyCardsToDrop() throws InvalidDropException {
 		
 		//Verify algorithm:
 		// 1) remove jokers, add 1 to jokerCount for each joker
@@ -102,7 +102,7 @@ public class PlayerHand extends Hand {
 			for (PlayingCard card : cardsToCheck) {
 				if(lastCardChecked != null && lastCardChecked.getIntegerValue() != card.getIntegerValue()){
 					//Reject
-					throw new InvalidYanivException("(YE001)Cards of different suits must have same value!");
+					throw new InvalidDropException("(YE001)Cards of different suits must have same value!");
 				}
 				lastCardChecked = card;
 			}
@@ -111,7 +111,7 @@ public class PlayerHand extends Hand {
 			//4.1 not enough cards
 			if(cardsToCheck.size() < 3 && jokerCount == 0){ //todo:change to cardstochek.size()+jokercount<3
 				//Reject
-				throw new InvalidYanivException("(YE002)Cards have same suit, but are not enough to complete a series! " +
+				throw new InvalidDropException("(YE002)Cards have same suit, but are not enough to complete a series! " +
 						"(only " + cardsToCheck.size() + " cards dropped and no jokers)");
 			}
 			//4.2 ace removal
@@ -136,7 +136,7 @@ public class PlayerHand extends Hand {
 					//4.4.1.2
 					if(differenceBetweenThisAndNextCardVal - 1 > jokerCount){
 						//reject
-						throw new InvalidYanivException("(YE003) Cards have same suit, " +
+						throw new InvalidDropException("(YE003) Cards have same suit, " +
 								"but the difference between them is too big"+ (jokerCount>0? ", even with your jokers. ":".") +
 								"(cards: "+ cardsToCheck.get(i) + " and " + cardsToCheck.get(i+1)+")");
 					}else{
@@ -163,7 +163,7 @@ public class PlayerHand extends Hand {
 				//OK
 			}else{
 				//reject
-				throw new InvalidYanivException("(YE004)Cards have at least one ace that cannot be attached to series.");
+				throw new InvalidDropException("(YE004)Cards have at least one ace that cannot be attached to series.");
 			}
 			
 		}

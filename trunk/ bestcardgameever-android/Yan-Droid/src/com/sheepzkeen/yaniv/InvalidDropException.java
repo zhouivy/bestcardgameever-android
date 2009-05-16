@@ -5,12 +5,12 @@ package com.sheepzkeen.yaniv;
  * @author Elad
  *
  */
-public class InvalidYanivException extends Exception {
+public class InvalidDropException extends Exception {
 
 	/**
 	 * 
 	 */
-	public InvalidYanivException(String message) {
+	public InvalidDropException(String message) {
 		super(message);
 	}
 	private static final long serialVersionUID = -2690350835355321831L;

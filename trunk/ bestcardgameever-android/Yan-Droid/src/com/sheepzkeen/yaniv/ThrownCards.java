@@ -55,4 +55,5 @@ public class ThrownCards extends PlayingCardsCollection {
 
 	}
 
+
 }
