@@ -14,7 +14,14 @@ android:layout_weight="0">
   <TextView 
   android:id="@+id/headingText"
    android:text="@string/Heading" android:textColor="#ffffff" 
-   android:layout_height="fill_parent" android:layout_width="fill_parent"/>
+   android:layout_height="fill_parent" android:layout_width="fill_parent"
+   android:ellipsize="marquee"
+	android:singleLine="true"
+	android:scrollHorizontally="true"
+	android:marqueeRepeatLimit="marquee_forever"
+	android:focusable="true"
+	android:focusableInTouchMode="true"
+	/>
      
      
 </LinearLayout>
@@ -243,11 +250,13 @@ android:layout_gravity = "left" android:gravity="left" android:layout_height="70
 			android:text="@string/PerformYaniv" 
 			android:id="@+id/PerformYaniv" 
 			android:clickable="true" 
-			android:gravity="center" android:textScaleX="1" android:layout_gravity="bottom|center">
+			android:gravity="center" android:textScaleX="1" android:layout_gravity="center">
 		</Button>
-	</LinearLayout>
+	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="true" android:textScaleX="1" android:layout_gravity="bottom" android:gravity="center" android:id="@+id/NextPlayer" android:text="@string/NextPlayer"></Button>
+</LinearLayout>
 </TableRow>
 </TableLayout>
 </LinearLayout>
+
 </TableLayout>
 
