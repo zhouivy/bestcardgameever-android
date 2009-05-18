@@ -19,21 +19,33 @@ public class Turn<T> {
 
 	private ArrayList<T> players;
 	private int turnIndex;
-	private OnTurnEndedListener<T> turnEndListener;
+	private int rounds;
+	private ArrayList<OnTurnEndedListener<T>> turnEndListenerList;
 
 	public Turn() {
-		throw new UnsupportedOperationException("cannot init without hands");
+		throw new UnsupportedOperationException("cannot init without players");
 	}
 	
-	public Turn(ArrayList<T> players){
+	public Turn(ArrayList<T> players, int startingPlayerIndex){
 		this.players = players;
-		this.turnIndex = 0;
+		this.turnIndex = startingPlayerIndex;
+		this.rounds = 0;
+		turnEndListenerList = new ArrayList<OnTurnEndedListener<T>>();
 	}
 	
+	public int getRounds() {
+		return rounds;
+	}
+
 	public T next() {
 		turnIndex = (turnIndex + 1) % players.size();
+		if(turnIndex == 0){
+			rounds++;
+		}
 		T retVal = players.get(turnIndex);
-		turnEndListener.onTurnEnded(retVal);
+		for (OnTurnEndedListener<T> l : turnEndListenerList) {
+			l.onTurnEnded(retVal);
+		}
 		return retVal;
 	}
 	
@@ -41,9 +53,8 @@ public class Turn<T> {
 		return players.get(turnIndex);
 	}
 
-	public void setOnTurnEndedListener(OnTurnEndedListener<T> l) {
-		this.turnEndListener = l;
+	public void addOnTurnEndedListener(OnTurnEndedListener<T> l) {
+		this.turnEndListenerList.add(l);
 		
 	}
-
 }

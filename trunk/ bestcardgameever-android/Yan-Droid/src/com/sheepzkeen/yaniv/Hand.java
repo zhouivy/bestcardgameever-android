@@ -284,5 +284,13 @@ public abstract class Hand implements Comparable<Hand> {
 		sb.append("]");
 		return sb.toString();
 	}
+	protected final PlayingCard[] getCards() {
+		return cards;
+	}
+	
+	//Roey: add this for test only.
+	protected final void setCards(PlayingCard[] newCards) {
+		cards = newCards;
+	}
 
 }

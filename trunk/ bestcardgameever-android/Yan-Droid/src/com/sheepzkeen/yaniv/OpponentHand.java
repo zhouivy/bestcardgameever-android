@@ -38,7 +38,7 @@ public class OpponentHand extends Hand {
 		 //END TESTING/////
 		//////////////////
 	
-		strategy.decideDrop(cards);
+		strategy.decideDrop();
 	}
 
 	@Override
@@ -48,6 +48,6 @@ public class OpponentHand extends Hand {
 
 	@Override
 	protected boolean shouldYaniv() {
-		return strategy.decideYaniv(cards);
+		return strategy.decideYaniv();
 	}
 }
