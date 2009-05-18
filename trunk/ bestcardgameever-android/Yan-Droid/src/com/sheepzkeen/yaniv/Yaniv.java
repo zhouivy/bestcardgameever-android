@@ -10,7 +10,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -341,16 +345,26 @@ public class Yaniv extends Activity {
 						Animation.ABSOLUTE,handLocation[0],
 						Animation.ABSOLUTE,deckLocation[1],
 						Animation.ABSOLUTE,handLocation[1]);
-				dealCardAnimation.setDuration(300); 
-				dealCardAnimation.setStartOffset(300*startOffset++);
+				dealCardAnimation.setDuration(100); 
+				dealCardAnimation.setStartOffset(100*startOffset++);
 				//try to change the z-order
-				hand.getCardsViews()[i].bringToFront();
+//				hand.getCardsViews()[i].bringToFront();
 				//end 
 				
 				hand.getCardsViews()[i].startAnimation(dealCardAnimation);
 				
 				//mina
-
+//				//Anim 2
+//				float fromAlpha = 0;
+//				float toAlpha = 1;
+//				AlphaAnimation aanim = new AlphaAnimation(fromAlpha ,toAlpha);
+//				//aanim.setInterpolator(new DecelerateInterpolator(1.0f));
+//				int durationInMilis = 100;
+//				aanim.setStartOffset(100*startOffset++);
+//				aanim.setDuration(durationInMilis);
+//				hand.getCardsViews()[i].startAnimation(aanim);
+//				//minA 2
+				
 				redrawHand(hand);
 			}
 		}
@@ -589,41 +603,99 @@ private void switchCards(Hand hand) throws InvalidDropException {
 	gameData.getThrownCards().pushMulti(tempThrownArr);
 
 	//TODO: Drop animation here
-	int startOffset = 0;
-	int thrownCardsSize = gameData.getThrownCards().count() > 4? 4:gameData.getThrownCards().count();
+//	int startOffset = 0;
+//	int thrownCardsSize  = gameData.getThrownCards().count();
+//	int thrownCardsSizeUpTo5 = thrownCardsSize > 5? 5:thrownCardsSize;
+	
 	// And redraw the thrown deck
 	redrawThrownCards();
 	
 	//and redraw it
 	redrawHand(hand);
-	for (int firstCardThrownIndex =  thrownCardsSize - tempThrownArr.length;
-				firstCardThrownIndex < thrownCardsSize; firstCardThrownIndex++) {
+
+	AnimationSet growShrinkAnim = new AnimationSet(true);
+/////////
+//	float fromAlpha = 0;
+//	float toAlpha = 1;
+//	AlphaAnimation aanim = new AlphaAnimation(fromAlpha ,toAlpha);
+//	//aanim.setInterpolator(new DecelerateInterpolator(1.0f));
+//	int durationInMilis = 1500;
+//	aanim.setDuration(durationInMilis);
+//	growShrinkAnim.addAnimation(aanim);
+////////
 	
-		//anim
-		int[] handLocation = {0,0};
-		hand.getContainer().getLocationOnScreen(handLocation);
-		Log.e("DROPANIM","Hand: ["+handLocation[0]+","+handLocation[1]+"]");
-		int[] thrownCardsLocation = {0,0};
-		thrownCardsImgs[firstCardThrownIndex].getLocationOnScreen(thrownCardsLocation);
-		Log.e("DROPANIM","thrownCardsContainer: ["+thrownCardsLocation[0]+","+thrownCardsLocation[1]+"]");
-		//move from deck location to hand location
-		TranslateAnimation dealCardAnimation = new TranslateAnimation(
-				Animation.ABSOLUTE,handLocation[0],
-				Animation.ABSOLUTE,thrownCardsLocation[0],
-				Animation.ABSOLUTE,handLocation[1],
-				Animation.ABSOLUTE,thrownCardsLocation[1]
-				                				);
-		dealCardAnimation.setDuration(300); 
-		dealCardAnimation.setStartOffset(300*startOffset++);
-		thrownCardsImgs[firstCardThrownIndex++].startAnimation(dealCardAnimation);
+	
+ 	ScaleAnimation grow = new ScaleAnimation(
+  		       0.5f, 1.5f, 0.5f, 1.5f, 
+  		       ScaleAnimation.RELATIVE_TO_SELF, 0.5f, 
+  		       ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+ 	grow.setDuration(750);
+ 	grow.setRepeatCount(0);	       
+	growShrinkAnim.addAnimation(grow);
+
+	ScaleAnimation shrink = new ScaleAnimation(
+		       1.5f, 0.5f, 1.5f, 0.5f, 
+		       ScaleAnimation.RELATIVE_TO_SELF, 0.5f, 
+		       ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+	shrink.setDuration(750);
+	shrink.setRepeatCount(0);	       
+	growShrinkAnim.addAnimation(shrink);
 		
-		//mina
+
+	for(int i = 0; i<tempThrownArr.length;i++){
+		//anim - v2
+
+		thrownCardsImgs[i].startAnimation(growShrinkAnim);
+		
+		//2v -mina
 
 	}
+
+	
+//	//Anim 3
+//	float fromAlpha = 0;
+//	float toAlpha = 1;
+//	AlphaAnimation aanim = new AlphaAnimation(fromAlpha ,toAlpha);
+//	//aanim.setInterpolator(new DecelerateInterpolator(1.0f));
+//	int durationInMilis = 1000;
+//	aanim.setDuration(durationInMilis);
+//	for(int i = 0; i<tempThrownArr.length;i++){
+//		thrownCardsImgs[i].startAnimation(aanim);
+//
+//	}
+//	//minA 3
+
+	
+	
+//	for (int firstCardThrownIndex =  thrownCardsSizeUpTo5 - tempThrownArr.length;
+//				firstCardThrownIndex < thrownCardsSize; firstCardThrownIndex++) {
+	
+//		//anim - v1
+//		int[] handLocation = {0,0};
+//		hand.getContainer().getLocationOnScreen(handLocation);
+//		Log.e("DROPANIM","Hand: ["+handLocation[0]+","+handLocation[1]+"]");
+//		int[] thrownCardsLocation = {0,0};
+//		thrownCardsImgs[firstCardThrownIndex].getLocationOnScreen(thrownCardsLocation);
+//		Log.e("DROPANIM","thrownCardsContainer: ["+thrownCardsLocation[0]+","+thrownCardsLocation[1]+"]");
+//		//move from deck location to hand location
+//		TranslateAnimation dealCardAnimation = new TranslateAnimation(
+//				Animation.ABSOLUTE,handLocation[0],
+//				Animation.ABSOLUTE,thrownCardsLocation[0],
+//				Animation.ABSOLUTE,handLocation[1],
+//				Animation.ABSOLUTE,thrownCardsLocation[1]
+//				                				);
+//		dealCardAnimation.setDuration(300); 
+//		dealCardAnimation.setStartOffset(300*startOffset++);
+//		thrownCardsImgs[firstCardThrownIndex++].startAnimation(dealCardAnimation);
+//		
+//		//1v -mina
+
+		
+//	}
 	//TODO: end drop animation here
 	headingTv.setText(hand.getPlayerName() + " dropped " + tempThrownArr.length +" card"+( tempThrownArr.length >1? "s":"" )+" and picked up from the "+ 
 			(numCardsInDeckBeforePickup == numCardsInDeckAfterPickup? "thrown cards":"deck"));
-	
+
 
 	
 
