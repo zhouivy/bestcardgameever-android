@@ -7,7 +7,7 @@ package com.sheepzkeen.yaniv;
  *
  */
 public interface YanivStrategy {
-	public void decideDrop(PlayingCard[] cards);
+	public void decideDrop();
 	public PlayingCard decidePickUp();
-	public boolean decideYaniv(PlayingCard[] cards);
+	public boolean decideYaniv();
 }

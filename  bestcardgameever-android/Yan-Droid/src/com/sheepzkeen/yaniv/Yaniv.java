@@ -33,6 +33,7 @@ public class Yaniv extends Activity {
 	public static final int YANIV_NUM_CARDS = 5;
 	//Deck - UI elements
 	private ImageView deckImg;
+
 	
 	// Player 1 - UI elements
 	private TextView p1Name;
@@ -190,7 +191,9 @@ public class Yaniv extends Activity {
 			}
 		});
 		
-		gameData.getTurn().setOnTurnEndedListener(new Turn.OnTurnEndedListener<Hand>(){
+
+		gameData.getTurn().addOnTurnEndedListener(new Turn.OnTurnEndedListener<Hand>(){
+
 			
 			@Override
 			public void onTurnEnded(Hand hand){
@@ -311,7 +314,7 @@ public class Yaniv extends Activity {
 		playersInOrder.add(o2Hand);
 		OpponentHand o3Hand = new OpponentHand(new BasicYanivStrategy(), o3Container,o3Cards,o3Name);
 		playersInOrder.add(o3Hand);
-		
+		int startingPlayer = 0;
 
 		
 		this.gameData = GameData.getInstance();
@@ -321,7 +324,8 @@ public class Yaniv extends Activity {
 				o3Hand,
 				new ThrownCards(),
 				new SingleDeck(),
-				new Turn<Hand>(playersInOrder));
+				new Turn<Hand>(playersInOrder, startingPlayer),
+				playersInOrder);
 	}
 
 	protected void dealCards() {

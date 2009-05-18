@@ -1,6 +1,9 @@
 package com.sheepzkeen.yaniv;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
+import android.util.Log;
 
 /**
  * a Serializable Singleton that holds the game data
@@ -35,10 +38,13 @@ public class GameData implements Serializable {
 	private Turn<Hand> turn;
 	//Deck - Logic elements
 	SingleDeck deck;
+	private ArrayList<Hand> playersInOrder;
 	
+
+
 	protected void init(PlayerHand hand, OpponentHand hand2, OpponentHand hand3,
 			OpponentHand hand4, ThrownCards thrownCards, 
-			SingleDeck deck, Turn<Hand> turn) {
+			SingleDeck deck, Turn<Hand> turn, ArrayList<Hand> playersInOrder) {
 		p1Hand = hand;
 		o1Hand = hand2;
 		o2Hand = hand3;
@@ -46,6 +52,15 @@ public class GameData implements Serializable {
 		this.thrownCards = thrownCards;
 		this.deck = deck;
 		this.turn = turn;
+		this.playersInOrder = playersInOrder;
+		turn.addOnTurnEndedListener(new Turn.OnTurnEndedListener<Hand>(){
+
+			@Override
+			public void onTurnEnded(Hand currentPlayer) {
+				//Log.v("Roey","P1:" + p1Hand +", O1: "+ o1Hand+", O2: "+ o2Hand +", O3: "+ o3Hand);
+			}
+			
+		});
 	}
 
 	private GameData(){
@@ -79,6 +94,8 @@ public class GameData implements Serializable {
 	public SingleDeck getDeck() {
 		return deck;
 	}
-
-
+	
+	public ArrayList<Hand> getPlayersInOrder() {
+		return playersInOrder;
+	}
 }
