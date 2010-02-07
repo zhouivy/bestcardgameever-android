@@ -14,6 +14,11 @@ public class OpponentHand extends Hand {
 
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public OpponentHand(YanivStrategy strategy, View container, ImageView[] cards, TextView name) {
 		super(container,cards,name);
 		//start the game with cards hidden

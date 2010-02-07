@@ -19,6 +19,13 @@ public class PlayerHand extends Hand {
 	
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+
 	public PlayerHand(View container, ImageView[] cards, TextView name) {
 		super(container,cards,name);
 		//cards always visible for p1

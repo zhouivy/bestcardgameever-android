@@ -3,22 +3,12 @@ package com.sheepzkeen.yaniv;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import android.util.Log;
-
 /**
  * a Serializable Singleton that holds the game data
  * @author Elad
  *
  */
 public class GameData implements Serializable {
-	
-	// Eagerly created instance
-	private static GameData instance = new GameData();
-	
-	
-	public static GameData getInstance() {
-		return instance;
-	}
 
 	/**
 	 * 
@@ -39,32 +29,38 @@ public class GameData implements Serializable {
 	//Deck - Logic elements
 	SingleDeck deck;
 	private ArrayList<Hand> playersInOrder;
-	
+	// Flag to indicate if this is the beginning of the game or middle
+	private boolean gameInProgress;
 
+	// Eagerly created instance
+	private static GameData instance = new GameData();
+	
+	private GameData(){
+		//Do nothing
+	}
+	
+	public static GameData getInstance() {
+		return instance;
+	}
 
 	protected void init(PlayerHand hand, OpponentHand hand2, OpponentHand hand3,
 			OpponentHand hand4, ThrownCards thrownCards, 
 			SingleDeck deck, Turn<Hand> turn, ArrayList<Hand> playersInOrder) {
-		p1Hand = hand;
-		o1Hand = hand2;
-		o2Hand = hand3;
-		o3Hand = hand4;
+		this.p1Hand = hand;
+		this.o1Hand = hand2;
+		this.o2Hand = hand3;
+		this.o3Hand = hand4;
 		this.thrownCards = thrownCards;
 		this.deck = deck;
 		this.turn = turn;
 		this.playersInOrder = playersInOrder;
+		this.gameInProgress = false;
 		turn.addOnTurnEndedListener(new Turn.OnTurnEndedListener<Hand>(){
-
 			@Override
 			public void onTurnEnded(Hand currentPlayer) {
 				//Log.v("Roey","P1:" + p1Hand +", O1: "+ o1Hand+", O2: "+ o2Hand +", O3: "+ o3Hand);
 			}
-			
 		});
-	}
-
-	private GameData(){
-		//Do nothing
 	}
 
 	public PlayerHand getP1Hand() {
@@ -97,5 +93,13 @@ public class GameData implements Serializable {
 	
 	public ArrayList<Hand> getPlayersInOrder() {
 		return playersInOrder;
+	}
+
+	public boolean isGameInProgress() {
+		return gameInProgress;
+	}
+
+	public void setGameInProgress(boolean gameInProgress) {
+		this.gameInProgress = gameInProgress;
 	}
 }

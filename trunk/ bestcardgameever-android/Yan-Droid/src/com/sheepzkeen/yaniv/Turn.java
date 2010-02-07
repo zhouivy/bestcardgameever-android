@@ -1,5 +1,6 @@
 package com.sheepzkeen.yaniv;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 //TODO make into singleton!
 /**
@@ -9,8 +10,13 @@ import java.util.ArrayList;
  * @author Elad
  *
  */
-public class Turn<T> {
+public class Turn<T> implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public interface OnTurnEndedListener<T> {
 
 		void onTurnEnded(T currentPlayer);

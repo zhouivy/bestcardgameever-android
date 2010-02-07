@@ -1,5 +1,6 @@
 package com.sheepzkeen.yaniv;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.util.Log;
@@ -16,7 +17,11 @@ import android.widget.TextView;
  * @author Elad
  *
  */
-public abstract class Hand implements Comparable<Hand> {
+public abstract class Hand implements Comparable<Hand> , Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected static final int YANIV_AMOUNT = 7;
 	protected PlayingCard[] cards;
 	int firstFreeLocation;

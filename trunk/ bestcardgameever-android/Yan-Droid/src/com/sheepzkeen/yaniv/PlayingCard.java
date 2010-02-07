@@ -1,5 +1,6 @@
 package com.sheepzkeen.yaniv;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 
 
@@ -10,8 +11,12 @@ import java.lang.reflect.Field;
  * @author Elad
  *
  */
-public class PlayingCard implements Comparable<PlayingCard> {
+public class PlayingCard implements Comparable<PlayingCard> , Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	//suits
 	protected static final char HEARTS = 'h';
 	protected static final char SPADES = 's';
