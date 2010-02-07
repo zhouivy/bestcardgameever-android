@@ -244,7 +244,7 @@ public class TestDropCardsAlgorithm {
 			card5.setSelected(true);
 			retVal[4] = card5;
 		}
-		// TODO Auto-generated method stub
+
 		return retVal;
 	}
 }

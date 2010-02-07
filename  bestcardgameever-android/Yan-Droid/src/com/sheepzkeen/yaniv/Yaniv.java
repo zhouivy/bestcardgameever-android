@@ -1,19 +1,27 @@
 package com.sheepzkeen.yaniv;
 
+/*
+ * TODO: 
+ * GameComponents need to be initialized from MainScreen activity, so it will not "die"
+ * when Yaniv activity dies...
+ * The separation we performed for init() is not sufficient.
+ * we need to separate the graphics components from the hand object and then pass it an adapter upon 
+ * initialization of graphic elements or keep the entire thing outside this activity and use it 
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -24,16 +32,22 @@ import android.widget.TextView;
 import com.sheepzkeen.yaniv.R.id;
 
 /**
- * The main activity of the application
+ * The core activity of the application
  * @author Elad
- *
  */
+
 public class Yaniv extends Activity {
 	
 	public static final int YANIV_NUM_CARDS = 5;
+	public static final int START_GAME = 1000;
+	public static final String STATE = "state";
+	public static final int RESUME_GAME = 2000;
+	public static enum STATES{start,resume,end};
+	public static final int defaultStartingPlayer = 0;
+	public static final String GAMEDATA_PARAMNAME = "gameData";
+	
 	//Deck - UI elements
 	private ImageView deckImg;
-
 	
 	// Player 1 - UI elements
 	private TextView p1Name;
@@ -103,15 +117,45 @@ public class Yaniv extends Activity {
 	private GameData gameData;
 	//TODO: end remove this
 	
-	
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
-		firstRun = true;
+		Log.d("PUKI","onCreate");
+
+		// Load game data that was passed by MainScreen
+		if(getIntent().getExtras() != null) {
+			gameData = (GameData)getIntent().getExtras().getSerializable(GAMEDATA_PARAMNAME);
+		}
+		else {
+			Log.e("PUKI", "getIntent().getExtras() == null");
+		}
 		
+		//	firstRun = true;
+		setContentView(R.layout.main);
+		
+		// Load state given by MainScreen
+		switch ((STATES)getIntent().getExtras().get(STATE)) {
+		case start:
+			firstRun = true;
+			break;
+		case resume:
+			firstRun = false;
+			break;
+		default:
+			firstRun = true;
+			break;
+		}
+		
+		// Transferring game data to MainScreen 
+		Bundle b = new Bundle();
+		b.putInt("int", 5);
+		b.putSerializable(GAMEDATA_PARAMNAME, gameData);
+		Intent i = new Intent();
+		i.putExtras(b);
+		setResult(0, i);
+		
+		init(firstRun);
 		
 			  //////////////////
 			 //TESTING/////////
@@ -119,25 +163,34 @@ public class Yaniv extends Activity {
 		
 		//TestDropCardsAlgorithm tests = new TestDropCardsAlgorithm(this);
 		//tests.testCardsCombination();
-		
-		
 
 			  //////////////////
 			 //END TESTING/////
 			//////////////////
-
-		
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d("PUKI","onDestroy");
+		
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Log.d("PUKI","onSaveInstanceState");
+	}
+
 	protected void onStart() {
 		super.onStart();
+		Log.d("PUKI","onStart");
+
 		if (firstRun) {
-			init();
+//			init(false);
 			firstRun = false;
 		}
 
-		//TODO: implement save\reload here
-		
 		// Perform Yaniv Listener
 		yanivBtn.setOnClickListener(new Button.OnClickListener(){
 
@@ -156,7 +209,7 @@ public class Yaniv extends Activity {
 		}
 		);		
 
-		// Drop Cards Listener
+		// Next player Listener
 		nextPlayerBtn.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v){
 				gameData.getTurn().next();
@@ -207,13 +260,7 @@ public class Yaniv extends Activity {
 	}
 
 
-	/**
-	 * Initializes all the components
-	 */
-	private void init() {
-		firstDeal = true;
-		cheatString = new String();
-		
+	private void initGraphicComponents() {
 		//TODO: remove this
 		d = new Dialog(this);
 		d.setTitle("hello");
@@ -221,8 +268,8 @@ public class Yaniv extends Activity {
 
 		headingTv = (TextView) findViewById(id.headingText);
 		
-		
 		uhOhDialog1 = new MyDialog(this);
+
 		// Player 1
 		p1Name = (TextView) findViewById(id.p1Name);
 		p1c1Img = (ImageView) findViewById(id.p1c1);
@@ -235,7 +282,6 @@ public class Yaniv extends Activity {
 
 		p1Cards = new ImageView[] { p1c1Img, p1c2Img, p1c3Img, p1c4Img, p1c5Img };
 
-
 		// Opponent 1
 		o1Name = (TextView) findViewById(id.o1Name);
 		o1c1Img = (ImageView) findViewById(id.o1c1);
@@ -246,9 +292,7 @@ public class Yaniv extends Activity {
 
 		o1Container = (LinearLayout) findViewById(id.leftCol);
 
-		o1Cards = new ImageView[] { o1c1Img, o1c2Img, o1c3Img, o1c4Img,
-				o1c5Img };
-
+		o1Cards = new ImageView[] { o1c1Img, o1c2Img, o1c3Img, o1c4Img, o1c5Img };
 
 		// Opponent 2
 		o2Name = (TextView) findViewById(id.o2Name);
@@ -259,8 +303,7 @@ public class Yaniv extends Activity {
 		o2c5Img = (ImageView) findViewById(id.o2c5);
 		o2Container = (LinearLayout) findViewById(id.topRow);
 
-		o2Cards = new ImageView[] { o2c1Img, o2c2Img, o2c3Img, o2c4Img,
-				o2c5Img };
+		o2Cards = new ImageView[] { o2c1Img, o2c2Img, o2c3Img, o2c4Img, o2c5Img };
 
 		// Opponent 3
 		o3Name = (TextView) findViewById(id.o3Name);
@@ -272,8 +315,7 @@ public class Yaniv extends Activity {
 
 		o3Container = (LinearLayout) findViewById(id.rightCol);
 
-		o3Cards = new ImageView[] { o3c1Img, o3c2Img, o3c3Img, o3c4Img,
-				o3c5Img };
+		o3Cards = new ImageView[] { o3c1Img, o3c2Img, o3c3Img, o3c4Img, o3c5Img };
 		
 		// Thrown Cards 
 		c5Thrown = (ImageView) findViewById(id.card5);
@@ -297,12 +339,15 @@ public class Yaniv extends Activity {
 		// will be gone until required
 		nextPlayerBtn.setVisibility(View.GONE);
 		
-		
-		
 		// Perform Yaniv Button
 		yanivBtn = (Button)findViewById(id.PerformYaniv);
 		// will be gone until required
 		yanivBtn.setVisibility(View.GONE);
+	}
+
+	private void initGameComponents() {
+		firstDeal = true;
+		cheatString = new String();
 		
 		// array of order of players in the beginning of the game (p1 is first) 
 		playersInOrder = new ArrayList<Hand>();
@@ -314,18 +359,28 @@ public class Yaniv extends Activity {
 		playersInOrder.add(o2Hand);
 		OpponentHand o3Hand = new OpponentHand(new BasicYanivStrategy(), o3Container,o3Cards,o3Name);
 		playersInOrder.add(o3Hand);
-		int startingPlayer = 0;
 
-		
-		this.gameData = GameData.getInstance();
+		//this.gameData = GameData.getInstance();
 		gameData.init(p1Hand,
 				o1Hand,
 				o2Hand,
 				o3Hand,
 				new ThrownCards(),
 				new SingleDeck(),
-				new Turn<Hand>(playersInOrder, startingPlayer),
+				new Turn<Hand>(playersInOrder, defaultStartingPlayer),
 				playersInOrder);
+		gameData.setGameInProgress(true);
+	}
+
+	/**
+	 * Initializes all the components
+	 * @param isGameCreation 
+	 */
+	private void init(boolean isGameCreation) {
+		initGraphicComponents();
+		if (isGameCreation) {
+			initGameComponents();
+		}
 	}
 
 	protected void dealCards() {
@@ -425,9 +480,7 @@ public class Yaniv extends Activity {
 			yanivBtn.setVisibility(View.GONE);
 		}
 		
-		
 		container.requestLayout();
-
 	}
 	
 	private void redrawThrownCards() {
@@ -467,12 +520,26 @@ public class Yaniv extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		//TODO: save everything
+		Log.d("PUKI", "OnPause");
+
 	}
 	@Override
 	protected void onResume() {
 		super.onResume();
 		//TODO: restore everything
+		Log.d("PUKI", "OnResume");
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Log.d("PUKI", "OnStop");
+	}
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		Log.d("PUKI", "OnRestart");
 	}
 
 	
@@ -855,6 +922,7 @@ case KeyEvent.KEYCODE_D:
 
 	break;
 default:
+	super.onKeyDown(keyCode, event);
 	cheatString = "";
 	break;
 }
@@ -862,4 +930,6 @@ default:
 	Log.d("CHEATING", "Key pressed:"+ (char)keyCode + ", cheatString is now:"+cheatString+", cheat is "+(isCheating? "en":"dis")+"abled.");
 	return false;
 }
+
+
 }

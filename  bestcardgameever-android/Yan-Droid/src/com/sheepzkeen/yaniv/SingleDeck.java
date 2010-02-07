@@ -14,6 +14,11 @@ public class SingleDeck extends PlayingCardsCollection {
 
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public SingleDeck() {
 		super();
 		// Create a temporary deck

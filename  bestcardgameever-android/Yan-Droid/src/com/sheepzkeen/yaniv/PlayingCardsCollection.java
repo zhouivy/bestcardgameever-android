@@ -1,5 +1,6 @@
 package com.sheepzkeen.yaniv;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Stack;
 
@@ -8,9 +9,13 @@ import java.util.Stack;
  * @author Elad
  *
  */
-public abstract class PlayingCardsCollection {
+public abstract class PlayingCardsCollection implements Serializable{
 
 
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 //	 public static final Map<String, Integer> cardToValue = new HashMap<String, Integer>();
 //	 static {
 //		 cardToValue.put("1", 1);

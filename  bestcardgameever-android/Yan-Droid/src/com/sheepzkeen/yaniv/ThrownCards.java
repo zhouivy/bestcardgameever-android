@@ -8,6 +8,12 @@ import java.util.Stack;
  *
  */
 public class ThrownCards extends PlayingCardsCollection {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	public ThrownCards() {
 		super();
 		this.cards = new Stack<PlayingCard>();

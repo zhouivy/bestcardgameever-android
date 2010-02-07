@@ -12,7 +12,6 @@ import android.util.Log;
  * pickup: if card on table < average of available cards values (6.7)
  * yaniv: if possible, perform.
  * @author Elad
- *
  */
 public class BasicYanivStrategy implements YanivStrategy {
 
@@ -68,19 +67,21 @@ public class BasicYanivStrategy implements YanivStrategy {
 //		System.out.println("original cards in hand: "+copyOfOriginalCards);
 //		System.out.println("card on table : " + thrown.peekTopCard());
 
-		//First drop option - find the cards to drop regardless the thrown card.
-		ArrayList<PlayingCard> cardsToDropWithOutTrownCard = findBestDropOption(cards);
+		// First drop option - find the cards to drop regardless the thrown card.
+		ArrayList<PlayingCard> cardsToDropWithOutThrownCard = findBestDropOption(cards);
 
-		//Second drop option - find the cards to drop with thrown card.
+		// Second drop option - find the cards to drop with thrown card.
 		ArrayList<PlayingCard> cardsToDropWithThrownCard = findBestDropOptionWithThrownCard(cards);
 
-		//Third drop option(switch) - find the cards to drop with thrown card after switch the the cards that the DDA decided to drop regardless the thrown card, with the thrown card itself.
-		ArrayList<PlayingCard> cardsToDropAfterSwitchWithTrownCard = findBestDropOptionAfterSwitch(copyOfOriginalCards, cardsToDropWithOutTrownCard);
+		// Third drop option(switch)
+		// find the cards to drop with thrown card after switch the cards that the DDA decided to drop regardless the thrown card, with the thrown card itself.
+		ArrayList<PlayingCard> cardsToDropAfterSwitchWithTrownCard = findBestDropOptionAfterSwitch(copyOfOriginalCards, cardsToDropWithOutThrownCard);
 
 		// Calculate all three drop options
-		int firstDropChoice =  countCards(cardsToDropWithOutTrownCard);
+		// TODO: Read and verify 2 & 3 make sense
+		int firstDropChoice =  countCards(cardsToDropWithOutThrownCard);
 		int secondDropChoice = (countCards(highestSetOrSeriesWithThrownCard) + countCards(cardsToDropWithThrownCard));
-		int	thirdDropChoice = countCards(cardsToDropAfterSwitchWithTrownCard) + countCards(cardsToDropWithOutTrownCard);
+		int	thirdDropChoice = countCards(cardsToDropAfterSwitchWithTrownCard) + countCards(cardsToDropWithOutThrownCard);
 
 		//TODO: remove the next 3 lines.
 //		System.out.println("first choice(DDA) = " + cardsToDropWithOutTrownCard + " = " +firstDropChoice);
@@ -89,7 +90,7 @@ public class BasicYanivStrategy implements YanivStrategy {
 
 		//choose the best drop option
 		if(thirdDropChoice > secondDropChoice && thirdDropChoice > firstDropChoice){
-			cardsToDrop = cardsToDropWithOutTrownCard;
+			cardsToDrop = cardsToDropWithOutThrownCard;
 			pickUpFrom = PickupMethod.fromThrown;
 //			System.out.println("third choice was selected");
 		}else if(secondDropChoice > thirdDropChoice && secondDropChoice > firstDropChoice){
@@ -97,16 +98,16 @@ public class BasicYanivStrategy implements YanivStrategy {
 			pickUpFrom = PickupMethod.fromThrown;
 //			System.out.println("second choice was selected");
 		}else if(secondDropChoice == thirdDropChoice && secondDropChoice > firstDropChoice && thirdDropChoice > firstDropChoice ){
-			if(countCards(cardsToDropWithThrownCard) > countCards(cardsToDropWithOutTrownCard)){
+			if(countCards(cardsToDropWithThrownCard) > countCards(cardsToDropWithOutThrownCard)){
 				cardsToDrop = cardsToDropWithThrownCard;
 //				System.out.println("third choice was selected");
 			}else{
-				cardsToDrop = cardsToDropWithOutTrownCard;
+				cardsToDrop = cardsToDropWithOutThrownCard;
 //				System.out.println("third choice was selected");
 			}
 			pickUpFrom = PickupMethod.fromThrown;
 		}else{
-			cardsToDrop = cardsToDropWithOutTrownCard;
+			cardsToDrop = cardsToDropWithOutThrownCard;
 			pickUpFrom = PickupMethod.decidePickup;
 //			System.out.println("first choice was selected");
 		}
