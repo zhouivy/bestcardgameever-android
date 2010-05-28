@@ -42,14 +42,14 @@ public class YanivPersistenceAdapter {
 			} catch (FileNotFoundException e) {
 				Log.i(LOG_TAG, "File " + FILE_NAME
 						+ " does not exist, probably a first run");
-//				appCtx.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
 				setSavedGameData(GameData.createNewGame());
 				Log.i(LOG_TAG, "File " + FILE_NAME + " Created Succesfuly");
 				file = appCtx.openFileInput(FILE_NAME);
 			}
-			InputStream buffer = new BufferedInputStream(file);
-			ObjectInput input = new ObjectInputStream(buffer);
+
+			ObjectInput input = new ObjectInputStream(file);
 			gd = (GameData) input.readObject();
+			Log.d(LOG_TAG,"file loaded succesfuly");
 		} catch (FileNotFoundException e) {
 			Log.e(LOG_TAG, "Could not open file " + FILE_NAME, e);
 			throw new YanivPersistenceException(e);
@@ -77,9 +77,9 @@ public class YanivPersistenceAdapter {
 		FileOutputStream file = null;
 		try {
 			file = appCtx.openFileOutput(FILE_NAME, Context.MODE_PRIVATE);
-			OutputStream buffer = new BufferedOutputStream(file);
-			ObjectOutput output = new ObjectOutputStream(buffer);
+			ObjectOutput output = new ObjectOutputStream(file);
 			output.writeObject(savedGameData);
+			Log.d(LOG_TAG,"file saved succesfuly");
 		} catch (FileNotFoundException e) {
 			Log.e(LOG_TAG, "Could not open file " + FILE_NAME, e);
 			throw new YanivPersistenceException(e);
