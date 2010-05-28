@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="title">Hello World, Yaniv</string>
-	<string name="app_name">Yaniv Card Game</string>
+	<string name="hello">Hello World, Yaniv</string>
+	<string name="app_name">Yan-Droid</string>
 	<string name="Heading">Yaniv - A Card Game </string>
 	<string name="DropSelected">Drop Cards</string>
 	<string name="Player">Player</string>
