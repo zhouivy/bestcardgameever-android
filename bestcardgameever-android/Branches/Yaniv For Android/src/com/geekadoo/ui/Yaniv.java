@@ -40,18 +40,18 @@ import com.geekadoo.logic.Turn;
 
 /**
  * The core activity of the application
+ * 
  * @author Elad
  */
 
 public class Yaniv extends Activity {
-	
+
 	private static final String YANIV_TAG = "Yaniv";
-	private YanivPersistenceAdapter persistencAdapter;
-	
-	////////////////////////
-	//Deck - UI elements
+
+	// //////////////////////
+	// Deck - UI elements
 	private ImageView deckImg;
-	
+
 	// Player 1 - UI elements
 	private TextView p1Name;
 	private ImageView[] p1Cards;
@@ -62,7 +62,7 @@ public class Yaniv extends Activity {
 	private ImageView p1c5Img;
 	private LinearLayout p1Container;
 
-	// Opponent 1  - UI elements
+	// Opponent 1 - UI elements
 	private TextView o1Name;
 	private ImageView o1c1Img;
 	private ImageView o1c2Img;
@@ -71,7 +71,7 @@ public class Yaniv extends Activity {
 	private ImageView o1c5Img;
 	private LinearLayout o1Container;
 	private ImageView[] o1Cards;
-	
+
 	// Opponent 2 - UI elements
 	private TextView o2Name;
 	private ImageView o2c1Img;
@@ -81,7 +81,7 @@ public class Yaniv extends Activity {
 	private ImageView o2c5Img;
 	private LinearLayout o2Container;
 	private ImageView[] o2Cards;
-		
+
 	// Opponent 3 - UI elements
 	private TextView o3Name;
 	private ImageView o3c1Img;
@@ -92,7 +92,7 @@ public class Yaniv extends Activity {
 	private LinearLayout o3Container;
 	private ImageView[] o3Cards;
 
-	//Thrown Cards - UI elements
+	// Thrown Cards - UI elements
 	private ImageView c1Thrown;
 	private ImageView c2Thrown;
 	private ImageView c3Thrown;
@@ -101,35 +101,33 @@ public class Yaniv extends Activity {
 	private ImageView[] thrownCardsImgs;
 	private View thrownCardsContainer;
 
-	//Misc.
+	// Misc.
 	private Button dropCardsBtn;
 	private Button nextPlayerBtn;
 	protected MyDialog uhOhDialog1;
 	private Button yanivBtn;
 	private TextView headingTv;
-//End UI Elements
+	// End UI Elements
 	private boolean isCheating;
 	private String cheatString;
 
-	//TODO: remove this
+	// TODO: remove this
 	private Dialog d;
 	private PlayingCard[] tempThrownArr;
 	private GameData gameData;
-	//TODO: end remove this
-	////////////////////////
+	// TODO: end remove this
+	// //////////////////////
 	private boolean firstRun;
-	
-
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.v(YANIV_TAG,"onCreate");
+		Log.v(YANIV_TAG, "onCreate");
 		setContentView(R.layout.main);
-		
+
 		// Load state given by MainScreen
-		switch ((GameData.STATES)getIntent().getExtras().get(GameData.STATE)) {
+		switch ((GameData.STATES) getIntent().getExtras().get(GameData.STATE)) {
 		case start:
 			firstRun = true;
 			break;
@@ -141,47 +139,36 @@ public class Yaniv extends Activity {
 			break;
 		}
 
-		// TODO: change the loading of the GameData to be performed in 
+		// TODO: change the loading of the GameData to be performed in
 		// GameData - on first access
-		persistencAdapter = new YanivPersistenceAdapter(getApplicationContext());
 
-		gameData = (savedInstanceState == null) ? null :
-            (GameData) savedInstanceState.getSerializable(YanivPersistenceAdapter.GAME_DATA);
-        
+		gameData = (savedInstanceState == null) ? null
+				: (GameData) savedInstanceState
+						.getSerializable(YanivPersistenceAdapter.GAME_DATA);
+
 		if (gameData == null) {
-			if(!firstRun){
-				// Existing game, read it from the persistence provider
-        		try{
-        			gameData = persistencAdapter.getSavedGameData();
-        		}catch (YanivPersistenceException e) {
-        			// TODO: pop up a sorry box and report this problem... - could not load, creating new.
-        			Log.e(YANIV_TAG,"Yaniv could not load state, creating new gamedata");
-        			gameData = GameData.createNewGame();
-        		}
-        	}
-			else{
-        		// First run: Override existing game in memory 
-        		gameData = GameData.createNewGame();
-        	}
-        }
-		init(firstRun);
+			gameData = GameData.getInstance(firstRun, getApplicationContext());
+			init(firstRun);
+		}
 	}
+
 	/**
 	 * Initializes all the components
-	 * @param isGameCreation 
+	 * 
+	 * @param isFirstRun
 	 */
-	private void init(boolean isGameCreation) {
+	private void init(boolean isFirstRun) {
 		initGraphicComponents();
 	}
-	
+
 	private void initGraphicComponents() {
-		//TODO: remove this
+		// TODO: remove this
 		d = new Dialog(this);
 		d.setTitle("hello");
-		//TODO: end remove this
+		// TODO: end remove this
 
 		headingTv = (TextView) findViewById(id.headingText);
-		
+
 		uhOhDialog1 = new MyDialog(this);
 
 		// Player 1
@@ -230,59 +217,60 @@ public class Yaniv extends Activity {
 		o3Container = (LinearLayout) findViewById(id.rightCol);
 
 		o3Cards = new ImageView[] { o3c1Img, o3c2Img, o3c3Img, o3c4Img, o3c5Img };
-		
-		// Thrown Cards 
+
+		// Thrown Cards
 		c5Thrown = (ImageView) findViewById(id.card5);
 		c4Thrown = (ImageView) findViewById(id.card4);
 		c3Thrown = (ImageView) findViewById(id.card3);
 		c2Thrown = (ImageView) findViewById(id.card2);
 		c1Thrown = (ImageView) findViewById(id.card1);
-		thrownCardsImgs = new ImageView[] {c1Thrown,c2Thrown,c3Thrown,c4Thrown,c5Thrown};
+		thrownCardsImgs = new ImageView[] { c1Thrown, c2Thrown, c3Thrown,
+				c4Thrown, c5Thrown };
 		thrownCardsContainer = findViewById(id.cardsThrown);
 
 		// Deck
 		deckImg = (ImageView) findViewById(id.deck);
 
 		// Drop Cards Button
-		dropCardsBtn = (Button)findViewById(id.DropCards);
+		dropCardsBtn = (Button) findViewById(id.DropCards);
 		// will be gone until required
 		dropCardsBtn.setVisibility(View.GONE);
-		
+
 		// Next Player Button
-		nextPlayerBtn = (Button)findViewById(id.NextPlayer);
+		nextPlayerBtn = (Button) findViewById(id.NextPlayer);
 		// will be gone until required
 		nextPlayerBtn.setVisibility(View.GONE);
-		
+
 		// Perform Yaniv Button
-		yanivBtn = (Button)findViewById(id.PerformYaniv);
+		yanivBtn = (Button) findViewById(id.PerformYaniv);
 		// will be gone until required
 		yanivBtn.setVisibility(View.GONE);
 	}
 
-
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.v(YANIV_TAG,"OnPause");
+		Log.v(YANIV_TAG, "OnPause");
 		saveState();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.v(YANIV_TAG,"OnResume");
+		Log.v(YANIV_TAG, "OnResume");
 		populateGameData();
+		redrawAll();
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		System.out.println("new config, orientation: " + newConfig.orientation );
-		
-		if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_YES){
+		System.out.println("new config, orientation: " + newConfig.orientation);
+
+		if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_YES) {
 			System.out.println("Keyboard open");
 		}
-		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			System.out.println("Orientation Landscape");
 		}
 	}
@@ -290,63 +278,66 @@ public class Yaniv extends Activity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.v(YANIV_TAG,"OnSaveInstanceState");
+		Log.v(YANIV_TAG, "OnSaveInstanceState");
 		saveState();
 		outState.putSerializable(YanivPersistenceAdapter.GAME_DATA, gameData);
 
 	}
 
 	private void saveState() {
-		try{
-			persistencAdapter.setSavedGameData(gameData);
-			Log.d(YANIV_TAG,"Yaniv saving state");
-		}catch (YanivPersistenceException e) {
-			// TODO: pop up a sorry box and report this problem... - could not save
-			Log.e(YANIV_TAG,"Yaniv could not save state");
+		try {
+			gameData.save(getApplicationContext());
+			Log.d(YANIV_TAG, "Yaniv saving state");
+		} catch (YanivPersistenceException e) {
+			// TODO: pop up a sorry box and report this problem... - could not
+			// save
+			Log.e(YANIV_TAG, "Yaniv could not save state");
 		}
 	}
-	
+
 	private void populateGameData() {
-		gameData.getP1Hand().bindGraphicComponents(p1Container,p1Cards, p1Name.getText());
-		gameData.getO1Hand().bindGraphicComponents(o1Container,o1Cards, o1Name.getText());
-		gameData.getO2Hand().bindGraphicComponents(o2Container,o2Cards, o2Name.getText());
-		gameData.getO3Hand().bindGraphicComponents(o3Container,o3Cards, o3Name.getText());
-	}	
-	
+		gameData.getP1Hand().bindGraphicComponents(p1Container, p1Cards,
+				p1Name.getText());
+		gameData.getO1Hand().bindGraphicComponents(o1Container, o1Cards,
+				o1Name.getText());
+		gameData.getO2Hand().bindGraphicComponents(o2Container, o2Cards,
+				o2Name.getText());
+		gameData.getO3Hand().bindGraphicComponents(o3Container, o3Cards,
+				o3Name.getText());
+	}
+
 	protected void onStart() {
 		super.onStart();
-		Log.v(YANIV_TAG,"onStart");
+		Log.v(YANIV_TAG, "onStart");
 
-//		if (firstRun) {
-////			init(false);
-//			firstRun = false;
-//		}
+		// if (firstRun) {
+		// // init(false);
+		// firstRun = false;
+		// }
 
 		// Perform Yaniv Listener
-		yanivBtn.setOnClickListener(new Button.OnClickListener(){
+		yanivBtn.setOnClickListener(new Button.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				performYanivHandler();
 			}
-			
+
 		});
-		
+
 		// Drop Cards Listener
 		dropCardsBtn.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v){
+			public void onClick(View v) {
 				dropCardsClickHandler();
 			}
-		}
-		);		
+		});
 
 		// Next player Listener
 		nextPlayerBtn.setOnClickListener(new Button.OnClickListener() {
-			public void onClick(View v){
+			public void onClick(View v) {
 				gameData.getTurn().next();
 			}
-		}
-		);		
+		});
 
 		// add a click listener to the deck
 		deckImg.setOnClickListener(new View.OnClickListener() {
@@ -355,7 +346,7 @@ public class Yaniv extends Activity {
 			}
 		});
 
-		// click listener for each card of player 1 
+		// click listener for each card of player 1
 		for (int cardIndex = 0; cardIndex < GameData.YANIV_NUM_CARDS; cardIndex++) {
 			final ImageView card = p1Cards[cardIndex];
 			final int finalCardIndex = cardIndex;
@@ -366,7 +357,7 @@ public class Yaniv extends Activity {
 				}
 			});
 		}
-		
+
 		// Thrown Cards Listener for pickup
 		c1Thrown.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -374,76 +365,81 @@ public class Yaniv extends Activity {
 				thrownCardsClickHandler();
 			}
 		});
-		
 
-		gameData.getTurn().addOnTurnEndedListener(new Turn.OnTurnEndedListener<Hand>(){
-			@Override
-			public void onTurnEnded(Hand hand){
-				turnEndedHandler(hand);
-			}
-		});
+		gameData.getTurn().addOnTurnEndedListener(
+				new Turn.OnTurnEndedListener<Hand>() {
+
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 5094578452334038986L;
+
+					@Override
+					public void onTurnEnded(Hand hand) {
+						turnEndedHandler(hand);
+					}
+				});
 
 	}
-	
-	///////////////////////////////////////////////////////////////////////////////
-	/////////////////////Handlers//////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////////	
+
+	// /////////////////////////////////////////////////////////////////////////////
+	// ///////////////////Handlers//////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////////
 	/**
-	 * 	what to do when one of the players cards are clicked
-	 *  mark as selected \ unselected in gameplay and update the hand
-	 *
-	 * @param cardIndex the index of the selected card
+	 * what to do when one of the players cards are clicked mark as selected \
+	 * unselected in gameplay and update the hand
+	 * 
+	 * @param cardIndex
+	 *            the index of the selected card
 	 */
 	private void p1CardsClickHandler(final int cardIndex) {
-		gameData.getP1Hand().changeSelectionStateOnCard(cardIndex);
-		
-		redrawHand(gameData.getP1Hand());
+		if (gameData.getTurn().peek().isAwaitingInput()) {
+			gameData.getP1Hand().changeSelectionStateOnCard(cardIndex);
+			redrawHand(gameData.getP1Hand());
+		}// TODO:ELSE (show uhoh dialog)
 	}
 
 	/**
-	 * I - 1
-	 * Drop cards that were previously marked
-	 * RULE: first you drop, then you pickup
+	 * I - 1 Drop cards that were previously marked RULE: first you drop, then
+	 * you pickup
 	 */
 	private void dropCardsClickHandler() {
-		if (gameData.getP1Hand().getCanDrop() == true){
+		if (gameData.getP1Hand().getCanDrop() == true) {
 			try {
 				tempThrownArr = gameData.getP1Hand().drop();
-			
-			// Rule: after drop you are not allowed to drop again
+
+				// Rule: after drop you are not allowed to drop again
 				gameData.getP1Hand().setCanDrop(false);
-			// Rule: after drop you are allowed to pickup again 
+				// Rule: after drop you are allowed to pickup again
 				gameData.getP1Hand().setCanPickup(true);
-			
-			dropCardsBtn.setVisibility(View.GONE);
-			//Note, we don't redraw the cards here, since we want the player to see the cards he is throwing until they are down
-			
+
+				dropCardsBtn.setVisibility(View.GONE);
+				// Note, we don't redraw the cards here, since we want the
+				// player to see the cards he is throwing until they are down
+
 			} catch (InvalidDropException e) {
 				d.setTitle("You Can't Drop This!\nReason: " + e.getMessage());
 				d.show();
-				
+
 			}
-		}else{
+		} else {
 			uhOhDialog1.show();
 		}
 	}
 
 	/**
-	 * II - 2
-	 * handler for the thrown cards click
-	 * RULE: first you drop, then you pickup
+	 * II - 2 handler for the thrown cards click RULE: first you drop, then you
+	 * pickup
 	 */
 	private void thrownCardsClickHandler() {
 		// When the last thrown card is clicked it is picked up
 		p1Pickup(PickupMethod.fromThrown);
 	}
-	
+
 	/**
-	 * II - 2
-	 * handler for the deck click
-	 * RULE: first you drop, then you pickup
+	 * II - 2 handler for the deck click RULE: first you drop, then you pickup
 	 */
-	
+
 	private void deckClickHandler() {
 		if (gameData.isFirstDeal()) {
 			dealCards();
@@ -452,13 +448,13 @@ public class Yaniv extends Activity {
 			p1Pickup(PickupMethod.fromDeck);
 		}
 	}
-	
+
 	private void performYanivHandler() {
 		gameData.getP1Hand().doYaniv();
-		//TODO: Perform yaniv (call p1hand.doYaniv()), end game
-		//Note: will only be visible when yaniv is possible
-		//note 2: this ends the game, need to call score here
-		
+		// TODO: Perform yaniv (call p1hand.doYaniv()), end game
+		// Note: will only be visible when yaniv is possible
+		// note 2: this ends the game, need to call score here
+
 		// Show everyone's cards
 		gameData.getO1Hand().setShouldCardsBeShown(true);
 		gameData.getO2Hand().setShouldCardsBeShown(true);
@@ -472,29 +468,29 @@ public class Yaniv extends Activity {
 		o1Name.setText(String.valueOf(o1Count));
 		o2Name.setText(String.valueOf(o2Count));
 		o3Name.setText(String.valueOf(o3Count));
-		//redraw hands
+		// redraw hands
 		redrawHand(gameData.getP1Hand());
 		redrawHand(gameData.getO1Hand());
 		redrawHand(gameData.getO2Hand());
 		redrawHand(gameData.getO3Hand());
-		
-		//Check if won or lost
+
+		// Check if won or lost
 		ArrayList<Hand> playersByPosition = gameData.getPlayersInOrder();
 		Collections.sort(playersByPosition);
-		if(playersByPosition.indexOf(gameData.getP1Hand()) == 0){
-			//P1 won
-			
+		if (playersByPosition.indexOf(gameData.getP1Hand()) == 0) {
+			// P1 won
+
 			d.setTitle("You Won!");
 			d.show();
-		}else{
-			d.setTitle(playersByPosition.get(0).getPlayerName() +" won! (you lost)");
+		} else {
+			d.setTitle(playersByPosition.get(0).getPlayerName()
+					+ " won! (you lost)");
 			d.show();
 		}
-		//end game and add to scores
-		//playersInOrder = winner is first and others after him clockwise 
-		//turn = new Turn<Hand>(playersInOrder);
+		// end game and add to scores
+		// playersInOrder = winner is first and others after him clockwise
+		// turn = new Turn<Hand>(playersInOrder);
 	}
-
 
 	private void turnEndedHandler(Hand hand) {
 		if (hand.isAwaitingInput()) {
@@ -512,69 +508,75 @@ public class Yaniv extends Activity {
 			} catch (InvalidDropException e) {
 				d.setTitle(e.getMessage());
 				d.show();// i know it's a bug, bug it should happen irl - no way
-							// that the ai will do an invalid drop...
+				// that the ai will do an invalid drop...
 			}
 		}
-				
+
 		hand.getContainer().setBackgroundDrawable(null);
 	}
-	
+
 	protected void dealCards() {
 
 		int startOffset = 0;
 		// 5 cards for each player
 		for (int i = 0; i < GameData.YANIV_NUM_CARDS; i++) {
-			
+
 			for (Hand hand : gameData.getPlayersInOrder()) {
 				hand.addCard(gameData.getDeck().popTopCard());
-				
-				//anim
-				int[] handLocation = {0,0};
+
+				// anim
+				int[] handLocation = { 0, 0 };
 				hand.getContainer().getLocationInWindow(handLocation);
-				Log.e("COOR","Hand: ["+handLocation[0]+","+handLocation[1]+"]");
-				int[] deckLocation = {0,0};
+				Log.e("COOR", "Hand: [" + handLocation[0] + ","
+						+ handLocation[1] + "]");
+				int[] deckLocation = { 0, 0 };
 				deckImg.getLocationInWindow(deckLocation);
-				Log.e("COOR","Deck: ["+deckLocation[0]+","+deckLocation[1]+"]");
-				//move from deck location to hand location
-				TranslateAnimation dealCardAnimation = new TranslateAnimation(Animation.ABSOLUTE,deckLocation[0],
-						Animation.ABSOLUTE,handLocation[0],
-						Animation.ABSOLUTE,deckLocation[1],
-						Animation.ABSOLUTE,handLocation[1]);
-				dealCardAnimation.setDuration(100); 
-				dealCardAnimation.setStartOffset(100*startOffset++);
-				//end 
-				
+				Log.e("COOR", "Deck: [" + deckLocation[0] + ","
+						+ deckLocation[1] + "]");
+				// move from deck location to hand location
+				TranslateAnimation dealCardAnimation = new TranslateAnimation(
+						Animation.ABSOLUTE, deckLocation[0],
+						Animation.ABSOLUTE, handLocation[0],
+						Animation.ABSOLUTE, deckLocation[1],
+						Animation.ABSOLUTE, handLocation[1]);
+				dealCardAnimation.setDuration(100);
+				dealCardAnimation.setStartOffset(100 * startOffset++);
+				// end
+
 				hand.getCardsViews()[i].startAnimation(dealCardAnimation);
-				
+
 				redrawHand(hand);
 			}
 		}
-		
+
 		// after dealing, put a card on the table for pick up
 		gameData.getThrownCards().push(gameData.getDeck().popTopCard());
 		redrawThrownCards();
 	}
-	
-	private void p1Pickup(PickupMethod method){
+
+	private void p1Pickup(PickupMethod method) {
 		// Usability fix:
-		if(gameData.getP1Hand().hasSelectedCard()){
+		if (gameData.getP1Hand().hasSelectedCard()) {
 			dropCardsClickHandler();
 		}
 		Hand currentHand = gameData.getTurn().peek();
 		// First verify that it is the player's turn and that he is
 		// eligible for pickup
-		if(gameData.getP1Hand().canPickup() && currentHand.isAwaitingInput() == true && currentHand .getCanPickup() == true){
+		if (gameData.getP1Hand().canPickup()
+				&& currentHand.isAwaitingInput() == true
+				&& currentHand.getCanPickup() == true) {
 			// fill virtual hand on first available place
 			gameData.getP1Hand().pickup(method);
 
 			// Rule: after pickup you are allowed to drop again
 			gameData.getP1Hand().setCanDrop(true);
-			// Rule: after pickup you are not allowed to pickup again 
+			// Rule: after pickup you are not allowed to pickup again
 			gameData.getP1Hand().setCanPickup(false);
 
-			//mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
+			// mark the cards in the cards to drop as unselected so that if
+			// somebody picks them up they will be unselected
 			for (PlayingCard card : tempThrownArr) {
-				if (card != null){
+				if (card != null) {
 					card.setSelected(false);
 				}
 			}
@@ -584,10 +586,10 @@ public class Yaniv extends Activity {
 			redrawThrownCards();
 			// redraw the hand
 			redrawHand(gameData.getP1Hand());
-			//and advance a turn
+			// and advance a turn
 			gameData.getTurn().next();
-		}else{
-			//show a dialog box saying 'cant pick up' or something
+		} else {
+			// show a dialog box saying 'cant pick up' or something
 			uhOhDialog1.show();
 		}
 	}
@@ -595,66 +597,66 @@ public class Yaniv extends Activity {
 	private void redrawHand(Hand hand) {
 		ImageView[] cardView = hand.getCardsViews();
 		View container = hand.getContainer();
-		
-		for (int i = 0; i < GameData.YANIV_NUM_CARDS; i++) {
-				PlayingCard card = hand.getCardByLocation(i);
-				if (card != null){
-					//Show Card
-					cardView[i].setVisibility(View.VISIBLE);
-					int resId;
-					if (hand.shouldCardsBeShown()) {
-						resId = card.getImageResourceId();
-					}else{
-						resId = R.drawable.back;
-					}
-					cardView[i].setImageResource(resId);
 
-					//TODO: Disgusting patch, need to fix asap!!!
-					if (hand == gameData.getP1Hand()){
-						//Show isSelected
-						//when selected, move up 10 pixels
-						boolean isSelected = hand.isCardSelected(i);
-						((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin =
-							isSelected? 10 : 0 ; 
-					}
-				}else{
-					cardView[i].setVisibility(View.INVISIBLE);
+		for (int i = 0; i < GameData.YANIV_NUM_CARDS; i++) {
+			PlayingCard card = hand.getCardByLocation(i);
+			if (card != null) {
+				// Show Card
+				cardView[i].setVisibility(View.VISIBLE);
+				int resId;
+				if (hand.shouldCardsBeShown()) {
+					resId = card.getImageResourceId();
+				} else {
+					resId = R.drawable.back;
 				}
+				cardView[i].setImageResource(resId);
+
+				// TODO: Disgusting patch, need to fix asap!!!
+				if (hand == gameData.getP1Hand()) {
+					// Show isSelected
+					// when selected, move up 10 pixels
+					boolean isSelected = hand.isCardSelected(i);
+					((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin = isSelected ? 10
+							: 0;
+				}
+			} else {
+				cardView[i].setVisibility(View.INVISIBLE);
+			}
 		}
-		
-		//TODO: problematic - this only applies to p1:
-		
-		//and show the drop cards button if needed
-		//if this and no other cards are selected, don't show the button
-		if(gameData.getP1Hand().hasSelectedCard() == false){
-			dropCardsBtn.setVisibility(View.GONE);
-		}else{
-			dropCardsBtn.setVisibility(View.VISIBLE);
-		}
-		//and the perform yaniv button...
-		if(gameData.getP1Hand().canYaniv()){
-			yanivBtn.setVisibility(View.VISIBLE);
-		}else
-		{
-			yanivBtn.setVisibility(View.GONE);
-		}
-		
+
+		// // TODO: problematic - this only applies to p1:
+		//
+		// // and show the drop cards button if needed
+		// // if this and no other cards are selected, don't show the button
+		// if (gameData.getP1Hand().hasSelectedCard() == false) {
+		// dropCardsBtn.setVisibility(View.GONE);
+		// } else {
+		// dropCardsBtn.setVisibility(View.VISIBLE);
+		// }
+		// // and the perform yaniv button...
+		// if (gameData.getP1Hand().canYaniv()) {
+		// yanivBtn.setVisibility(View.VISIBLE);
+		// } else {
+		// yanivBtn.setVisibility(View.GONE);
+		// }
+		//
 		container.requestLayout();
 	}
-	
+
 	private void redrawThrownCards() {
 		PlayingCard[] cards = gameData.getThrownCards().peekTopFive();
-		System.out.println("redrawThrownCards: " +cards );
+		System.out.println("redrawThrownCards: " + cards);
 		for (int thrownCardIndex = 0; thrownCardIndex < cards.length; thrownCardIndex++) {
-			if(cards[thrownCardIndex] != null){
+			if (cards[thrownCardIndex] != null) {
 				thrownCardsImgs[thrownCardIndex].setVisibility(View.VISIBLE);
-				thrownCardsImgs[thrownCardIndex].
-				setImageResource(cards[thrownCardIndex].getImageResourceId());
-			}else{
+				thrownCardsImgs[thrownCardIndex]
+						.setImageResource(cards[thrownCardIndex]
+								.getImageResourceId());
+			} else {
 				thrownCardsImgs[thrownCardIndex].setVisibility(View.INVISIBLE);
-				thrownCardsImgs[thrownCardIndex].
-				setImageResource(R.drawable.back);
-				
+				thrownCardsImgs[thrownCardIndex]
+						.setImageResource(R.drawable.back);
+
 			}
 		}
 		thrownCardsContainer.postInvalidate();
@@ -662,20 +664,23 @@ public class Yaniv extends Activity {
 	}
 
 	/**
-	 * Drops a card\s and picks up a card
-	 * Drops a single card a set or a series to the table and then picks up either from the deck or from the table
-	 * @param hand the hand performing the switch
+	 * Drops a card\s and picks up a card Drops a single card a set or a series
+	 * to the table and then picks up either from the deck or from the table
+	 * 
+	 * @param hand
+	 *            the hand performing the switch
 	 */
 	private void switchCards(Hand hand) throws InvalidDropException {
 		// Drop
 		tempThrownArr = hand.drop();
-		// Mark the cards in the cards to drop as unselected so that if somebody picks them up they will be unselected
+		// Mark the cards in the cards to drop as unselected so that if somebody
+		// picks them up they will be unselected
 		for (PlayingCard card : tempThrownArr) {
-			if (card != null){
+			if (card != null) {
 				card.setSelected(false);
 			}
 		}
-		
+
 		int numCardsInDeckBeforePickup = gameData.getDeck().count();
 		// Pickup
 		hand.pickup(PickupMethod.decidePickup);
@@ -683,42 +688,85 @@ public class Yaniv extends Activity {
 		// Update the thrown cards only after the pickup (RULE)
 		gameData.getThrownCards().pushMulti(tempThrownArr);
 
-		//TODO: Drop animation here
-		
+		// TODO: Drop animation here
+
 		// And redraw the thrown deck
 		redrawThrownCards();
-		
-		//and redraw it
+
+		// and redraw it
 		redrawHand(hand);
 
 		AnimationSet growShrinkAnim = new AnimationSet(true);
-		
-	 	ScaleAnimation grow = new ScaleAnimation(
-	  		       0.5f, 1.5f, 0.5f, 1.5f, 
-	  		       ScaleAnimation.RELATIVE_TO_SELF, 0.5f, 
-	  		       ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
-	 	grow.setDuration(750);
-	 	grow.setRepeatCount(0);	       
+
+		ScaleAnimation grow = new ScaleAnimation(0.5f, 1.5f, 0.5f, 1.5f,
+				ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+				ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+		grow.setDuration(750);
+		grow.setRepeatCount(0);
 		growShrinkAnim.addAnimation(grow);
 
-		ScaleAnimation shrink = new ScaleAnimation(
-			       1.5f, 0.5f, 1.5f, 0.5f, 
-			       ScaleAnimation.RELATIVE_TO_SELF, 0.5f, 
-			       ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
+		ScaleAnimation shrink = new ScaleAnimation(1.5f, 0.5f, 1.5f, 0.5f,
+				ScaleAnimation.RELATIVE_TO_SELF, 0.5f,
+				ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
 		shrink.setDuration(750);
-		shrink.setRepeatCount(0);	       
+		shrink.setRepeatCount(0);
 		growShrinkAnim.addAnimation(shrink);
-			
 
-		for(int i = 0; i<tempThrownArr.length;i++){
-			//anim - v2
+		for (int i = 0; i < tempThrownArr.length; i++) {
+			// anim - v2
 			thrownCardsImgs[i].startAnimation(growShrinkAnim);
-			//2v -mina
+			// 2v -mina
 		}
 
-		//TODO: end drop animation here
-		headingTv.setText(hand.getPlayerName() + " dropped " + tempThrownArr.length +" card"+( tempThrownArr.length >1? "s":"" )+" and picked up from the "+ 
-				(numCardsInDeckBeforePickup == numCardsInDeckAfterPickup? "thrown cards":"deck"));
+		// TODO: end drop animation here
+		headingTv
+				.setText(hand.getPlayerName()
+						+ " dropped "
+						+ tempThrownArr.length
+						+ " card"
+						+ (tempThrownArr.length > 1 ? "s" : "")
+						+ " and picked up from the "
+						+ (numCardsInDeckBeforePickup == numCardsInDeckAfterPickup ? "thrown cards"
+								: "deck"));
 	}
-	
+
+	public void redrawAll() {
+		ArrayList<Hand> handsList = gameData.getPlayersInOrder();
+		for (Hand hand : handsList) {
+			redrawHand(hand);
+		}
+		redrawThrownCards();
+		redrawButtons();
+	}
+
+	private void redrawButtons() {
+		// If this is the first deal, don't show any buttons
+		if (!gameData.isFirstDeal()) {
+			Hand currentPlayer = gameData.getTurn().peek();
+
+			// If it's the human player's turn
+			if (currentPlayer.isAwaitingInput()) {
+				// Hide the next player button
+				nextPlayerBtn.setVisibility(View.GONE);
+				// If they are allowed to drop a card and have a card selected
+				if (currentPlayer.getCanDrop()
+						&& currentPlayer.hasSelectedCard()) {
+					// Display the Drop Cards button
+					dropCardsBtn.setVisibility(View.VISIBLE);
+				} else {
+					dropCardsBtn.setVisibility(View.GONE);
+				}
+				// If they are allowed to perform Yaniv
+				if (currentPlayer.canYaniv()) {
+					// Show the Yaniv button
+					yanivBtn.setVisibility(View.VISIBLE);
+				} else {
+					yanivBtn.setVisibility(View.GONE);
+				}
+			} else {
+				// If it's not the Player's turn, show Next Player button
+				nextPlayerBtn.setVisibility(View.VISIBLE);
+			}
+		}
+	}
 }

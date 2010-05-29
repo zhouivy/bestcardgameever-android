@@ -3,6 +3,11 @@ package com.geekadoo.logic;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.geekadoo.db.YanivPersistenceAdapter;
+import com.geekadoo.exceptions.YanivPersistenceException;
 import com.geekadoo.logic.ai.BasicYanivStrategy;
 
 /**
@@ -18,7 +23,7 @@ public class GameData implements Serializable {
 	public static final int RESUME_GAME = 2000;
 	public static final int DEFAULT_STARTING_PLAYER = 0;
 	public static final String STATE = "state";
-	public static final String GAMEDATA_PARAMNAME = "gameData";
+	public static final String GAMEDATA_TAG = "gameData";
 
 	public static enum STATES {
 		start, resume, end
@@ -43,6 +48,8 @@ public class GameData implements Serializable {
 	private ArrayList<Hand> playersInOrder;
 
 	private boolean firstDeal;
+	private static YanivPersistenceAdapter persistencAdapter;
+
 
 	private GameData() {
 		firstDeal = true;
@@ -62,12 +69,33 @@ public class GameData implements Serializable {
 				GameData.DEFAULT_STARTING_PLAYER);
 	}
 
-	public static GameData getInstance() {
+	public static GameData getInstance(boolean firstRun, Context appCtx) {
 		// TODO: change the loading of the GameData to be performed in 
 		// GameData - on first access (load from disc)
-		if (gameData == null) {
-			gameData = new GameData();
-		}
+		persistencAdapter = new YanivPersistenceAdapter(appCtx);
+		
+		if(!firstRun){
+			// Existing game, read it from the persistence provider
+    		try{
+    			gameData = persistencAdapter.getSavedGameData();
+    		}catch (YanivPersistenceException e) {
+    			// TODO: pop up a sorry box and report this problem... - could not load, creating new.
+    			Log.e(GAMEDATA_TAG,"GameData could not load state, creating new gamedata");
+    			gameData = createNewGame();
+    		}
+    	}
+		else{
+    		// First run: Override existing game in memory 
+    		gameData = createNewGame();
+    	}
+		return gameData;
+	}
+	public void save(Context applicationContext) throws YanivPersistenceException {
+		Log.e(GAMEDATA_TAG,"persistenceAdapter is " + persistencAdapter);
+		persistencAdapter.setSavedGameData(this);
+	}
+	
+	public static GameData getInstance(){
 		return gameData;
 	}
 
@@ -119,5 +147,6 @@ public class GameData implements Serializable {
 	public void setPlayersInOrder(ArrayList<Hand> playersInOrder) {
 		this.playersInOrder = playersInOrder;
 	}
+
 	
 }

@@ -30,7 +30,6 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 	private static final long serialVersionUID = 1L;
 	private static final Integer PICKUP_THRESHOLD = 7;
 	private PickupMethod pickUpFrom = null;
-	private GameData gameData;
 	ThrownCards thrown;
 	private boolean haveMoreCards = false;
 	private ArrayList<PlayingCard> highestSetOrSeriesWithThrownCard ;
@@ -38,7 +37,6 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 
 
 	public BasicYanivStrategy(){
-		gameData = GameData.getInstance();
 		highestSetOrSeriesWithThrownCard = new ArrayList<PlayingCard>();
 
 	}
@@ -47,6 +45,8 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 	 */
 	@Override
 	public void decideDrop() {
+		GameData gameData = GameData.getInstance();
+
 		// Get the current hand playing from the turn
 		Hand hand = gameData.getTurn().peek();
 
@@ -326,6 +326,7 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 	}
 
 	private ArrayList<PlayingCard> checkIfThrownCardCanHelpToMakeSetOrSeries(ArrayList<PlayingCard> cardsToCheck){
+		GameData gameData = GameData.getInstance();
 
 
 		//ArrayList<PlayingCard> newCards = cardsToCheck;
@@ -751,6 +752,7 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 		// In case that the the value of the pickUpFrom variable is 'fromThrown' (the DDA decided to pickup from table), need to pickup from table
 		// In case that the the value of the pickUpFrom variable is 'fromDeck', the pickUp algorithm need to decide if is better to pickup from
 		//  table or deck.(need to consider: value of all the cards that in the hand, round number, value of thrown card etc.)
+		GameData gameData = GameData.getInstance();
 
 		SingleDeck deck = gameData.getDeck();
 
