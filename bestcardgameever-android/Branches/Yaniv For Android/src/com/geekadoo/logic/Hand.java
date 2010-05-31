@@ -121,10 +121,10 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 
 
 	public boolean canYaniv(){
-		
-		if (countCards()<=YANIV_AMOUNT) {
-			return shouldYaniv();
-		}else{
+		if (sumCards()<=YANIV_AMOUNT) {
+			return true;
+		}
+		else{
 			return false;
 		}
 		
@@ -238,7 +238,7 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	 * will return true for a human player
 	 * @return True iff the player is human
 	 */
-	abstract public boolean isAwaitingInput();
+	abstract public boolean isHumanPlayer();
 	
 	public CharSequence getPlayerName() {
 		
@@ -257,7 +257,7 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 		this.canPickup = canPickup;
 	}
 	
-	public int countCards() {
+	public int sumCards() {
 		int retVal = 0;
 		for (PlayingCard card : cards) {
 			if (card != null)
@@ -268,7 +268,7 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	
 	@Override
 	public int compareTo(Hand another) {
-		return this.countCards() - another.countCards();
+		return this.sumCards() - another.sumCards();
 	}
 	
 	@Override

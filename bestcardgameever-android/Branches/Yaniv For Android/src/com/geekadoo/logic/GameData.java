@@ -50,7 +50,6 @@ public class GameData implements Serializable {
 	private boolean firstDeal;
 	private static YanivPersistenceAdapter persistencAdapter;
 
-
 	private GameData() {
 		firstDeal = true;
 		// array of order of players in the beginning of the game (p1 is first)

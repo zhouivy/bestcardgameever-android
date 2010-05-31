@@ -25,7 +25,7 @@ public class OpponentHand extends Hand {
 	}
 
 	@Override
-	public boolean isAwaitingInput() {
+	public boolean isHumanPlayer() {
 		return false;
 	}
 
