@@ -172,7 +172,7 @@ public class PlayerHand extends Hand {
 	}
 	
 	@Override
-	public boolean isAwaitingInput() {
+	public boolean isHumanPlayer() {
 		return true;
 	}
 

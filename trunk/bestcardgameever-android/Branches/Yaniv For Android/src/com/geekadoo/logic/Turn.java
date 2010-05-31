@@ -17,8 +17,8 @@ public class Turn<T> implements Serializable{
 	/**
 	 * 
 	 */
-	public interface OnTurnEndedListener<T> extends Serializable{
-		void onTurnEnded(T currentPlayer);
+	public interface OnTurnStartedListener<T> extends Serializable{
+		void onTurnStarted(T currentPlayer);
 	}
 	
 	private static final long serialVersionUID = 1L;
@@ -26,7 +26,7 @@ public class Turn<T> implements Serializable{
 	private ArrayList<T> players;
 	private int turnIndex;
 	private int rounds;
-	private transient ArrayList<OnTurnEndedListener<T>> turnEndListenerList;
+	private transient ArrayList<OnTurnStartedListener<T>> turnStartListenerList;
 
 	public Turn() {
 		throw new UnsupportedOperationException("cannot init without players");
@@ -49,8 +49,8 @@ public class Turn<T> implements Serializable{
 			rounds++;
 		}
 		T retVal = players.get(turnIndex);
-		for (OnTurnEndedListener<T> l : turnEndListenerList) {
-			l.onTurnEnded(retVal);
+		for (OnTurnStartedListener<T> l : turnStartListenerList) {
+			l.onTurnStarted(retVal);
 		}
 		return retVal;
 	}
@@ -60,14 +60,14 @@ public class Turn<T> implements Serializable{
 		return players.get(turnIndex);
 	}
 
-	public void addOnTurnEndedListener(OnTurnEndedListener<T> l) {
-		if(turnEndListenerList == null){
+	public void addOnTurnEndedListener(OnTurnStartedListener<T> l) {
+		if(turnStartListenerList == null){
 			// Since turnEndListenerList has to be transient, 
 			//we lazy load it to make sure that it exists even 
 			//if the turn class deserialized and it was not deserialized
-			turnEndListenerList = new ArrayList<OnTurnEndedListener<T>>();
+			turnStartListenerList = new ArrayList<OnTurnStartedListener<T>>();
 		}
-		this.turnEndListenerList.add(l);
+		this.turnStartListenerList.add(l);
 	}
 
 	

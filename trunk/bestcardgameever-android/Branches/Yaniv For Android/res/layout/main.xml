@@ -169,12 +169,6 @@
 					android:gravity="right" android:layout_gravity="right"
 					android:orientation="vertical" android:layout_width="75px">
 
-					<Button android:id="@+id/DropCards" android:layout_height="wrap_content"
-						android:text="@string/DropSelected" android:clickable="true"
-						android:layout_width="wrap_content" android:soundEffectsEnabled="true"
-						android:gravity="center" android:layout_gravity="top"
-						android:textScaleX="1">
-					</Button>
 					<Button android:layout_width="wrap_content"
 						android:layout_height="wrap_content" android:text="@string/PerformYaniv"
 						android:id="@+id/PerformYaniv" android:clickable="true"
