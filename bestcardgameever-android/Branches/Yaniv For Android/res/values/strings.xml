@@ -10,8 +10,13 @@
 	<string name="Opponent3">Elad</string>
 	<string name="msg1">You can only pick up cards if it\'s your turn
 	</string>
+	<!--  uh-oh dialog -->
 	<string name="msg1Heading">Not Your Turn</string>
 	<string name="dialogOkMsg">Got it!</string>
+
+	<!--  Scores dialog -->
+	<string name="scoresDialogHeading">What\'s The Score?</string>
+	<string name="scoresDialogOkMsg">Return to Game</string>
 
 	<string name="PerformYaniv">Yaniv!</string>
 	<string name="NextPlayer">Next!</string>
