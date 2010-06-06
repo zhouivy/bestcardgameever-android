@@ -18,6 +18,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -48,6 +50,8 @@ import com.geekadoo.logic.Turn;
 public class Yaniv extends Activity {
 
 	private static final String YANIV_TAG = "Yaniv";
+
+	private static final int MENU_VIEW_SCORES = 0;
 
 	// //////////////////////
 	// Deck - UI elements
@@ -121,6 +125,8 @@ public class Yaniv extends Activity {
 	// //////////////////////
 	private boolean firstRun;
 
+	private ScoresDialog scoresDialog;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -163,6 +169,7 @@ public class Yaniv extends Activity {
 		headingTv = (TextView) findViewById(id.headingText);
 
 		uhOhDialog1 = new MyDialog(this);
+		scoresDialog = new ScoresDialog(this);
 
 		// Player 1
 		p1Name = (TextView) findViewById(id.p1Name);
@@ -733,10 +740,31 @@ public class Yaniv extends Activity {
 			}
 		}
 	}
+
+	// Adding option menu
+	/* Creates the menu items */
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, MENU_VIEW_SCORES, 0, "View Scores");
+	    return true;
+	}
+
+	/* Handles item selections */
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case MENU_VIEW_SCORES:
+	        showScores();
+	        return true;
+	    }
+	    return false;
+	}
 	
-	
-	
-	// Cheating session
+	private void showScores() {
+		// TODO: get actual scores from game data
+		scoresDialog.showScores(ScoresDialog.DELETE_ME);
+	}
+	// End of menu
+
+	// Cheating section
 	private void toggleCheat() {
 		isCheating = !isCheating;
 		if(isCheating){
