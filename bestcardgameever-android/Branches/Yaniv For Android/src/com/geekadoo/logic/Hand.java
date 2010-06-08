@@ -2,6 +2,7 @@ package com.geekadoo.logic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,7 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	protected static final int YANIV_AMOUNT = 7;
+	private static final String LOG_TAG = "HAND";
 	protected PlayingCard[] cards;
 	int firstFreeLocation;
 	private PlayingCard[] compactedArr;
@@ -35,6 +37,9 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	private boolean cardVisibility;
 	private transient HandGUI handGui;
 	
+	
+	protected List<Integer> scoreHistory;
+	 
 	protected YanivStrategy strategy;
 	
 	public Hand() {
@@ -42,6 +47,7 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 		firstFreeLocation = 0;
 		this.canDrop = true;
 		this.canPickup = false;
+		this.scoreHistory = new ArrayList<Integer>();
 	}
 
 	public void bindGraphicComponents(View container, ImageView[] cardsViews, CharSequence name){
@@ -137,7 +143,7 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 			//TODO:do yaniv...
 			Log.e("Yaniv", "Player " + name + " can and should do yaniv according to strategy" );
 		}
-		//Finish game:
+		//Finish round:
 		//TODO: something here...
 		
 	}
@@ -298,4 +304,22 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	public View getContainer() {
 		return handGui.getContainer();
 	}
+	
+	public void addToScoreHistory(Integer scoreThisGame){
+		scoreHistory.add(scoreThisGame);
+		Log.e(LOG_TAG, "added score ["+scoreThisGame+"] to score history at position "+ scoreHistory.size());
+	}
+
+	public List<Integer> getScoreHistory() {
+		return scoreHistory;
+	}
+	
+	public Integer getSumScores(){
+		Integer sum = 0;
+		for (Integer gameScore : scoreHistory) {
+			sum += gameScore;
+		}
+		return sum;
+	}
+	
 }

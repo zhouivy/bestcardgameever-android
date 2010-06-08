@@ -2,6 +2,7 @@ package com.geekadoo.logic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.util.Log;
@@ -23,7 +24,7 @@ public class GameData implements Serializable {
 	public static final int RESUME_GAME = 2000;
 	public static final int DEFAULT_STARTING_PLAYER = 0;
 	public static final String STATE = "state";
-	public static final String GAMEDATA_TAG = "gameData";
+	public static final String LOG_TAG = "gameData";
 
 	public static enum STATES {
 		start, resume, end
@@ -48,6 +49,9 @@ public class GameData implements Serializable {
 	private ArrayList<Hand> playersInOrder;
 
 	private boolean firstDeal;
+
+	private int currentGameNumber;
+
 	private static YanivPersistenceAdapter persistencAdapter;
 
 	private GameData() {
@@ -66,6 +70,7 @@ public class GameData implements Serializable {
 		this.deck = new SingleDeck();
 		this.turn = new Turn<Hand>(playersInOrder,
 				GameData.DEFAULT_STARTING_PLAYER);
+		currentGameNumber = 0;
 	}
 
 	public static GameData getInstance(boolean firstRun, Context appCtx) {
@@ -79,7 +84,7 @@ public class GameData implements Serializable {
     			gameData = persistencAdapter.getSavedGameData();
     		}catch (YanivPersistenceException e) {
     			// TODO: pop up a sorry box and report this problem... - could not load, creating new.
-    			Log.e(GAMEDATA_TAG,"GameData could not load state, creating new gamedata");
+    			Log.e(LOG_TAG,"GameData could not load state, creating new gamedata");
     			gameData = createNewGame();
     		}
     	}
@@ -90,7 +95,7 @@ public class GameData implements Serializable {
 		return gameData;
 	}
 	public void save(Context applicationContext) throws YanivPersistenceException {
-		Log.e(GAMEDATA_TAG,"persistenceAdapter is " + persistencAdapter);
+		Log.e(LOG_TAG,"persistenceAdapter is " + persistencAdapter);
 		persistencAdapter.setSavedGameData(this);
 	}
 	
@@ -147,5 +152,52 @@ public class GameData implements Serializable {
 		this.playersInOrder = playersInOrder;
 	}
 
-	
+	public List<String> getScoreRepresentation(){
+		//TODO:game number column as well.
+		List<String> retVal = new ArrayList<String>();
+		
+		// First row is column titles: game number & player names
+		retVal.add("Game");
+		for (Hand h : playersInOrder) {
+			retVal.add((String) h.getPlayerName());
+		}
+		
+		// Contents: actual scores
+		// For each game in history
+		for(int gameNumber = 0; gameNumber < getCurrentGameNumber(); gameNumber++){
+			Log.e("Sivan", "gameNumber = " + gameNumber + ", String.valueOf = " + String.valueOf(gameNumber));
+			// Game count is zero based, so when printing we need to add 1
+			retVal.add(String.valueOf(gameNumber + 1));
+			// Get history for that game
+			for (Hand hand : playersInOrder) {
+				// For each player
+				retVal.add(hand.getScoreHistory().get(gameNumber).toString());
+			}
+		}
+		// Sum
+		retVal.add("Totals:");
+		for (Hand h : playersInOrder) {
+			// Get the sum for each player
+			retVal.add(h.getSumScores().toString());
+		}
+
+		Log.e("Sivan", retVal.toString());
+		return retVal;
+	}
+
+	private int getCurrentGameNumber() {
+		return currentGameNumber;
+	}
+
+	public void addRoundScores() {
+		for (Hand h : playersInOrder) {
+			h.addToScoreHistory(h.sumCards());
+		}
+	}
+
+	public void startNewGame() {
+		// TODO Auto-generated method stub
+		currentGameNumber++;
+		//TODO:THIS!!!
+	}
 }

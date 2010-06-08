@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.geekadoo.exceptions.InvalidDropException;
 
 /**
@@ -180,7 +176,7 @@ public class PlayerHand extends Hand {
 
 	@Override
 	protected boolean shouldYaniv() {
-		// depends on the players judgment, therefore always true
+		// depends on the player's judgment, therefore always true
 		return true;
 	}
 
