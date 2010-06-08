@@ -763,7 +763,7 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 		PlayingCard[] cards = hand.getCards();
 
 		//get round number
-		int roundNumber  = gameData.getTurn().getRounds();
+		int roundNumber  = gameData.getTurn().getCurrentRoundNumber();
 
 
 		//clac the hand after we throw the cards that the DDA decided to drop.

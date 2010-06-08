@@ -1,5 +1,7 @@
 package com.geekadoo.ui;
 
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -13,17 +15,18 @@ import android.widget.TextView;
 
 public class TextAdapter extends BaseAdapter{
 	private Context mContext;
-	private int		mNumColumns = 4;
-	private String[] mStrings;
+	private List<String> mStrings;
+	private int mNumColumns;
 	
-    public TextAdapter(Context c, String[] scores) {
+    public TextAdapter(Context c, List<String> scores, int numColumns) {
         mContext = c;
         mStrings  = scores;
+        mNumColumns = numColumns;
     }
 
     @Override
 	public int getCount() {
-		return mStrings.length;
+		return mStrings.size();
 	}
 
 	@Override
@@ -48,7 +51,7 @@ public class TextAdapter extends BaseAdapter{
         	container = new LinearLayout(mContext);
             textView = new TextView(mContext);
             textView.setBackgroundColor(Color.BLACK);
-            textView.setText(mStrings[position]);
+            textView.setText(mStrings.get(position));
             textView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
             textView.setGravity(Gravity.CENTER);
             container.addView(textView);
@@ -68,6 +71,8 @@ public class TextAdapter extends BaseAdapter{
 //        	container = (LinearLayout)convertView;
 //        	Log.e("ELAD","here");
 //        }
+
+        Log.e("Sivan", "position = " + position + ", value = " + mStrings.get(position));	
         return container;
     }
 }

@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.app.Activity;
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,7 +50,7 @@ import com.geekadoo.logic.Turn;
 
 public class Yaniv extends Activity {
 
-	private static final String YANIV_TAG = "Yaniv";
+	private static final String LOG_TAG = "Yaniv";
 
 	private static final int MENU_VIEW_SCORES = 0;
 
@@ -118,7 +119,7 @@ public class Yaniv extends Activity {
 	private String cheatString;
 
 	// TODO: remove this
-	private Dialog d;
+	private AlertDialog.Builder d;
 	private PlayingCard[] tempThrownArr;
 	private GameData gameData;
 	// TODO: end remove this
@@ -131,7 +132,7 @@ public class Yaniv extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.v(YANIV_TAG, "onCreate");
+		Log.v(LOG_TAG, "onCreate");
 		setContentView(R.layout.main);
 
 		// Load state given by MainScreen
@@ -162,8 +163,13 @@ public class Yaniv extends Activity {
 
 	private void initGraphicComponents() {
 		// TODO: remove this
-		d = new Dialog(this);
+		d = new AlertDialog.Builder(this); 
 		d.setTitle("hello");
+		d.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.dismiss();
+			}
+		});
 		// TODO: end remove this
 
 		headingTv = (TextView) findViewById(id.headingText);
@@ -245,14 +251,14 @@ public class Yaniv extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.v(YANIV_TAG, "OnPause");
+		Log.v(LOG_TAG, "OnPause");
 		saveState();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.v(YANIV_TAG, "OnResume");
+		Log.v(LOG_TAG, "OnResume");
 		populateGameData();
 		redrawAll();
 	}
@@ -273,7 +279,7 @@ public class Yaniv extends Activity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.v(YANIV_TAG, "OnSaveInstanceState");
+		Log.v(LOG_TAG, "OnSaveInstanceState");
 		saveState();
 		outState.putSerializable(YanivPersistenceAdapter.GAME_DATA, gameData);
 
@@ -282,11 +288,11 @@ public class Yaniv extends Activity {
 	private void saveState() {
 		try {
 			gameData.save(getApplicationContext());
-			Log.d(YANIV_TAG, "Yaniv saving state");
+			Log.d(LOG_TAG, "Yaniv saving state");
 		} catch (YanivPersistenceException e) {
 			// TODO: pop up a sorry box and report this problem... - could not
 			// save
-			Log.e(YANIV_TAG, "Yaniv could not save state");
+			Log.e(LOG_TAG, "Yaniv could not save state");
 		}
 	}
 
@@ -305,7 +311,7 @@ public class Yaniv extends Activity {
 
 	protected void onStart() {
 		super.onStart();
-		Log.v(YANIV_TAG, "onStart");
+		Log.v(LOG_TAG, "onStart");
 
 		// Perform Yaniv Listener
 		yanivBtn.setOnClickListener(new Button.OnClickListener() {
@@ -468,7 +474,10 @@ public class Yaniv extends Activity {
 					+ " won! (you lost)");
 			d.show();
 		}
-		// end game and add to scores
+		// add to scores and end game
+		gameData.addRoundScores();
+		gameData.startNewGame();
+		showScores();
 		// playersInOrder = winner is first and others after him clockwise
 		// turn = new Turn<Hand>(playersInOrder);
 	}
@@ -759,8 +768,7 @@ public class Yaniv extends Activity {
 	}
 	
 	private void showScores() {
-		// TODO: get actual scores from game data
-		scoresDialog.showScores(ScoresDialog.DELETE_ME);
+		scoresDialog.showScores(gameData.getScoreRepresentation());
 	}
 	// End of menu
 

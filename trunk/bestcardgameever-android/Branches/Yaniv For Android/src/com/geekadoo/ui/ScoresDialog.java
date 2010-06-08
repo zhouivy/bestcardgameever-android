@@ -1,5 +1,7 @@
 package com.geekadoo.ui;
 
+import java.util.List;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
@@ -18,6 +20,7 @@ public class ScoresDialog extends Dialog implements
 	private static final double cDialogHeightSizeFactor = 0.6;
 	private static final double cDialogWidthSizeFactor = 0.85;
 	private static final double cGridViewHeightSizeFactor = 0.83;
+	private int		numColumns = 5;
 	private Button okButton;
 
 	// TODO: delete this
@@ -40,18 +43,22 @@ public class ScoresDialog extends Dialog implements
 
 		this.setTitle(R.string.scoresDialogHeading);
 		setContentView(R.layout.scores_view);
-
+		
 		okButton = (Button) findViewById(id.scoresDialogOkButton);
 		okButton.setOnClickListener(this);
 		// Have the system blur any windows behind this one.
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND,
 				WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+
+		// Set the number of columns
+		GridView gridView = (GridView) findViewById(R.id.gridview);
+		gridView.setNumColumns(numColumns);
 	}
 
-	public void showScores(String[] scores) {
-		GridView gridview = (GridView) findViewById(R.id.gridview);
-		gridview.setAdapter(new TextAdapter(this.getContext(), scores));
-		fixSize(gridview);
+	public void showScores(List<String> scores) {
+		GridView gridView = (GridView) findViewById(R.id.gridview);
+		gridView.setAdapter(new TextAdapter(this.getContext(), scores, numColumns));
+		fixSize(gridView);
 		show();
 		
 		Log.e("Sivan", ""+okButton.getMeasuredHeight());
