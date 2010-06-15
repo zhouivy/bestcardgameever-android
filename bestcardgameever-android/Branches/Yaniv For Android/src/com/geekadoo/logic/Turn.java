@@ -46,8 +46,18 @@ public class Turn<T> implements Serializable {
 
 	public Turn(ArrayList<T> players, int startingPlayerIndex) {
 		this.players = players;
+		newRound(startingPlayerIndex, true);
+	}
+
+	public void newRound(int startingPlayerIndex, boolean isFirstRound) {
 		this.turnIndex = startingPlayerIndex;
-		this.roundIdx = 0;
+		
+		if (!isFirstRound){
+			this.roundIdx++;
+		}
+		else {
+			this.roundIdx = 0;
+		}
 	}
 
 	public int getCurrentRoundNumber() {
@@ -59,19 +69,28 @@ public class Turn<T> implements Serializable {
 		turnIndex = (turnIndex + 1) % players.size();
 		if (turnIndex == 0) {
 			roundIdx++;
-			if (roundEndedListenerList != null) {
-				for (OnRoundEndedListener l : roundEndedListenerList) {
-					l.onRoundEnded();
-				}
+			fireTurnEndedEvent();
+		}
+
+		T retVal = players.get(turnIndex);
+		fireTurnStartEvent(retVal);
+		return retVal;
+	}
+
+	public void fireTurnEndedEvent() {
+		if (roundEndedListenerList != null) {
+			for (OnRoundEndedListener l : roundEndedListenerList) {
+				l.onRoundEnded();
 			}
 		}
-		T retVal = players.get(turnIndex);
+	}
+
+	public void fireTurnStartEvent(T startingEntity) {
 		if (turnStartListenerList != null) {
 			for (OnTurnStartedListener<T> l : turnStartListenerList) {
-				l.onTurnStarted(retVal);
+				l.onTurnStarted(startingEntity);
 			}
 		}
-		return retVal;
 	}
 
 	public T peek() {

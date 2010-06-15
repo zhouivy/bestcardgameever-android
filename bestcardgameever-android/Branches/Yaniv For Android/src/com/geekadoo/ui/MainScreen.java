@@ -79,7 +79,7 @@ public class MainScreen extends Activity {
 		// Create an intent 
 		Intent yanivIntent = new Intent(this, Yaniv.class);
 		// Transfer information to the yaniv (such as state and game attributes)
-		yanivIntent.putExtra(GameData.STATE, GameData.STATES.start);
+		yanivIntent.putExtra(GameData.STATE, GameData.GAME_STATES.start);
 		
 		startActivityForResult(yanivIntent, GameData.START_GAME);
 	}
@@ -87,7 +87,7 @@ public class MainScreen extends Activity {
 	protected void resumeYanivHandler() {
 		// Create an intent 
 		Intent yanivIntent = new Intent(this, Yaniv.class);
-		yanivIntent.putExtra(GameData.STATE, GameData.STATES.resume);
+		yanivIntent.putExtra(GameData.STATE, GameData.GAME_STATES.resume);
 		startActivityForResult(yanivIntent, GameData.RESUME_GAME);
 	}
 

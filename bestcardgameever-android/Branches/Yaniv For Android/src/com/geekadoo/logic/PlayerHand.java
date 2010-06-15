@@ -180,9 +180,11 @@ public class PlayerHand extends Hand {
 		return true;
 	}
 
-
-
-	
-
-	
+	@Override
+	public void reset(){
+		super.reset();
+		setCanDrop(true);
+		setCanPickup(true);
+		setCardVisibility(true);
+	}
 }

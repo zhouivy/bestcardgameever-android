@@ -41,6 +41,8 @@ import com.geekadoo.logic.Hand;
 import com.geekadoo.logic.PickupMethod;
 import com.geekadoo.logic.PlayingCard;
 import com.geekadoo.logic.Turn;
+import com.geekadoo.logic.GameData.GAME_INPUT_MODE;
+import com.geekadoo.ui.ScoresDialog.OkButtonHandler;
 
 /**
  * The core activity of the application
@@ -111,7 +113,7 @@ public class Yaniv extends Activity {
 	private Button nextPlayerBtn;
 	protected MyDialog uhOhDialog1;
 	private Button yanivBtn;
-	private TextView headingTv;
+	private TextView headingView;
 	// End UI Elements
 
 	// Cheating - for debugging AI
@@ -119,7 +121,7 @@ public class Yaniv extends Activity {
 	private String cheatString;
 
 	// TODO: remove this
-	private AlertDialog.Builder d;
+	private AlertDialog.Builder basicDialog;
 	private PlayingCard[] tempThrownArr;
 	private GameData gameData;
 	// TODO: end remove this
@@ -136,7 +138,8 @@ public class Yaniv extends Activity {
 		setContentView(R.layout.main);
 
 		// Load state given by MainScreen
-		switch ((GameData.STATES) getIntent().getExtras().get(GameData.STATE)) {
+		switch ((GameData.GAME_STATES) getIntent().getExtras().get(
+				GameData.STATE)) {
 		case start:
 			firstRun = true;
 			break;
@@ -150,7 +153,6 @@ public class Yaniv extends Activity {
 
 		// TODO: change the loading of the GameData to be performed in
 		// GameData - on first access
-
 		gameData = (savedInstanceState == null) ? null
 				: (GameData) savedInstanceState
 						.getSerializable(YanivPersistenceAdapter.GAME_DATA);
@@ -162,17 +164,15 @@ public class Yaniv extends Activity {
 	}
 
 	private void initGraphicComponents() {
-		// TODO: remove this
-		d = new AlertDialog.Builder(this); 
-		d.setTitle("hello");
-		d.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.dismiss();
-			}
-		});
-		// TODO: end remove this
+		basicDialog = new AlertDialog.Builder(this);
+		basicDialog.setPositiveButton("OK",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.dismiss();
+					}
+				});
 
-		headingTv = (TextView) findViewById(id.headingText);
+		headingView = (TextView) findViewById(id.headingText);
 
 		uhOhDialog1 = new MyDialog(this);
 		scoresDialog = new ScoresDialog(this);
@@ -297,14 +297,18 @@ public class Yaniv extends Activity {
 	}
 
 	private void populateGameData() {
-		gameData.getP1Hand().bindGraphicComponents(p1Container, p1Cards,
-				p1Name.getText());
-		gameData.getO1Hand().bindGraphicComponents(o1Container, o1Cards,
-				o1Name.getText());
-		gameData.getO2Hand().bindGraphicComponents(o2Container, o2Cards,
-				o2Name.getText());
-		gameData.getO3Hand().bindGraphicComponents(o3Container, o3Cards,
-				o3Name.getText());
+		gameData.getP1Hand().bindGraphicComponents(
+				p1Container, p1Cards,
+				p1Name, GameData.PLAYER_NAMES[0]);
+		gameData.getO1Hand().bindGraphicComponents(
+				o1Container, o1Cards,
+				o1Name, GameData.PLAYER_NAMES[1]);
+		gameData.getO2Hand().bindGraphicComponents(
+				o2Container, o2Cards,
+				o2Name, GameData.PLAYER_NAMES[2]);
+		gameData.getO3Hand().bindGraphicComponents(
+				o3Container, o3Cards,
+				o3Name, GameData.PLAYER_NAMES[3]);
 		// Cheating
 		cheatString = new String();
 	}
@@ -373,9 +377,7 @@ public class Yaniv extends Activity {
 
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////
 	// ///////////////////Handlers//////////////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////
 	/**
 	 * what to do when one of the players cards are clicked mark as selected \
 	 * unselected in gameplay and update the hand
@@ -384,10 +386,12 @@ public class Yaniv extends Activity {
 	 *            the index of the selected card
 	 */
 	private void p1CardsClickHandler(final int cardIndex) {
-		if (gameData.getTurn().peek().isHumanPlayer()) {
-			gameData.getP1Hand().changeSelectionStateOnCard(cardIndex);
-			redrawHand(gameData.getP1Hand());
-		}// TODO:ELSE (show uhoh dialog)
+		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
+			if (gameData.getTurn().peek().isHumanPlayer()) {
+				gameData.getP1Hand().changeSelectionStateOnCard(cardIndex);
+				redrawHand(gameData.getP1Hand());
+			}// TODO:ELSE (show uhoh dialog)
+		}
 	}
 
 	/**
@@ -395,22 +399,26 @@ public class Yaniv extends Activity {
 	 * you pickup
 	 */
 	private void dropCards() {
-		if (gameData.getP1Hand().getCanDrop() == true) {
-			try {
-				tempThrownArr = gameData.getP1Hand().drop();
+		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
+			if (gameData.getP1Hand().getCanDrop() == true) {
+				try {
+					tempThrownArr = gameData.getP1Hand().drop();
 
-				// Rule: after drop you are not allowed to drop again
-				gameData.getP1Hand().setCanDrop(false);
-				// Rule: after drop you are allowed to pickup 
-				gameData.getP1Hand().setCanPickup(true);
-				// Note, we don't redraw the cards here, since we want the
-				// player to see the cards he is throwing until they are down
-			} catch (InvalidDropException e) {
-				d.setTitle("You Can't Drop This!\nReason: " + e.getMessage());
-				d.show();
+					// Rule: after drop you are not allowed to drop again
+					gameData.getP1Hand().setCanDrop(false);
+					// Rule: after drop you are allowed to pickup
+					gameData.getP1Hand().setCanPickup(true);
+					// Note, we don't redraw the cards here, since we want the
+					// player to see the cards he is throwing until they are
+					// down
+				} catch (InvalidDropException e) {
+					basicDialog.setTitle("You Can't Drop This!\nReason: "
+							+ e.getMessage());
+					basicDialog.show();
+				}
+			} else {
+				uhOhDialog1.show();
 			}
-		} else {
-			uhOhDialog1.show();
 		}
 	}
 
@@ -419,8 +427,11 @@ public class Yaniv extends Activity {
 	 * pickup
 	 */
 	private void thrownCardsClickHandler() {
-		// When the last thrown card is clicked it is picked up
-		p1Pickup(PickupMethod.fromThrown);
+		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
+
+			// When the last thrown card is clicked it is picked up
+			p1Pickup(PickupMethod.fromThrown);
+		}
 	}
 
 	/**
@@ -428,16 +439,24 @@ public class Yaniv extends Activity {
 	 */
 
 	private void deckClickHandler() {
-		if (gameData.isFirstDeal()) {
-			dealCards();
-			gameData.setFirstDeal(false);
-		} else {
-			p1Pickup(PickupMethod.fromDeck);
+		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
+			if (gameData.isFirstDeal()) {
+				dealCards();
+				gameData.setFirstDeal(false);
+			} else {
+				p1Pickup(PickupMethod.fromDeck);
+			}
 		}
 	}
 
 	private void performYanivHandler() {
-		gameData.getP1Hand().doYaniv();
+		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
+
+		// First disable all input
+		gameData.setGameInputMode(GAME_INPUT_MODE.paused);
+
+		Hand yanivingHand = gameData.getP1Hand();
+		yanivingHand.doYaniv();
 		// TODO: Perform yaniv (call p1hand.doYaniv()), end game
 		// Note: will only be visible when yaniv is possible
 		// note 2: this ends the game, need to call score here
@@ -446,40 +465,70 @@ public class Yaniv extends Activity {
 		gameData.getO1Hand().setShouldCardsBeShown(true);
 		gameData.getO2Hand().setShouldCardsBeShown(true);
 		gameData.getO3Hand().setShouldCardsBeShown(true);
-		// And count the cards for each player
+		// And sum up the cards for each player
 		int p1Count = gameData.getP1Hand().sumCards();
 		int o1Count = gameData.getO1Hand().sumCards();
 		int o2Count = gameData.getO2Hand().sumCards();
 		int o3Count = gameData.getO3Hand().sumCards();
-		p1Name.setText(String.valueOf(p1Count));
-		o1Name.setText(String.valueOf(o1Count));
-		o2Name.setText(String.valueOf(o2Count));
-		o3Name.setText(String.valueOf(o3Count));
+		// Change player names to show the sum of cards instead
+		gameData.getP1Hand().setHandLabel(String.valueOf(p1Count));
+		gameData.getO1Hand().setHandLabel(String.valueOf(o1Count));
+		gameData.getO2Hand().setHandLabel(String.valueOf(o2Count));
+		gameData.getO3Hand().setHandLabel(String.valueOf(o3Count));
+
 		// redraw hands
 		redrawHand(gameData.getP1Hand());
 		redrawHand(gameData.getO1Hand());
 		redrawHand(gameData.getO2Hand());
 		redrawHand(gameData.getO3Hand());
 
-		// Check if won or lost
-		ArrayList<Hand> playersByPosition = gameData.getPlayersInOrder();
+		// Create dialog 
+		AlertDialog dialog = new AlertDialog.Builder(this).create();
+		// TODO: Check if ASSAF condition occurred
+		ArrayList<Hand> playersByPosition = new ArrayList<Hand>(gameData.getPlayersInOrder());
 		Collections.sort(playersByPosition);
-		if (playersByPosition.indexOf(gameData.getP1Hand()) == 0) {
-			// P1 won
-
-			d.setTitle("You Won!");
-			d.show();
+		final Hand winningHand;
+		if (playersByPosition.indexOf(yanivingHand) == 0) {
+			winningHand  = yanivingHand;
+			// yaniv was successful
+			dialog.setTitle("You Won!");
 		} else {
-			d.setTitle(playersByPosition.get(0).getPlayerName()
-					+ " won! (you lost)");
-			d.show();
+			// yaniv failed, ASSAF occurred
+			// TODO: handle ASSAF scoring
+			winningHand = playersByPosition.get(0);
+			dialog.setTitle(winningHand.getPlayerName()
+					+ " won!\n (you lost)");
 		}
+		dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Next Game", new DialogInterface.OnClickListener(){
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				nextGame(winningHand);
+			}
+		});
+		dialog.show();
+		}
+	}
+	private void nextGame(final Hand winningHand) {
 		// add to scores and end game
 		gameData.addRoundScores();
-		gameData.startNewGame();
-		showScores();
-		// playersInOrder = winner is first and others after him clockwise
-		// turn = new Turn<Hand>(playersInOrder);
+		gameData.startNewGame(winningHand,false);
+		showScores(winningHand,new OkButtonHandler(){
+			
+			@Override
+			public void afterScoreShown(Hand hand) {
+				//TODO:
+				// 1) The "next" button doesn't show up in the next game, check about "yaniv" button as well
+				//2) we need to make the yaniv performed handler callable by AI so that the AI can win as well.
+				initGraphicComponents();
+				redrawAll();
+				dealCards();
+				headingView.setText("Starting game number " + (gameData.getCurrentGameNumber()+1));
+				gameData.getTurn().fireTurnStartEvent(winningHand);
+			}
+		});
+	}
+	
+	private void afterScoreShown(final Hand winningHand){
 	}
 
 	private void turnStartedHandler(Hand hand) {
@@ -487,20 +536,21 @@ public class Yaniv extends Activity {
 			try {
 				// First perform yaniv if strategy dictates it
 				hand.doYaniv();
-
 				switchCards(hand);
 			} catch (InvalidDropException e) {
-				d.setTitle(e.getMessage());
-				d.show();// i know it's a bug, bug it should happen irl - no way
-				// that the ai will do an invalid drop...
+				basicDialog.setTitle(e.getMessage());
+				basicDialog.show();// i know it's a bug, but it should never
+				// happen during gameplay
+				// there should be no way that the AI will perform an invalid
+				// drop...
 			}
 		}
-		
+
 		// Reset buttons - so the Yaniv button will show up when its needed
 		redrawButtons(hand);
-
 		hand.getContainer().setBackgroundDrawable(null);
 	}
+	// ///////////////////END Handlers//////////////////////////////////////////////
 
 	protected void dealCards() {
 
@@ -555,7 +605,8 @@ public class Yaniv extends Activity {
 			// fill virtual hand on first available place
 			gameData.getP1Hand().pickup(method);
 
-			// Rule: after pickup you are allowed to drop again (in the next turn)
+			// Rule: after pickup you are allowed to drop again (in the next
+			// turn)
 			gameData.getP1Hand().setCanDrop(true);
 			// Rule: after pickup you are not allowed to pickup again
 			gameData.getP1Hand().setCanPickup(false);
@@ -610,9 +661,12 @@ public class Yaniv extends Activity {
 				cardView[i].setVisibility(View.INVISIBLE);
 			}
 		}
+
+		// Set player name
+		hand.getHandLabelView().setText(hand.getHandLabel());
 		
 		// Handle button display
-//		redrawButtons();
+		// redrawButtons();
 
 		// // TODO: problematic - this only applies to p1:
 		//
@@ -709,7 +763,7 @@ public class Yaniv extends Activity {
 		}
 
 		// TODO: end drop animation here
-		headingTv
+		headingView
 				.setText(hand.getPlayerName()
 						+ " dropped "
 						+ tempThrownArr.length
@@ -726,7 +780,7 @@ public class Yaniv extends Activity {
 			redrawHand(hand);
 		}
 		redrawThrownCards();
-//		redrawButtons();
+		// redrawButtons();
 	}
 
 	private void redrawButtons(Hand currentPlayer) {
@@ -742,8 +796,7 @@ public class Yaniv extends Activity {
 					// Show the Yaniv button
 					yanivBtn.setVisibility(View.VISIBLE);
 				}
-			}
-			else {
+			} else {
 				// If it's not a human player turn, show Next Player button
 				nextPlayerBtn.setVisibility(View.VISIBLE);
 			}
@@ -754,75 +807,78 @@ public class Yaniv extends Activity {
 	/* Creates the menu items */
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MENU_VIEW_SCORES, 0, "View Scores");
-	    return true;
+		return true;
 	}
 
 	/* Handles item selections */
 	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	    case MENU_VIEW_SCORES:
-	        showScores();
-	        return true;
-	    }
-	    return false;
+		switch (item.getItemId()) {
+		case MENU_VIEW_SCORES:
+			showScores(null,null);
+			return true;
+		}
+		return false;
 	}
-	
-	private void showScores() {
-		scoresDialog.showScores(gameData.getScoreRepresentation());
+
+	private void showScores(Hand winningHand, ScoresDialog.OkButtonHandler handler) {
+		scoresDialog.showScores(gameData.getScoreRepresentation(),winningHand,handler);
 	}
+
 	// End of menu
 
 	// Cheating section
 	private void toggleCheat() {
 		isCheating = !isCheating;
-		if(isCheating){
-			d.setTitle("Cheater!");
-			d.show();
+		if (isCheating) {
+			basicDialog.setTitle("Cheater!");
+			basicDialog.show();
 		}
-			// Show everyone's cards
+		// Show everyone's cards
 		gameData.getO1Hand().setShouldCardsBeShown(isCheating);
-			redrawHand(gameData.getO1Hand());
-			gameData.getO2Hand().setShouldCardsBeShown(isCheating);
-			redrawHand(gameData.getO2Hand());
-			gameData.getO3Hand().setShouldCardsBeShown(isCheating);
-			redrawHand(gameData.getO3Hand());
+		redrawHand(gameData.getO1Hand());
+		gameData.getO2Hand().setShouldCardsBeShown(isCheating);
+		redrawHand(gameData.getO2Hand());
+		gameData.getO3Hand().setShouldCardsBeShown(isCheating);
+		redrawHand(gameData.getO3Hand());
 
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	switch (keyCode) {
-	case KeyEvent.KEYCODE_E:
-		cheatString = "e";
-		break;
-	case KeyEvent.KEYCODE_L:
-		if(cheatString.equals("e")){
-			cheatString = "el";
-		}else{
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_E:
+			cheatString = "e";
+			break;
+		case KeyEvent.KEYCODE_L:
+			if (cheatString.equals("e")) {
+				cheatString = "el";
+			} else {
+				cheatString = "";
+			}
+			break;
+		case KeyEvent.KEYCODE_A:
+			if (cheatString.equals("el")) {
+				cheatString = "ela";
+			} else {
+				cheatString = "";
+			}
+			break;
+		case KeyEvent.KEYCODE_D:
+			if (cheatString.equals("ela")) {
+				toggleCheat();
+			}
 			cheatString = "";
-		}
-		break;
-	case KeyEvent.KEYCODE_A:
-		if(cheatString.equals("el")){
-			cheatString = "ela";
-		}else{
-			cheatString = "";
-		}
-		break;
-	case KeyEvent.KEYCODE_D:
-		if(cheatString.equals("ela")){
-			toggleCheat();
-		}
-		cheatString = "";
 
-		break;
-	default:
-		super.onKeyDown(keyCode, event);
-		cheatString = "";
-		break;
-	}
-		
-		Log.d("CHEATING", "Key pressed:"+ (char)keyCode + ", cheatString is now:"+cheatString+", cheat is "+(isCheating? "en":"dis")+"abled.");
+			break;
+		default:
+			super.onKeyDown(keyCode, event);
+			cheatString = "";
+			break;
+		}
+
+		Log.d("CHEATING", "Key pressed:" + (char) keyCode
+				+ ", cheatString is now:" + cheatString + ", cheat is "
+				+ (isCheating ? "en" : "dis") + "abled.");
 		return false;
 	}
 	// Cheating end
