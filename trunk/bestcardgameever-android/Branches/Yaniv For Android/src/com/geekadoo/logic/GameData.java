@@ -17,6 +17,7 @@ import com.geekadoo.logic.ai.BasicYanivStrategy;
  * @author Elad
  */
 public class GameData implements Serializable {
+
 	private static final long serialVersionUID = -4564493907808892053L;
 
 	public static final int YANIV_NUM_CARDS = 5;
@@ -25,9 +26,14 @@ public class GameData implements Serializable {
 	public static final int DEFAULT_STARTING_PLAYER = 0;
 	public static final String STATE = "state";
 	public static final String LOG_TAG = "gameData";
+	public static final String[] PLAYER_NAMES = {"Player", "Sivan", "Iddo", "Elad"}; 
 
-	public static enum STATES {
+	public static enum GAME_STATES {
 		start, resume, end
+	}
+
+	public static enum GAME_INPUT_MODE {
+		paused, running
 	}
 
 	private static GameData gameData = null;
@@ -54,8 +60,9 @@ public class GameData implements Serializable {
 
 	private static YanivPersistenceAdapter persistencAdapter;
 
+	private GAME_INPUT_MODE mode;
+
 	private GameData() {
-		firstDeal = true;
 		// array of order of players in the beginning of the game (p1 is first)
 		playersInOrder = new ArrayList<Hand>();
 		p1Hand = new PlayerHand();
@@ -66,40 +73,40 @@ public class GameData implements Serializable {
 		playersInOrder.add(o2Hand);
 		o3Hand = new OpponentHand(new BasicYanivStrategy());
 		playersInOrder.add(o3Hand);
-		this.thrownCards = new ThrownCards();
-		this.deck = new SingleDeck();
-		this.turn = new Turn<Hand>(playersInOrder,
-				GameData.DEFAULT_STARTING_PLAYER);
 		currentGameNumber = 0;
+		startNewGame(p1Hand,true);
 	}
 
 	public static GameData getInstance(boolean firstRun, Context appCtx) {
-		// TODO: change the loading of the GameData to be performed in 
+		// TODO: change the loading of the GameData to be performed in
 		// GameData - on first access (load from disc)
 		persistencAdapter = new YanivPersistenceAdapter(appCtx);
-		
-		if(!firstRun){
+
+		if (!firstRun) {
 			// Existing game, read it from the persistence provider
-    		try{
-    			gameData = persistencAdapter.getSavedGameData();
-    		}catch (YanivPersistenceException e) {
-    			// TODO: pop up a sorry box and report this problem... - could not load, creating new.
-    			Log.e(LOG_TAG,"GameData could not load state, creating new gamedata");
-    			gameData = createNewGame();
-    		}
-    	}
-		else{
-    		// First run: Override existing game in memory 
-    		gameData = createNewGame();
-    	}
+			try {
+				gameData = persistencAdapter.getSavedGameData();
+			} catch (YanivPersistenceException e) {
+				// TODO: pop up a sorry box and report this problem... - could
+				// not load, creating new.
+				Log.e(LOG_TAG,
+						"GameData could not load state, creating new gamedata");
+				gameData = createNewGame();
+			}
+		} else {
+			// First run: Override existing game in memory
+			gameData = createNewGame();
+		}
 		return gameData;
 	}
-	public void save(Context applicationContext) throws YanivPersistenceException {
-		Log.e(LOG_TAG,"persistenceAdapter is " + persistencAdapter);
+
+	public void save(Context applicationContext)
+			throws YanivPersistenceException {
+		Log.e(LOG_TAG, "persistenceAdapter is " + persistencAdapter);
 		persistencAdapter.setSavedGameData(this);
 	}
-	
-	public static GameData getInstance(){
+
+	public static GameData getInstance() {
 		return gameData;
 	}
 
@@ -152,20 +159,21 @@ public class GameData implements Serializable {
 		this.playersInOrder = playersInOrder;
 	}
 
-	public List<String> getScoreRepresentation(){
-		//TODO:game number column as well.
+	public List<String> getScoreRepresentation() {
+		// TODO:game number column as well.
 		List<String> retVal = new ArrayList<String>();
-		
+
 		// First row is column titles: game number & player names
 		retVal.add("Game");
 		for (Hand h : playersInOrder) {
 			retVal.add((String) h.getPlayerName());
 		}
-		
+
 		// Contents: actual scores
 		// For each game in history
-		for(int gameNumber = 0; gameNumber < getCurrentGameNumber(); gameNumber++){
-			Log.e("Sivan", "gameNumber = " + gameNumber + ", String.valueOf = " + String.valueOf(gameNumber));
+		for (int gameNumber = 0; gameNumber < getCurrentGameNumber(); gameNumber++) {
+			Log.e("Sivan", "gameNumber = " + gameNumber + ", String.valueOf = "
+					+ String.valueOf(gameNumber));
 			// Game count is zero based, so when printing we need to add 1
 			retVal.add(String.valueOf(gameNumber + 1));
 			// Get history for that game
@@ -185,7 +193,7 @@ public class GameData implements Serializable {
 		return retVal;
 	}
 
-	private int getCurrentGameNumber() {
+	public int getCurrentGameNumber() {
 		return currentGameNumber;
 	}
 
@@ -195,9 +203,31 @@ public class GameData implements Serializable {
 		}
 	}
 
-	public void startNewGame() {
-		// TODO Auto-generated method stub
-		currentGameNumber++;
-		//TODO:THIS!!!
+	public void startNewGame(Hand startingHand, boolean isFirstGameInMatch) {
+		if (!isFirstGameInMatch) {
+			// advance game number
+			currentGameNumber++;
+			// reset hands
+			p1Hand.reset();
+			o1Hand.reset();
+			o2Hand.reset();
+			o3Hand.reset();
+			// Set the starting hand
+			turn.newRound(playersInOrder.indexOf(startingHand), false);
+		}else{
+			firstDeal = true;
+			this.turn = new Turn<Hand>(playersInOrder, playersInOrder.indexOf(startingHand));
+		}
+		this.thrownCards = new ThrownCards();
+		this.deck = new SingleDeck();
+		this.mode = GAME_INPUT_MODE.running;
+	}
+
+	public void setGameInputMode(GAME_INPUT_MODE mode) {
+		this.mode = mode;
+	}
+
+	public GAME_INPUT_MODE getGameInputMode() {
+		return mode;
 	}
 }

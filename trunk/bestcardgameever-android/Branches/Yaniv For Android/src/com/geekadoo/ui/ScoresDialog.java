@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,29 +13,23 @@ import android.widget.LinearLayout;
 
 import com.geekadoo.R;
 import com.geekadoo.R.id;
+import com.geekadoo.logic.GameData;
+import com.geekadoo.logic.Hand;
 
 public class ScoresDialog extends Dialog implements
 		android.view.View.OnClickListener {
+	public interface OkButtonHandler {
+
+		void afterScoreShown(final Hand hand);
+	}
+
 	private static final double cDialogHeightSizeFactor = 0.6;
 	private static final double cDialogWidthSizeFactor = 0.85;
 	private static final double cGridViewHeightSizeFactor = 0.83;
 	private int		numColumns = 5;
 	private Button okButton;
-
-	// TODO: delete this
-	public static String[] DELETE_ME = { "sivan", "elad", "Iddo", "Rachel",
-			"10", "20", "30", "40", "10", "20", "30", "40", "10", "20", "30",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20","20",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20","20",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20","20",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20","20",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20","20",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20","20",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20","20",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20","20",
-			"40", "10", "20", "30", "40", "10", "20", "30", "40", "10", "20","20",
-			"30", "40", "10", "20", "30", "40", "11", "101", "181", "112" };
+	private OkButtonHandler handler;
+	private Hand hand;
 
 	public ScoresDialog(Context context) {
 		super(context);
@@ -55,13 +48,21 @@ public class ScoresDialog extends Dialog implements
 		gridView.setNumColumns(numColumns);
 	}
 
-	public void showScores(List<String> scores) {
+	public void showScores(List<String> scores, Hand winningHand, OkButtonHandler handler) {
 		GridView gridView = (GridView) findViewById(R.id.gridview);
 		gridView.setAdapter(new TextAdapter(this.getContext(), scores, numColumns));
 		fixSize(gridView);
+
+		if(handler!=null){
+			this.handler = handler;
+			this.hand = winningHand;
+			okButton.setText("Proceed to next game");
+		}else{
+			this.handler = null;
+			this.hand = null;
+			okButton.setText("Got it!");
+		}
 		show();
-		
-		Log.e("Sivan", ""+okButton.getMeasuredHeight());
 	}
 
 	/**
@@ -92,8 +93,10 @@ public class ScoresDialog extends Dialog implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.scoresDialogOkButton:
+			if(handler!=null){
+				handler.afterScoreShown(hand);
+			}
 			dismiss();
-			// cancel();
 			break;
 
 		default:

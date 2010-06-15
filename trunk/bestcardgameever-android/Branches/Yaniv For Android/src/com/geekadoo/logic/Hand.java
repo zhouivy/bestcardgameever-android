@@ -7,6 +7,7 @@ import java.util.List;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.geekadoo.exceptions.InvalidDropException;
 import com.geekadoo.logic.ai.YanivStrategy;
@@ -32,6 +33,7 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	private PlayingCard[] compactedArr;
 
 	private CharSequence name;
+	private CharSequence handLabel;
 	private boolean canDrop;
 	private boolean canPickup;
 	private boolean cardVisibility;
@@ -43,16 +45,29 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	protected YanivStrategy strategy;
 	
 	public Hand() {
+		this.scoreHistory = new ArrayList<Integer>();
+		reset();
+	}
+
+	/**
+	 * this method resets this hand, this should be called between games to clean any cards this hand has
+	 */
+	public void reset(){
 		this.cards = new PlayingCard[GameData.YANIV_NUM_CARDS];
+		compactedArr = new PlayingCard[GameData.YANIV_NUM_CARDS];
 		firstFreeLocation = 0;
 		this.canDrop = true;
 		this.canPickup = false;
-		this.scoreHistory = new ArrayList<Integer>();
+		this.cardVisibility = false;
+		// Set the hand label to contain actual player name
+		this.handLabel = this.name;
 	}
 
-	public void bindGraphicComponents(View container, ImageView[] cardsViews, CharSequence name){
-		this.handGui = new HandGUI(container,cardsViews);
+	public void bindGraphicComponents(View container, ImageView[] cardsViews, 
+			TextView handLabelView, CharSequence name){
+		this.handGui = new HandGUI(container,cardsViews, handLabelView);
 		this.name =  name;
+		this.handLabel =  name;
 	}
 	
 	/**
@@ -247,9 +262,21 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	abstract public boolean isHumanPlayer();
 	
 	public CharSequence getPlayerName() {
-		
 		return this.name;
 	}
+
+//	public void setPlayerName(CharSequence name) {
+//		this.name = name;
+//	}
+	
+	public CharSequence getHandLabel() {
+		return handLabel;
+	}
+
+	public void setHandLabel(CharSequence handLabel) {
+		this.handLabel = handLabel;
+	}
+
 	public boolean getCanDrop(){
 		return canDrop;
 	}
@@ -259,6 +286,10 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	public boolean getCanPickup() {
 		return this.canPickup;
 	}
+	public void setCardVisibility(boolean cardVisibility) {
+		this.cardVisibility = cardVisibility;
+	}
+
 	public void setCanPickup(boolean canPickup) {
 		this.canPickup = canPickup;
 	}
@@ -301,6 +332,11 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	public ImageView[] getCardsViews() {
 		return handGui.getCardsViews();
 	}
+
+	public TextView getHandLabelView() {
+		return handGui.getHandLabelView();
+	}
+
 	public View getContainer() {
 		return handGui.getContainer();
 	}
@@ -321,5 +357,4 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 		}
 		return sum;
 	}
-	
 }
