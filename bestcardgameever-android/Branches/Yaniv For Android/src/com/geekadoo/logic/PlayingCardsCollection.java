@@ -21,17 +21,15 @@ public abstract class PlayingCardsCollection implements Serializable{
 	}
 
 	public int getRemainingCardsNo() {
-		return cards.toArray().length;
+		return cards.size();
 	}
 	
 	/**
 	 * @return The next card from the Collection and removes it
 	 */
 	public PlayingCard popTopCard() {
-		// If no cards, exception will be thrown - TODO: fix this bug for deck! (won't happen on thrown cards)
 		PlayingCard retVal = cards.pop();
 		return retVal;
-
 	}
 	
 	public final PlayingCard peekTopCard(){

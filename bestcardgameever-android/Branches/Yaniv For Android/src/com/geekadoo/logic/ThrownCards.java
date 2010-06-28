@@ -1,5 +1,7 @@
 package com.geekadoo.logic;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -48,8 +50,8 @@ public class ThrownCards extends PlayingCardsCollection {
 		PlayingCard[] retVal = new PlayingCard[GameData.YANIV_NUM_CARDS];
 		Stack<PlayingCard> tempStack = (Stack<PlayingCard>) cards.clone();
 		for (int i = 0; i < GameData.YANIV_NUM_CARDS; i++) {
-			if(tempStack.isEmpty()){
-				retVal[i]=null;
+			if (tempStack.isEmpty()){
+				retVal[i] = null;
 			}else{
 				retVal[i] = tempStack.pop();
 			}
@@ -61,5 +63,19 @@ public class ThrownCards extends PlayingCardsCollection {
 
 	}
 
-
+	/**
+	 * @return All the cards except for the last YANIV_NUM_CARDS (5)
+	 */
+	public List<PlayingCard> popAllButTopFive() {
+		List<PlayingCard> retVal;
+		int fromIndex = 0;
+		int toIndex = cards.size() - GameData.YANIV_NUM_CARDS;
+		
+		// Take out all the cards except for the last 5
+		retVal = new ArrayList<PlayingCard>(cards.subList(fromIndex, toIndex));
+		// Clear the thrown cards list from the cards that were taken
+		cards.removeAll(retVal);
+				
+		return retVal;
+	}
 }
