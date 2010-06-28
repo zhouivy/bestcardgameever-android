@@ -2,7 +2,6 @@ package com.geekadoo.logic;
 
 import com.geekadoo.logic.ai.YanivStrategy;
 
-
 /**
  * Descendant of the Hand class @see {@link Hand}
  * This is a hand that is controlled by artificial intelligence.
@@ -33,4 +32,5 @@ public class OpponentHand extends Hand {
 	protected boolean shouldYaniv() {
 		return strategy.decideYaniv();
 	}
+
 }

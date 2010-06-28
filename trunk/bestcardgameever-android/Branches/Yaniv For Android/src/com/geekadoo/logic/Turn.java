@@ -12,7 +12,6 @@ import android.util.Log;
  * that X's turn is over
  * 
  * @author Elad
- * 
  */
 public class Turn<T> implements Serializable {
 
@@ -117,5 +116,4 @@ public class Turn<T> implements Serializable {
 		}
 		this.roundEndedListenerList.add(l);
 	}
-
 }

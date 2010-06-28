@@ -2,6 +2,7 @@ package com.geekadoo.logic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -28,6 +29,9 @@ public class GameData implements Serializable {
 	public static final String LOG_TAG = "gameData";
 	public static final String[] PLAYER_NAMES = {"Player", "Sivan", "Iddo", "Elad"}; 
 
+	/** This flag is used for debugging the game */
+	private final boolean disableOpponentsYanivAbility = false;
+	
 	public static enum GAME_STATES {
 		start, resume, end
 	}
@@ -63,7 +67,11 @@ public class GameData implements Serializable {
 	private GAME_INPUT_MODE mode;
 
 	private GameData() {
-		// array of order of players in the beginning of the game (p1 is first)
+		if (disableOpponentsYanivAbility) {
+			Log.e(LOG_TAG, "*************************\n disableOpponentsYanivAbility IS TRUE!!!!!\n****************");
+		}
+
+		// Array of order of players in the beginning of the game (p1 is first)
 		playersInOrder = new ArrayList<Hand>();
 		p1Hand = new PlayerHand();
 		playersInOrder.add(p1Hand);
@@ -229,5 +237,16 @@ public class GameData implements Serializable {
 
 	public GAME_INPUT_MODE getGameInputMode() {
 		return mode;
+	}
+
+	/**
+	 * This method will use the thrown cards to re-create the deck (after shuffling them)
+	 */
+	public void refillDeck() {
+		// Obtain the cards to be re-used
+		List<PlayingCard> usedCards = getThrownCards().popAllButTopFive();
+		
+		Collections.shuffle(usedCards);
+		getDeck().addCards(usedCards);
 	}
 }

@@ -1,7 +1,10 @@
 package com.geekadoo.logic;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
+
+import android.util.Log;
 
 /**
  * This class represents a deck of 54 cards that includes 13 cards X 4 suits + 2 jokers
@@ -10,6 +13,7 @@ import java.util.Stack;
  */
 public class SingleDeck extends PlayingCardsCollection {
 	private static final long serialVersionUID = 1L;
+	private static final String LOG_TAG = "SingleDeck";
 
 	public SingleDeck() {
 		super();
@@ -32,4 +36,21 @@ public class SingleDeck extends PlayingCardsCollection {
 		// And lets get it on!
 		cards = deckTemp;
 	}
+	
+	public void addCards(List<PlayingCard> cardsToAdd) {
+		cards.addAll(cardsToAdd);
+	}
+	
+	@Override
+	public PlayingCard popTopCard() {
+		// If there are no cards, refill deck 
+		if (cards.isEmpty()) {
+			Log.w(LOG_TAG,"Deck was empty, refilling...");
+			GameData.getInstance().refillDeck();
+		}
+
+		PlayingCard retVal = cards.pop();
+		return retVal;
+	}
+
 }

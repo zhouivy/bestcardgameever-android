@@ -39,9 +39,12 @@ import com.geekadoo.exceptions.YanivPersistenceException;
 import com.geekadoo.logic.GameData;
 import com.geekadoo.logic.Hand;
 import com.geekadoo.logic.PickupMethod;
+import com.geekadoo.logic.PlayerHand;
 import com.geekadoo.logic.PlayingCard;
 import com.geekadoo.logic.Turn;
 import com.geekadoo.logic.GameData.GAME_INPUT_MODE;
+import com.geekadoo.logic.Hand.AttemptYanivListener;
+import com.geekadoo.logic.Hand.SwitchCardsListener;
 import com.geekadoo.ui.ScoresDialog.OkButtonHandler;
 
 /**
@@ -322,7 +325,7 @@ public class Yaniv extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				performYanivHandler();
+				performYanivHandler(gameData.getP1Hand());
 			}
 
 		});
@@ -375,6 +378,39 @@ public class Yaniv extends Activity {
 					}
 				});
 
+		// Define how to behave when there is an option to perform Yaniv
+		// and when switch cards is due
+		SwitchCardsListener opHandSwitchListener = 				
+			new Hand.SwitchCardsListener() {
+				private static final long serialVersionUID = 1L;
+	
+				@Override
+				public void onSwitchCards(Hand hand) throws InvalidDropException {
+					switchCards(hand);
+				}
+			};
+			
+		AttemptYanivListener opHandAttemptYanivListener = 				
+			new Hand.AttemptYanivListener() {
+				private static final long serialVersionUID = 1L;
+	
+				@Override
+				public void onAttemptYaniv(Hand hand) {
+					performYaniv(hand);
+					hand.setPerformedYaniv(true);
+				}
+			};
+
+		gameData.getO1Hand().setSwitchCardsListener(opHandSwitchListener);
+		gameData.getO2Hand().setSwitchCardsListener(opHandSwitchListener);
+		gameData.getO3Hand().setSwitchCardsListener(opHandSwitchListener);
+		gameData.getO1Hand().setAttemptYanivListener(opHandAttemptYanivListener);
+		gameData.getO2Hand().setAttemptYanivListener(opHandAttemptYanivListener);
+		gameData.getO3Hand().setAttemptYanivListener(opHandAttemptYanivListener);
+
+		// For human player:
+		// There is no need to setAttemptYanivListener since we should only enable the yaniv
+		// button and that happens anyway every time a turn start/end
 	}
 
 	// ///////////////////Handlers//////////////////////////////////////////////////
@@ -437,7 +473,6 @@ public class Yaniv extends Activity {
 	/**
 	 * II - 2 handler for the deck click RULE: first you drop, then you pickup
 	 */
-
 	private void deckClickHandler() {
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
 			if (gameData.isFirstDeal()) {
@@ -449,63 +484,67 @@ public class Yaniv extends Activity {
 		}
 	}
 
-	private void performYanivHandler() {
+	private void performYanivHandler(Hand yanivingHand) {
+		performYaniv(yanivingHand);
+		yanivingHand.setPerformedYaniv(true);
+	}
+
+	//TODO: ASSAF!!!
+	private void performYaniv(Hand yanivingHand) {
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
 
-		// First disable all input
-		gameData.setGameInputMode(GAME_INPUT_MODE.paused);
-
-		Hand yanivingHand = gameData.getP1Hand();
-		yanivingHand.doYaniv();
-		// TODO: Perform yaniv (call p1hand.doYaniv()), end game
-		// Note: will only be visible when yaniv is possible
-		// note 2: this ends the game, need to call score here
-
-		// Show everyone's cards
-		gameData.getO1Hand().setShouldCardsBeShown(true);
-		gameData.getO2Hand().setShouldCardsBeShown(true);
-		gameData.getO3Hand().setShouldCardsBeShown(true);
-		// And sum up the cards for each player
-		int p1Count = gameData.getP1Hand().sumCards();
-		int o1Count = gameData.getO1Hand().sumCards();
-		int o2Count = gameData.getO2Hand().sumCards();
-		int o3Count = gameData.getO3Hand().sumCards();
-		// Change player names to show the sum of cards instead
-		gameData.getP1Hand().setHandLabel(String.valueOf(p1Count));
-		gameData.getO1Hand().setHandLabel(String.valueOf(o1Count));
-		gameData.getO2Hand().setHandLabel(String.valueOf(o2Count));
-		gameData.getO3Hand().setHandLabel(String.valueOf(o3Count));
-
-		// redraw hands
-		redrawHand(gameData.getP1Hand());
-		redrawHand(gameData.getO1Hand());
-		redrawHand(gameData.getO2Hand());
-		redrawHand(gameData.getO3Hand());
-
-		// Create dialog 
-		AlertDialog dialog = new AlertDialog.Builder(this).create();
-		// TODO: Check if ASSAF condition occurred
-		ArrayList<Hand> playersByPosition = new ArrayList<Hand>(gameData.getPlayersInOrder());
-		Collections.sort(playersByPosition);
-		final Hand winningHand;
-		if (playersByPosition.indexOf(yanivingHand) == 0) {
-			winningHand  = yanivingHand;
-			// yaniv was successful
-			dialog.setTitle("You Won!");
-		} else {
-			// yaniv failed, ASSAF occurred
-			// TODO: handle ASSAF scoring
-			winningHand = playersByPosition.get(0);
-			dialog.setTitle(winningHand.getPlayerName()
-					+ " won!\n (you lost)");
-		}
-		dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Next Game", new DialogInterface.OnClickListener(){
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				nextGame(winningHand);
+			// First disable all input
+			gameData.setGameInputMode(GAME_INPUT_MODE.paused);
+		
+			// TODO: Perform yaniv (call p1hand.doYaniv()), end game
+			// Note: will only be visible when yaniv is possible
+			// note 2: this ends the game, need to call score here
+	
+			// Show everyone's cards
+			gameData.getO1Hand().setShouldCardsBeShown(true);
+			gameData.getO2Hand().setShouldCardsBeShown(true);
+			gameData.getO3Hand().setShouldCardsBeShown(true);
+			// And sum up the cards for each player
+			int p1Count = gameData.getP1Hand().sumCards();
+			int o1Count = gameData.getO1Hand().sumCards();
+			int o2Count = gameData.getO2Hand().sumCards();
+			int o3Count = gameData.getO3Hand().sumCards();
+			// Change player names to show the sum of cards instead
+			gameData.getP1Hand().setHandLabel(gameData.getP1Hand().getPlayerName() + ": " + String.valueOf(p1Count));
+			gameData.getO1Hand().setHandLabel(gameData.getO1Hand().getPlayerName() + ": " + String.valueOf(o1Count));
+			gameData.getO2Hand().setHandLabel(gameData.getO2Hand().getPlayerName() + ": " + String.valueOf(o2Count));
+			gameData.getO3Hand().setHandLabel(gameData.getO3Hand().getPlayerName() + ": " + String.valueOf(o3Count));
+	
+			// redraw hands
+			redrawHand(gameData.getP1Hand());
+			redrawHand(gameData.getO1Hand());
+			redrawHand(gameData.getO2Hand());
+			redrawHand(gameData.getO3Hand());
+	
+			// Create dialog 
+			AlertDialog dialog = new AlertDialog.Builder(this).create();
+			// TODO: Check if ASSAF condition occurred
+			ArrayList<Hand> playersByPosition = new ArrayList<Hand>(gameData.getPlayersInOrder());
+			Collections.sort(playersByPosition);
+			final Hand winningHand;
+			if (playersByPosition.indexOf(yanivingHand) == 0) {
+				winningHand  = yanivingHand;
+				// yaniv was successful
+				dialog.setTitle("You Won!");
+			} else {
+				// yaniv failed, ASSAF occurred
+				// TODO: handle ASSAF scoring
+				winningHand = playersByPosition.get(0);
+				dialog.setTitle(winningHand.getPlayerName()
+						+ " won!\n (you lost)");
 			}
-		});
-		dialog.show();
+			dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Next Game", new DialogInterface.OnClickListener(){
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					nextGame(winningHand);
+				}
+			});
+			dialog.show();
 		}
 	}
 	private void nextGame(final Hand winningHand) {
@@ -528,22 +567,19 @@ public class Yaniv extends Activity {
 		});
 	}
 	
-	private void afterScoreShown(final Hand winningHand){
-	}
-
 	private void turnStartedHandler(Hand hand) {
-		if (!hand.isHumanPlayer()) {
-			try {
-				// First perform yaniv if strategy dictates it
-				hand.doYaniv();
-				switchCards(hand);
-			} catch (InvalidDropException e) {
-				basicDialog.setTitle(e.getMessage());
-				basicDialog.show();// i know it's a bug, but it should never
-				// happen during gameplay
-				// there should be no way that the AI will perform an invalid
-				// drop...
+		try {
+			// First perform yaniv if strategy dictates it
+			hand.attemptYaniv();
+			if (!hand.hasPerformedYaniv()) {
+				hand.switchCards();
 			}
+		} catch (InvalidDropException e) {
+			basicDialog.setTitle(e.getMessage());
+			basicDialog.show();// i know it's a bug, but it should never
+			// happen during game play
+			// there should be no way that the AI will perform an invalid drop
+			// and human player does nothing upon switch cards
 		}
 
 		// Reset buttons - so the Yaniv button will show up when its needed

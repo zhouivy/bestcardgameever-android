@@ -14,12 +14,12 @@ import com.geekadoo.exceptions.InvalidDropException;
 public class PlayerHand extends Hand {
 	private static final long serialVersionUID = 1L;
 
-	
-
 	public PlayerHand() {
 		super();
 		// The cards always visible for p1
 		setShouldCardsBeShown(true);
+		// 
+		
 	}
 
 
@@ -171,8 +171,6 @@ public class PlayerHand extends Hand {
 	public boolean isHumanPlayer() {
 		return true;
 	}
-
-
 
 	@Override
 	protected boolean shouldYaniv() {

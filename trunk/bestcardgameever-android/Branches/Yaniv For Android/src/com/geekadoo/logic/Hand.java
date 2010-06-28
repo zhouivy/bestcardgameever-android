@@ -22,9 +22,15 @@ import com.geekadoo.ui.HandGUI;
  *
  */
 public abstract class Hand implements Comparable<Hand> , Serializable{
-	/**
-	 * 
-	 */
+	
+	public interface SwitchCardsListener extends Serializable {
+		void onSwitchCards(Hand hand) throws InvalidDropException;
+	}
+
+	public interface AttemptYanivListener extends Serializable {
+		void onAttemptYaniv(Hand hand);
+	}
+
 	private static final long serialVersionUID = 1L;
 	protected static final int YANIV_AMOUNT = 7;
 	private static final String LOG_TAG = "HAND";
@@ -39,10 +45,13 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	private boolean cardVisibility;
 	private transient HandGUI handGui;
 	
+	private transient SwitchCardsListener switchCardsListener;
+	private transient AttemptYanivListener attemptYanivListener;
 	
 	protected List<Integer> scoreHistory;
 	 
 	protected YanivStrategy strategy;
+	private boolean hasPerformedYaniv = false;
 	
 	public Hand() {
 		this.scoreHistory = new ArrayList<Integer>();
@@ -61,6 +70,7 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 		this.cardVisibility = false;
 		// Set the hand label to contain actual player name
 		this.handLabel = this.name;
+		this.hasPerformedYaniv = false;
 	}
 
 	public void bindGraphicComponents(View container, ImageView[] cardsViews, 
@@ -153,16 +163,17 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	
 	protected abstract boolean shouldYaniv();
 	
-	public void doYaniv(){
-		if(canYaniv() && shouldYaniv()){
-			//TODO:do yaniv...
-			Log.e("Yaniv", "Player " + name + " can and should do yaniv according to strategy" );
+	final public void attemptYaniv() {
+		if (attemptYanivListener != null && canYaniv() && shouldYaniv()) {
+			attemptYanivListener.onAttemptYaniv(this);
 		}
-		//Finish round:
-		//TODO: something here...
-		
 	}
 	
+	final public void switchCards() throws InvalidDropException {
+		if (switchCardsListener != null) {
+			switchCardsListener.onSwitchCards(this);
+		}
+	}
 //	public interface onYanivPerformedListener{
 //		void onYanivPerformed();
 //	}
@@ -356,5 +367,21 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 			sum += gameScore;
 		}
 		return sum;
+	}
+
+	public void setSwitchCardsListener(SwitchCardsListener switchCardsListener) {
+		this.switchCardsListener = switchCardsListener;
+	}
+
+	public void setAttemptYanivListener(AttemptYanivListener attemptYanivListener) {
+		this.attemptYanivListener = attemptYanivListener;
+	}
+
+	public boolean hasPerformedYaniv() {
+		return hasPerformedYaniv;
+	}
+
+	public void setPerformedYaniv(boolean value) {
+		this.hasPerformedYaniv = value;
 	}
 }
