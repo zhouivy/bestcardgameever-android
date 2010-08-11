@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.R.integer;
 import android.content.Context;
 import android.util.Log;
 
 import com.geekadoo.db.YanivPersistenceAdapter;
 import com.geekadoo.exceptions.YanivPersistenceException;
 import com.geekadoo.logic.ai.BasicYanivStrategy;
+import com.geekadoo.ui.ScoresDialog;
 
 /**
  * a Serializable Object that holds the game data
@@ -27,7 +29,13 @@ public class GameData implements Serializable {
 	public static final int DEFAULT_STARTING_PLAYER = 0;
 	public static final String STATE = "state";
 	public static final String LOG_TAG = "gameData";
-	public static final String[] PLAYER_NAMES = {"Player", "Sivan", "Iddo", "Elad"}; 
+	public static final String[] PLAYER_NAMES = {"Player", "Sivan", "Iddo", "Elad"};
+
+	private static final int ASSAF_PENALTY = 30;
+
+	private static final int WIN_SCORE = 0;
+
+	private static final Integer MATCH_LOSING_SCORE = 200; 
 
 	/** This flag is used for debugging the game */
 	private final boolean disableOpponentsYanivAbility = false;
@@ -86,8 +94,6 @@ public class GameData implements Serializable {
 	}
 
 	public static GameData getInstance(boolean firstRun, Context appCtx) {
-		// TODO: change the loading of the GameData to be performed in
-		// GameData - on first access (load from disc)
 		persistencAdapter = new YanivPersistenceAdapter(appCtx);
 
 		if (!firstRun) {
@@ -180,8 +186,6 @@ public class GameData implements Serializable {
 		// Contents: actual scores
 		// For each game in history
 		for (int gameNumber = 0; gameNumber < getCurrentGameNumber(); gameNumber++) {
-			Log.e("Sivan", "gameNumber = " + gameNumber + ", String.valueOf = "
-					+ String.valueOf(gameNumber));
 			// Game count is zero based, so when printing we need to add 1
 			retVal.add(String.valueOf(gameNumber + 1));
 			// Get history for that game
@@ -197,7 +201,6 @@ public class GameData implements Serializable {
 			retVal.add(h.getSumScores().toString());
 		}
 
-		Log.e("Sivan", retVal.toString());
 		return retVal;
 	}
 
@@ -207,7 +210,18 @@ public class GameData implements Serializable {
 
 	public void addRoundScores() {
 		for (Hand h : playersInOrder) {
-			h.addToScoreHistory(h.sumCards());
+			if(h.isWasAssaffed()){
+				h.setWasAssaffed(true);
+				h.addToScoreHistory(ASSAF_PENALTY + h.sumCards());
+			}else{
+				if(h.isWonRound()){
+					h.setWonRound(false);
+					h.addToScoreHistory(WIN_SCORE);
+				}else{
+					h.addToScoreHistory(h.sumCards());
+				}
+			}
+
 		}
 	}
 
@@ -248,5 +262,17 @@ public class GameData implements Serializable {
 		
 		Collections.shuffle(usedCards);
 		getDeck().addCards(usedCards);
+	}
+
+	public boolean isMatchWon() {
+////		//remove this FIXME TODO
+//			return true;
+////		//
+		boolean retVal = false;
+		for(int i = 0 ; i<playersInOrder.size() && !retVal ; i++){
+			Hand hand = playersInOrder.get(i);
+			retVal = hand.getSumScores() > MATCH_LOSING_SCORE;
+		}
+		return retVal;
 	}
 }

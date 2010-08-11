@@ -1,21 +1,15 @@
 package com.geekadoo.ui;
 
-/*
- * TODO: 
- * GameComponents need to be initialized from MainScreen activity, so it will not "die"
- * when Yaniv activity dies...
- * The separation we performed for init() is not sufficient.
- * we need to separate the graphics components from the hand object and then pass it an adapter upon 
- * initialization of graphic elements or keep the entire thing outside this activity and use it 
- */
-
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -39,7 +33,6 @@ import com.geekadoo.exceptions.YanivPersistenceException;
 import com.geekadoo.logic.GameData;
 import com.geekadoo.logic.Hand;
 import com.geekadoo.logic.PickupMethod;
-import com.geekadoo.logic.PlayerHand;
 import com.geekadoo.logic.PlayingCard;
 import com.geekadoo.logic.Turn;
 import com.geekadoo.logic.GameData.GAME_INPUT_MODE;
@@ -117,6 +110,7 @@ public class Yaniv extends Activity {
 	protected MyDialog uhOhDialog1;
 	private Button yanivBtn;
 	private TextView headingView;
+	ScoresDialog scoresDialog;
 	// End UI Elements
 
 	// Cheating - for debugging AI
@@ -131,7 +125,6 @@ public class Yaniv extends Activity {
 	// //////////////////////
 	private boolean firstRun;
 
-	private ScoresDialog scoresDialog;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -154,8 +147,6 @@ public class Yaniv extends Activity {
 			break;
 		}
 
-		// TODO: change the loading of the GameData to be performed in
-		// GameData - on first access
 		gameData = (savedInstanceState == null) ? null
 				: (GameData) savedInstanceState
 						.getSerializable(YanivPersistenceAdapter.GAME_DATA);
@@ -300,17 +291,13 @@ public class Yaniv extends Activity {
 	}
 
 	private void populateGameData() {
-		gameData.getP1Hand().bindGraphicComponents(
-				p1Container, p1Cards,
+		gameData.getP1Hand().bindGraphicComponents(p1Container, p1Cards,
 				p1Name, GameData.PLAYER_NAMES[0]);
-		gameData.getO1Hand().bindGraphicComponents(
-				o1Container, o1Cards,
+		gameData.getO1Hand().bindGraphicComponents(o1Container, o1Cards,
 				o1Name, GameData.PLAYER_NAMES[1]);
-		gameData.getO2Hand().bindGraphicComponents(
-				o2Container, o2Cards,
+		gameData.getO2Hand().bindGraphicComponents(o2Container, o2Cards,
 				o2Name, GameData.PLAYER_NAMES[2]);
-		gameData.getO3Hand().bindGraphicComponents(
-				o3Container, o3Cards,
+		gameData.getO3Hand().bindGraphicComponents(o3Container, o3Cards,
 				o3Name, GameData.PLAYER_NAMES[3]);
 		// Cheating
 		cheatString = new String();
@@ -325,7 +312,7 @@ public class Yaniv extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				performYanivHandler(gameData.getP1Hand());
+				performYanivHandler();
 			}
 
 		});
@@ -380,36 +367,38 @@ public class Yaniv extends Activity {
 
 		// Define how to behave when there is an option to perform Yaniv
 		// and when switch cards is due
-		SwitchCardsListener opHandSwitchListener = 				
-			new Hand.SwitchCardsListener() {
-				private static final long serialVersionUID = 1L;
-	
-				@Override
-				public void onSwitchCards(Hand hand) throws InvalidDropException {
-					switchCards(hand);
-				}
-			};
-			
-		AttemptYanivListener opHandAttemptYanivListener = 				
-			new Hand.AttemptYanivListener() {
-				private static final long serialVersionUID = 1L;
-	
-				@Override
-				public void onAttemptYaniv(Hand hand) {
-					performYaniv(hand);
-					hand.setPerformedYaniv(true);
-				}
-			};
+		SwitchCardsListener opHandSwitchListener = new Hand.SwitchCardsListener() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onSwitchCards(Hand hand) throws InvalidDropException {
+				switchCards(hand);
+			}
+		};
+
+		AttemptYanivListener opHandAttemptYanivListener = new Hand.AttemptYanivListener() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void onAttemptYaniv(Hand hand) {
+				performYaniv(hand);
+				hand.setPerformedYaniv(true);
+			}
+		};
 
 		gameData.getO1Hand().setSwitchCardsListener(opHandSwitchListener);
 		gameData.getO2Hand().setSwitchCardsListener(opHandSwitchListener);
 		gameData.getO3Hand().setSwitchCardsListener(opHandSwitchListener);
-		gameData.getO1Hand().setAttemptYanivListener(opHandAttemptYanivListener);
-		gameData.getO2Hand().setAttemptYanivListener(opHandAttemptYanivListener);
-		gameData.getO3Hand().setAttemptYanivListener(opHandAttemptYanivListener);
+		gameData.getO1Hand()
+				.setAttemptYanivListener(opHandAttemptYanivListener);
+		gameData.getO2Hand()
+				.setAttemptYanivListener(opHandAttemptYanivListener);
+		gameData.getO3Hand()
+				.setAttemptYanivListener(opHandAttemptYanivListener);
 
 		// For human player:
-		// There is no need to setAttemptYanivListener since we should only enable the yaniv
+		// There is no need to setAttemptYanivListener since we should only
+		// enable the yaniv
 		// button and that happens anyway every time a turn start/end
 	}
 
@@ -484,22 +473,18 @@ public class Yaniv extends Activity {
 		}
 	}
 
-	private void performYanivHandler(Hand yanivingHand) {
-		performYaniv(yanivingHand);
-		yanivingHand.setPerformedYaniv(true);
+	private void performYanivHandler() {
+		performYaniv(gameData.getP1Hand());
+		gameData.getP1Hand().setPerformedYaniv(true);
 	}
 
-	//TODO: ASSAF!!!
+	// TODO: ASSAF!!!
 	private void performYaniv(Hand yanivingHand) {
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
 
 			// First disable all input
 			gameData.setGameInputMode(GAME_INPUT_MODE.paused);
-		
-			// TODO: Perform yaniv (call p1hand.doYaniv()), end game
-			// Note: will only be visible when yaniv is possible
-			// note 2: this ends the game, need to call score here
-	
+
 			// Show everyone's cards
 			gameData.getO1Hand().setShouldCardsBeShown(true);
 			gameData.getO2Hand().setShouldCardsBeShown(true);
@@ -510,63 +495,120 @@ public class Yaniv extends Activity {
 			int o2Count = gameData.getO2Hand().sumCards();
 			int o3Count = gameData.getO3Hand().sumCards();
 			// Change player names to show the sum of cards instead
-			gameData.getP1Hand().setHandLabel(gameData.getP1Hand().getPlayerName() + ": " + String.valueOf(p1Count));
-			gameData.getO1Hand().setHandLabel(gameData.getO1Hand().getPlayerName() + ": " + String.valueOf(o1Count));
-			gameData.getO2Hand().setHandLabel(gameData.getO2Hand().getPlayerName() + ": " + String.valueOf(o2Count));
-			gameData.getO3Hand().setHandLabel(gameData.getO3Hand().getPlayerName() + ": " + String.valueOf(o3Count));
-	
+			gameData.getP1Hand().setHandLabel(
+					gameData.getP1Hand().getPlayerName() + ": "
+							+ String.valueOf(p1Count));
+			gameData.getO1Hand().setHandLabel(
+					gameData.getO1Hand().getPlayerName() + ": "
+							+ String.valueOf(o1Count));
+			gameData.getO2Hand().setHandLabel(
+					gameData.getO2Hand().getPlayerName() + ": "
+							+ String.valueOf(o2Count));
+			gameData.getO3Hand().setHandLabel(
+					gameData.getO3Hand().getPlayerName() + ": "
+							+ String.valueOf(o3Count));
+
 			// redraw hands
 			redrawHand(gameData.getP1Hand());
 			redrawHand(gameData.getO1Hand());
 			redrawHand(gameData.getO2Hand());
 			redrawHand(gameData.getO3Hand());
-	
-			// Create dialog 
+
+			// Create dialog
 			AlertDialog dialog = new AlertDialog.Builder(this).create();
-			// TODO: Check if ASSAF condition occurred
-			ArrayList<Hand> playersByPosition = new ArrayList<Hand>(gameData.getPlayersInOrder());
+			// Get winner
+			ArrayList<Hand> playersByPosition = new ArrayList<Hand>(
+					gameData.getPlayersInOrder());
 			Collections.sort(playersByPosition);
-			final Hand winningHand;
-			if (playersByPosition.indexOf(yanivingHand) == 0) {
-				winningHand  = yanivingHand;
+			final Hand winningHand = playersByPosition.get(0);
+			winningHand.setWonRound(true);
+			// Check if ASSAF condition occurred
+			if (winningHand.equals(yanivingHand)) {
 				// yaniv was successful
-				dialog.setTitle("You Won!");
+				dialog.setTitle((winningHand.isHumanPlayer() ? "You"
+						: winningHand.getPlayerName()) + " Won!");
 			} else {
 				// yaniv failed, ASSAF occurred
+				String assafMessage = (yanivingHand.isHumanPlayer() ? "You"
+						: yanivingHand.getPlayerName())
+								+ " Attempted a yaniv with a sum of "
+								+ yanivingHand.sumCards()
+								+ " but "
+								+ ((winningHand.isHumanPlayer() ? "You"
+										: winningHand.getPlayerName()))
+								+ " performed an Assaf with "
+								+ winningHand.sumCards() + "!!!";
 				// TODO: handle ASSAF scoring
-				winningHand = playersByPosition.get(0);
-				dialog.setTitle(winningHand.getPlayerName()
-						+ " won!\n (you lost)");
+				dialog.setTitle("An Assaf happend!");
+				dialog.setMessage(assafMessage);
+				yanivingHand.setWasAssaffed(true);
 			}
-			dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Next Game", new DialogInterface.OnClickListener(){
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					nextGame(winningHand);
-				}
-			});
+			dialog.setButton(AlertDialog.BUTTON_POSITIVE,
+					winningHand.isHumanPlayer() ? "Yay!" : "Darn!",
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							nextGame(winningHand);
+							if(winningHand.isHumanPlayer()){
+								MediaPlayer.create(getApplicationContext(), R.raw.yes).start();
+							}else{
+								MediaPlayer.create(getApplicationContext(), R.raw.damnit).start();
+							}
+						}
+					});
 			dialog.show();
 		}
 	}
+
 	private void nextGame(final Hand winningHand) {
 		// add to scores and end game
 		gameData.addRoundScores();
-		gameData.startNewGame(winningHand,false);
-		showScores(winningHand,new OkButtonHandler(){
-			
+		if (gameData.isMatchWon()) {
+			processMatchEnd();
+		} else {
+			gameData.startNewGame(winningHand, false);
+			showScores(winningHand, new OkButtonHandler() {
+
+				@Override
+				public void afterScoreShown(Hand hand) {
+					initGraphicComponents();
+					redrawAll();
+					dealCards();
+					headingView.setText("Starting game number "
+							+ (gameData.getCurrentGameNumber() + 1));
+					gameData.getTurn().fireTurnStartEvent(winningHand);
+				}
+			}, false);
+		}
+	}
+
+	/**
+	 * 1. show match ended screen 2. clear gamedata and start new game
+	 */
+	private void processMatchEnd() {
+		// Get hand with lowest sum scores
+		List<Hand> hands = gameData.getPlayersInOrder();
+		Collections.sort(hands, new Comparator<Hand>() {
+
 			@Override
-			public void afterScoreShown(Hand hand) {
-				//TODO:
-				// 1) The "next" button doesn't show up in the next game, check about "yaniv" button as well
-				//2) we need to make the yaniv performed handler callable by AI so that the AI can win as well.
-				initGraphicComponents();
-				redrawAll();
-				dealCards();
-				headingView.setText("Starting game number " + (gameData.getCurrentGameNumber()+1));
-				gameData.getTurn().fireTurnStartEvent(winningHand);
+			public int compare(Hand hand1, Hand hand2) {
+				return (hand1.getSumScores() - hand2.getSumScores()); // lowest
+																		// first
 			}
 		});
+		final Hand winningHand = hands.get(0);
+
+		showScores(winningHand, new OkButtonHandler() {
+			@Override
+			public void afterScoreShown(Hand hand) {
+				Yaniv.this.setResult(MainScreen.MATCH_OVER);
+				Yaniv.this.finish();
+			}
+		}, true);
+
+		Log.e(LOG_TAG, "MATCH SHOULD END NOW!");
 	}
-	
+
 	private void turnStartedHandler(Hand hand) {
 		try {
 			// First perform yaniv if strategy dictates it
@@ -586,7 +628,9 @@ public class Yaniv extends Activity {
 		redrawButtons(hand);
 		hand.getContainer().setBackgroundDrawable(null);
 	}
-	// ///////////////////END Handlers//////////////////////////////////////////////
+
+	// ///////////////////END
+	// Handlers//////////////////////////////////////////////
 
 	protected void dealCards() {
 
@@ -700,7 +744,7 @@ public class Yaniv extends Activity {
 
 		// Set player name
 		hand.getHandLabelView().setText(hand.getHandLabel());
-		
+
 		// Handle button display
 		// redrawButtons();
 
@@ -850,14 +894,16 @@ public class Yaniv extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case MENU_VIEW_SCORES:
-			showScores(null,null);
+			showScores(null, null, false);
 			return true;
 		}
 		return false;
 	}
 
-	private void showScores(Hand winningHand, ScoresDialog.OkButtonHandler handler) {
-		scoresDialog.showScores(gameData.getScoreRepresentation(),winningHand,handler);
+	private void showScores(Hand winningHand,
+			ScoresDialog.OkButtonHandler handler, boolean matchOver) {
+		scoresDialog.showScores(gameData.getScoreRepresentation(), winningHand,
+				handler, matchOver);
 	}
 
 	// End of menu

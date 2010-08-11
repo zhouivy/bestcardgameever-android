@@ -8,21 +8,25 @@ package com.geekadoo.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.geekadoo.R;
 import com.geekadoo.R.id;
+import com.geekadoo.db.YanivPersistenceAdapter;
 import com.geekadoo.logic.GameData;
 
 
 public class MainScreen extends Activity {
 
+	static protected final int MATCH_OVER = 1;
+	private static final String LOG_TAG = "MainScreen";
 	Button startBtn;
 	Button resumeBtn;
 	Button tutorialBtn;
 	Button exitBtn;
+	private boolean isResumable;
 	
 	public MainScreen() {
 		super();
@@ -36,6 +40,9 @@ public class MainScreen extends Activity {
 		
 		startBtn = (Button)findViewById(id.StartButton);
 		resumeBtn = (Button)findViewById(id.ResumeButton);
+		if(!YanivPersistenceAdapter.isSavedGameDataValid(getApplicationContext())){
+			resumeBtn.setEnabled(false);
+		}
 		tutorialBtn = (Button)findViewById(id.TutorialButton);
 		exitBtn = (Button)findViewById(id.ExitButton);
 
@@ -68,8 +75,7 @@ public class MainScreen extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				System.out.println("exitBtn - onClick");
-				//TODO:implement
+				System.exit(0);
 			}
 		});
 }
@@ -91,30 +97,23 @@ public class MainScreen extends Activity {
 		startActivityForResult(yanivIntent, GameData.RESUME_GAME);
 	}
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO:Just testing to see we can pass data within activities
-		TextView title = (TextView)findViewById(id.MainScreenTitle);
-//		title.setText(gameData.)
-
-		
-		//		// TODO:Check what is the reason the Yaniv activity was finished (exit, end of game?)
-//		super.onActivityResult(requestCode, resultCode, data);
-//		
-//		Log.d("PUKI", ""+data.getExtras().getInt("int"));
-//		GameData gameData = (GameData)data.getExtras().getSerializable(GameData.GAMEDATA_PARAMNAME);
-//		Log.d("PUKI", "gameData.isGameInProgress() = " + gameData.isGameInProgress());
-//		Log.d("PUKI", "GameData.getInstance().isGameInProgress() = " + GameData.getInstance().isGameInProgress());
-//		switch (requestCode) {
-//		case GameData.START_GAME:
-//			System.out.println("returned from a new game");
-//			break;
-//		case GameData.RESUME_GAME:
-//			System.out.println("returned from a resumed game");
-//			break;
-//
-//		default:
-//			break;
-//		}
+	// Listen for results.
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+	    // See which child activity is calling us back.
+	    switch (resultCode) {
+	        case MATCH_OVER:
+	        	// Disable the resume button
+	        	YanivPersistenceAdapter.deleteSavedGameData(getApplicationContext());
+	        	resumeBtn.setEnabled(false);
+	        	// get the data & populate high scores
+	        	break;
+	        case RESULT_CANCELED:
+	        	// This is the standard resultCode that is sent back if the
+	        	// activity crashed or didn't doesn't supply an explicit result.
+	        	break;
+	        default:
+	            break;
+	    }
 	}
+
 }
