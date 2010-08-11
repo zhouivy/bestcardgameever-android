@@ -2,6 +2,7 @@ package com.geekadoo.db;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -94,5 +95,18 @@ public class YanivPersistenceAdapter {
 			}
 		}
 	}
+	
+	public static boolean isSavedGameDataValid(Context appCtx){
+		boolean retVal = true;
+		try {
+			appCtx.openFileInput(FILE_NAME);
+		} catch (FileNotFoundException e) {
+			retVal = false;
+		}
+		return retVal;
+	}
 
+	public static void deleteSavedGameData(Context appCtx){
+		appCtx.deleteFile(FILE_NAME);
+	}
 }

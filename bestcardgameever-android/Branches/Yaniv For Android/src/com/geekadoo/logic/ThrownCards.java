@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import android.util.Log;
+
 /**
  * this class represents a stack of cards that have been thrown to the table
  * @author Elad
@@ -14,18 +16,18 @@ public class ThrownCards extends PlayingCardsCollection {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static final String LOG_TAG = "ThrownCards";
 
 
 	public ThrownCards() {
 		super();
 		this.cards = new Stack<PlayingCard>();
-		
-		System.out.println("Ctor"+ cards.empty() + " size: " + cards.size());
+		Log.d(LOG_TAG,"Ctor"+ cards.empty() + " size: " + cards.size());
 	}
 	
 	public void push(PlayingCard card){
 		cards.push(card);
-		System.out.println("push "+cards.empty() + " size: " + cards.size());
+		Log.d(LOG_TAG,"push "+cards.empty() + " size: " + cards.size());
 	}
 	
 	public void pushMulti(PlayingCard[] cards){
@@ -35,7 +37,7 @@ public class ThrownCards extends PlayingCardsCollection {
 		for (PlayingCard playingCard : cards) {
 			push(playingCard);
 		}
-		System.out.println("pushMulti "+ this.cards.empty() + " size: " + this.cards.size());
+		Log.d(LOG_TAG,"pushMulti "+ this.cards.empty() + " size: " + this.cards.size());
 	}
 	
 	
@@ -57,7 +59,7 @@ public class ThrownCards extends PlayingCardsCollection {
 			}
 		}
 		
-		System.out.println("peekTopFive "+cards.empty() + " size: " + cards.size());
+		Log.d(LOG_TAG,"peekTopFive "+cards.empty() + " size: " + cards.size());
 
 		return retVal;
 

@@ -75,11 +75,6 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 			copyOfOriginalCards.add(cards[i]);
 		}
 
-		//TODO: remove the next 3 lines
-//		System.err.println("---------------vvvvvvvvvv-----------------------");
-//		System.out.println("original cards in hand: "+copyOfOriginalCards);
-//		System.out.println("card on table : " + thrown.peekTopCard());
-
 		// First drop option - find the cards to drop regardless the thrown card.
 		ArrayList<PlayingCard> cardsToDropWithOutThrownCard = findBestDropOption(cards);
 
@@ -96,40 +91,25 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 		int secondDropChoice = (countCards(highestSetOrSeriesWithThrownCard) + countCards(cardsToDropWithThrownCard));
 		int	thirdDropChoice = countCards(cardsToDropAfterSwitchWithTrownCard) + countCards(cardsToDropWithOutThrownCard);
 
-		//TODO: remove the next 3 lines.
-//		System.out.println("first choice(DDA) = " + cardsToDropWithOutTrownCard + " = " +firstDropChoice);
-//		System.out.println("second choice(best set/series) = drop this round: " +  cardsToDropWithThrownCard+ " + drop next round: " + highestSetOrSeriesWithThrownCard+ " = " + secondDropChoice);
-//		System.out.println("third choice(Switch) = drop this round" + cardsToDropWithOutTrownCard  + " + drop next round" +  cardsToDropAfterSwitchWithTrownCard + " = "+thirdDropChoice);
-
 		//choose the best drop option
 		if(thirdDropChoice > secondDropChoice && thirdDropChoice > firstDropChoice){
 			cardsToDrop = cardsToDropWithOutThrownCard;
 			pickUpFrom = PickupMethod.fromThrown;
-//			System.out.println("third choice was selected");
 		}else if(secondDropChoice > thirdDropChoice && secondDropChoice > firstDropChoice){
 			cardsToDrop = cardsToDropWithThrownCard;
 			pickUpFrom = PickupMethod.fromThrown;
-//			System.out.println("second choice was selected");
 		}else if(secondDropChoice == thirdDropChoice && secondDropChoice > firstDropChoice && thirdDropChoice > firstDropChoice ){
 			if(countCards(cardsToDropWithThrownCard) > countCards(cardsToDropWithOutThrownCard)){
 				cardsToDrop = cardsToDropWithThrownCard;
-//				System.out.println("third choice was selected");
 			}else{
 				cardsToDrop = cardsToDropWithOutThrownCard;
-//				System.out.println("third choice was selected");
 			}
 			pickUpFrom = PickupMethod.fromThrown;
 		}else{
 			cardsToDrop = cardsToDropWithOutThrownCard;
 			pickUpFrom = PickupMethod.decidePickup;
-//			System.out.println("first choice was selected");
 		}
 
-
-//		TODO: remove the next 3 lines
-//		System.out.println("cardsToDrop : "+cardsToDrop);
-//		System.out.println("pickup from : " + pickUpFrom);
-//		System.err.println("-----------^^^^^^^^^^^------------------");
 
 
 		// mark the cards of the best drop option as selected

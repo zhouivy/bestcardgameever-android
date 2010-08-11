@@ -52,7 +52,11 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	 
 	protected YanivStrategy strategy;
 	private boolean hasPerformedYaniv = false;
+	private boolean wasAssaffed;
+	private boolean wonRound;
 	
+
+
 	public Hand() {
 		this.scoreHistory = new ArrayList<Integer>();
 		reset();
@@ -354,7 +358,7 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 	
 	public void addToScoreHistory(Integer scoreThisGame){
 		scoreHistory.add(scoreThisGame);
-		Log.e(LOG_TAG, "added score ["+scoreThisGame+"] to score history at position "+ scoreHistory.size());
+		Log.d(LOG_TAG, "added score ["+scoreThisGame+"] to score history at position "+ scoreHistory.size());
 	}
 
 	public List<Integer> getScoreHistory() {
@@ -383,5 +387,20 @@ public abstract class Hand implements Comparable<Hand> , Serializable{
 
 	public void setPerformedYaniv(boolean value) {
 		this.hasPerformedYaniv = value;
+	}
+
+	public void setWasAssaffed(boolean b) {
+		this.wasAssaffed = b;
+	}
+	public boolean isWasAssaffed() {
+		return wasAssaffed;
+	}
+
+	public void setWonRound(boolean b) {
+		this.wonRound = b;
+	}
+
+	public boolean isWonRound() {
+		return wonRound;
 	}
 }
