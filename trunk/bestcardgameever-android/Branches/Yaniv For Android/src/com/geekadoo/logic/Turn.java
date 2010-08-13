@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
-//TODO make into singleton!
 /**
  * This class is used to determine whose turn it is it will be populated with a
  * cyclic array of hands and will allow asking : who's turn is it and telling it
@@ -97,6 +96,10 @@ public class Turn<T> implements Serializable {
 		return players.get(turnIndex);
 	}
 
+	public T peekNext() {
+		return players.get((turnIndex + 1) % players.size());
+	}
+	
 	public void addOnTurnEndedListener(OnTurnStartedListener<T> l) {
 		if (turnStartListenerList == null) {
 			// Since turnEndListenerList has to be transient,

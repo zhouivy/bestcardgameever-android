@@ -28,7 +28,8 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final Integer PICKUP_THRESHOLD = 7;
+	private static final String LOG_TAG = "BasicYanivStrategy";
+	
 	private PickupMethod pickUpFrom = null;
 	ThrownCards thrown;
 	private boolean haveMoreCards = false;
@@ -265,7 +266,7 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 	private PlayingCard findHighestSingleCard(PlayingCard[] cardsWithoutNulls){
 		Arrays.sort(cardsWithoutNulls);
 		if(cardsWithoutNulls.length == 0){
-			Log.e("EXCEP", "cardswithoutnulls is empty, gonna be an exception");
+			Log.e(LOG_TAG, "cardswithoutnulls is empty, gonna be an exception");
 		}
 		return cardsWithoutNulls[0];
 	}
@@ -647,80 +648,80 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 	}
 
 
-	private void addJokers(ArrayList<PlayingCard> tmpHighestValSeries , ArrayList<PlayingCard> jokers, int numOfJokersToAdd){
-		//jokers are needed. Add them if they not already there
-		for (int i=0; i<numOfJokersToAdd; i++) {
-			if(!tmpHighestValSeries.contains(jokers.get(i))){
-				tmpHighestValSeries.add(jokers.get(i));
-			}
-		}
-	}
-	
-	private ArrayList<PlayingCard> verifyThatThereIsSeries(ArrayList<PlayingCard> tmpHighestValSeries, PlayingCard ace) {
-		//verify that the return array contains series.
-		ArrayList<PlayingCard> numberOfUsedJokers = new ArrayList<PlayingCard>();
-
-		//move all the joker to other arrayList
-		for (int i = tmpHighestValSeries.size()-1; i > 0; i--) {
-			if(tmpHighestValSeries.get(i).getValue() == PlayingCard.JOKER){
-				numberOfUsedJokers.add(tmpHighestValSeries.get(i));
-				tmpHighestValSeries.remove(i);
-			}
-		}
-
-		//count available jokers
-		int numOfAvailableJokers = numberOfUsedJokers.size();
-		int numOfAces = ace != null? 1 : 0 ;
-
-		//check for "holes" between 2 cards
-		for(int j=0; j<tmpHighestValSeries.size()-1; j++){
-			//check that we have enough cards + jokers to make series
-			if(tmpHighestValSeries.size() + numberOfUsedJokers.size() + numOfAces >= 3){
-				int currentCard = tmpHighestValSeries.get(j).getIntegerValue();
-				int nextCard = tmpHighestValSeries.get(j+1).getIntegerValue();
-				int diff = currentCard - nextCard;
-				boolean isSeries = true;
-
-				if(diff ==1){
-					// move to the next pair of cards
-				}else{
-					// have available joker 
-					if(numOfAvailableJokers > 0){
-						// if the available jokers can help to "fill a hole" between 2 cards
-						if(diff - numOfAvailableJokers <= 1){
-							//update available jokers according the jokers we use to "fill a hole"
-							numOfAvailableJokers = diff-1;
-						}else{
-							// can't "fill a hole" with the available jokers 
-							isSeries = false;
-						}
-					}else{
-						//not enough jokers to "fill a hole" 
-						isSeries = false;
-					}
-				}
-				//check that all the current cards are part of the same series.
-				if( ! isSeries){
-					// Remove the first card, init the numOfAvailableJokers 
-					//  set j to be -1 so that in the 'for loop' it will be 0 again.
-					// Now try to make series with the cards that left
-					tmpHighestValSeries.remove(0);
-					j=-1;
-					numOfAvailableJokers = numberOfUsedJokers.size();
-				}
-			}else{
-				//not enough cards to make series
-				tmpHighestValSeries = new ArrayList<PlayingCard>();
-				return tmpHighestValSeries;
-			}
-		}
-		//add back the jokers.
-		for (PlayingCard joker : numberOfUsedJokers) {
-			tmpHighestValSeries.add(joker);
-		}
-
-		return tmpHighestValSeries;
-	}
+//	private void addJokers(ArrayList<PlayingCard> tmpHighestValSeries , ArrayList<PlayingCard> jokers, int numOfJokersToAdd){
+//		//jokers are needed. Add them if they not already there
+//		for (int i=0; i<numOfJokersToAdd; i++) {
+//			if(!tmpHighestValSeries.contains(jokers.get(i))){
+//				tmpHighestValSeries.add(jokers.get(i));
+//			}
+//		}
+//	}
+//	
+//	private ArrayList<PlayingCard> verifyThatThereIsSeries(ArrayList<PlayingCard> tmpHighestValSeries, PlayingCard ace) {
+//		//verify that the return array contains series.
+//		ArrayList<PlayingCard> numberOfUsedJokers = new ArrayList<PlayingCard>();
+//
+//		//move all the joker to other arrayList
+//		for (int i = tmpHighestValSeries.size()-1; i > 0; i--) {
+//			if(tmpHighestValSeries.get(i).getValue() == PlayingCard.JOKER){
+//				numberOfUsedJokers.add(tmpHighestValSeries.get(i));
+//				tmpHighestValSeries.remove(i);
+//			}
+//		}
+//
+//		//count available jokers
+//		int numOfAvailableJokers = numberOfUsedJokers.size();
+//		int numOfAces = ace != null? 1 : 0 ;
+//
+//		//check for "holes" between 2 cards
+//		for(int j=0; j<tmpHighestValSeries.size()-1; j++){
+//			//check that we have enough cards + jokers to make series
+//			if(tmpHighestValSeries.size() + numberOfUsedJokers.size() + numOfAces >= 3){
+//				int currentCard = tmpHighestValSeries.get(j).getIntegerValue();
+//				int nextCard = tmpHighestValSeries.get(j+1).getIntegerValue();
+//				int diff = currentCard - nextCard;
+//				boolean isSeries = true;
+//
+//				if(diff ==1){
+//					// move to the next pair of cards
+//				}else{
+//					// have available joker 
+//					if(numOfAvailableJokers > 0){
+//						// if the available jokers can help to "fill a hole" between 2 cards
+//						if(diff - numOfAvailableJokers <= 1){
+//							//update available jokers according the jokers we use to "fill a hole"
+//							numOfAvailableJokers = diff-1;
+//						}else{
+//							// can't "fill a hole" with the available jokers 
+//							isSeries = false;
+//						}
+//					}else{
+//						//not enough jokers to "fill a hole" 
+//						isSeries = false;
+//					}
+//				}
+//				//check that all the current cards are part of the same series.
+//				if( ! isSeries){
+//					// Remove the first card, init the numOfAvailableJokers 
+//					//  set j to be -1 so that in the 'for loop' it will be 0 again.
+//					// Now try to make series with the cards that left
+//					tmpHighestValSeries.remove(0);
+//					j=-1;
+//					numOfAvailableJokers = numberOfUsedJokers.size();
+//				}
+//			}else{
+//				//not enough cards to make series
+//				tmpHighestValSeries = new ArrayList<PlayingCard>();
+//				return tmpHighestValSeries;
+//			}
+//		}
+//		//add back the jokers.
+//		for (PlayingCard joker : numberOfUsedJokers) {
+//			tmpHighestValSeries.add(joker);
+//		}
+//
+//		return tmpHighestValSeries;
+//	}
 
 	/* (non-Javadoc)
 	 * @see com.sheepzkeen.yaniv.YanivStrategy#decidePickUp()

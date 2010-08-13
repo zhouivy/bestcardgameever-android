@@ -5,14 +5,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import android.R.integer;
 import android.content.Context;
 import android.util.Log;
 
 import com.geekadoo.db.YanivPersistenceAdapter;
 import com.geekadoo.exceptions.YanivPersistenceException;
 import com.geekadoo.logic.ai.BasicYanivStrategy;
-import com.geekadoo.ui.ScoresDialog;
 
 /**
  * a Serializable Object that holds the game data
@@ -116,7 +114,6 @@ public class GameData implements Serializable {
 
 	public void save(Context applicationContext)
 			throws YanivPersistenceException {
-		Log.e(LOG_TAG, "persistenceAdapter is " + persistencAdapter);
 		persistencAdapter.setSavedGameData(this);
 	}
 
@@ -174,7 +171,6 @@ public class GameData implements Serializable {
 	}
 
 	public List<String> getScoreRepresentation() {
-		// TODO:game number column as well.
 		List<String> retVal = new ArrayList<String>();
 
 		// First row is column titles: game number & player names
@@ -265,9 +261,6 @@ public class GameData implements Serializable {
 	}
 
 	public boolean isMatchWon() {
-////		//remove this FIXME TODO
-//			return true;
-////		//
 		boolean retVal = false;
 		for(int i = 0 ; i<playersInOrder.size() && !retVal ; i++){
 			Hand hand = playersInOrder.get(i);

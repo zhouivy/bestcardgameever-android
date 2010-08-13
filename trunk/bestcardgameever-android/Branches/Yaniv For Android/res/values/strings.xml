@@ -21,9 +21,17 @@
 	<string name="PerformYaniv">Yaniv!</string>
 	<string name="NextPlayer">Next!</string>
 	<!-- Strings for the main screen -->
-	<string name="MainScreenTitle">Welcome to YanDroid!</string>
+	<string name="MainScreenTitle">Welcome to Yaniv for Android!</string>
 	<string name="ResumeButton">Resume</string>
 	<string name="StartButton">Start</string>
 	<string name="TutorialButton">Tutorial</string>
+	<string name="BugButton">Report an issue</string>
 	<string name="ExitButton">Exit</string>
+	
+	<string name="BugEmail">bugs@geekadoo.com</string>
+	<string name="BugSubject">Please fix this!</string>
+	<string name="BugBody">Hi, I found this bug, or request this feature:/nMy Device is: (nexus one)/nWhat steps will reproduce the problem?/n1. (start new game)/n2.(click on deck)/n3.(nothing happens)/nWhat is the expected output? (cards should be dealt)/n What do you see instead?(nothing, duh!)</string>
+	
+	
+	
 </resources>
