@@ -22,12 +22,10 @@ public class ThrownCards extends PlayingCardsCollection {
 	public ThrownCards() {
 		super();
 		this.cards = new Stack<PlayingCard>();
-		Log.d(LOG_TAG,"Ctor"+ cards.empty() + " size: " + cards.size());
 	}
 	
 	public void push(PlayingCard card){
 		cards.push(card);
-		Log.d(LOG_TAG,"push "+cards.empty() + " size: " + cards.size());
 	}
 	
 	public void pushMulti(PlayingCard[] cards){
@@ -37,7 +35,6 @@ public class ThrownCards extends PlayingCardsCollection {
 		for (PlayingCard playingCard : cards) {
 			push(playingCard);
 		}
-		Log.d(LOG_TAG,"pushMulti "+ this.cards.empty() + " size: " + this.cards.size());
 	}
 	
 	

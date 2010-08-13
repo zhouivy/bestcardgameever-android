@@ -117,12 +117,9 @@ public class Yaniv extends Activity {
 	private boolean isCheating;
 	private String cheatString;
 
-	// TODO: remove this
 	private AlertDialog.Builder basicDialog;
 	private PlayingCard[] tempThrownArr;
 	private GameData gameData;
-	// TODO: end remove this
-	// //////////////////////
 	private boolean firstRun;
 
 
@@ -478,7 +475,6 @@ public class Yaniv extends Activity {
 		gameData.getP1Hand().setPerformedYaniv(true);
 	}
 
-	// TODO: ASSAF!!!
 	private void performYaniv(Hand yanivingHand) {
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
 
@@ -538,7 +534,6 @@ public class Yaniv extends Activity {
 										: winningHand.getPlayerName()))
 								+ " performed an Assaf with "
 								+ winningHand.sumCards() + "!!!";
-				// TODO: handle ASSAF scoring
 				dialog.setTitle("An Assaf happend!");
 				dialog.setMessage(assafMessage);
 				yanivingHand.setWasAssaffed(true);
@@ -606,7 +601,6 @@ public class Yaniv extends Activity {
 			}
 		}, true);
 
-		Log.e(LOG_TAG, "MATCH SHOULD END NOW!");
 	}
 
 	private void turnStartedHandler(Hand hand) {
@@ -644,12 +638,12 @@ public class Yaniv extends Activity {
 				// anim
 				int[] handLocation = { 0, 0 };
 				hand.getContainer().getLocationInWindow(handLocation);
-				Log.e("COOR", "Hand: [" + handLocation[0] + ","
-						+ handLocation[1] + "]");
+//				Log.e("COOR", "Hand: [" + handLocation[0] + ","
+//						+ handLocation[1] + "]");
 				int[] deckLocation = { 0, 0 };
 				deckImg.getLocationInWindow(deckLocation);
-				Log.e("COOR", "Deck: [" + deckLocation[0] + ","
-						+ deckLocation[1] + "]");
+//				Log.e("COOR", "Deck: [" + deckLocation[0] + ","
+//						+ deckLocation[1] + "]");
 				// move from deck location to hand location
 				TranslateAnimation dealCardAnimation = new TranslateAnimation(
 						Animation.ABSOLUTE, deckLocation[0],
@@ -745,25 +739,6 @@ public class Yaniv extends Activity {
 		// Set player name
 		hand.getHandLabelView().setText(hand.getHandLabel());
 
-		// Handle button display
-		// redrawButtons();
-
-		// // TODO: problematic - this only applies to p1:
-		//
-		// // and show the drop cards button if needed
-		// // if this and no other cards are selected, don't show the button
-		// if (gameData.getP1Hand().hasSelectedCard() == false) {
-		// dropCardsBtn.setVisibility(View.GONE);
-		// } else {
-		// dropCardsBtn.setVisibility(View.VISIBLE);
-		// }
-		// // and the perform yaniv button...
-		// if (gameData.getP1Hand().canYaniv()) {
-		// yanivBtn.setVisibility(View.VISIBLE);
-		// } else {
-		// yanivBtn.setVisibility(View.GONE);
-		// }
-		//
 		container.requestLayout();
 	}
 
@@ -878,7 +853,12 @@ public class Yaniv extends Activity {
 				}
 			} else {
 				// If it's not a human player turn, show Next Player button
-				nextPlayerBtn.setVisibility(View.VISIBLE);
+				// *unless the next player is human (usability fix)
+				if(gameData.getTurn().peekNext().isHumanPlayer()){
+					gameData.getTurn().next();
+				}else{
+					nextPlayerBtn.setVisibility(View.VISIBLE);
+				}
 			}
 		}
 	}

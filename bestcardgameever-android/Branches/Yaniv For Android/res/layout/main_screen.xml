@@ -3,24 +3,33 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:gravity="center_horizontal" android:orientation="vertical"
 	android:background="@drawable/risingtree">
-	
+
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:orientation="vertical" android:gravity="top" android:paddingTop="10px">
+		android:orientation="vertical" android:gravity="top"
+		android:paddingTop="10px">
 		<TextView android:text="@string/MainScreenTitle" android:id="@+id/MainScreenTitle"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+		<!-- <TextView android:text="BETA" android:id="@+id/MainScreenTitle" android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" android:textColor ="#FF8040" android:textSize="36px" 
+			android:textStyle="bold" android:layout_gravity="center_vertical|center_horizontal"/> -->
 	</LinearLayout>
-	
+
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="vertical" android:layout_height="fill_parent" android:gravity="center_vertical|center_horizontal" android:layout_width="wrap_content">
+		android:orientation="vertical" android:layout_height="fill_parent"
+		android:gravity="center_vertical|center_horizontal"
+		android:layout_width="wrap_content">
 
 		<Button android:text="@string/StartButton" android:id="@+id/StartButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent"/>
+			android:layout_height="wrap_content" android:layout_width="fill_parent" />
 		<Button android:text="@string/ResumeButton" android:id="@+id/ResumeButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent"/>
+			android:layout_height="wrap_content" android:layout_width="fill_parent" />
 		<Button android:text="@string/TutorialButton" android:id="@+id/TutorialButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent"/>
+			android:layout_height="wrap_content" android:layout_width="fill_parent" />
+		<Button android:text="@string/BugButton" android:id="@+id/BugButton"
+			android:layout_height="wrap_content" android:layout_width="fill_parent"
+			android:background = "@drawable/custom_button" />
 		<Button android:text="@string/ExitButton" android:id="@+id/ExitButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent"/>
+			android:layout_height="wrap_content" android:layout_width="fill_parent" />
 	</LinearLayout>
 </LinearLayout>

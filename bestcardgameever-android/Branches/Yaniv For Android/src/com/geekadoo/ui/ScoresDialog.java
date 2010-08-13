@@ -4,10 +4,8 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -38,7 +36,6 @@ public class ScoresDialog extends Dialog implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 	}
 
