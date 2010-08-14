@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:weightSum="100" android:orientation="vertical" android:id="@+id/table"
+	android:background="#ffffff">
+	<!-- Top marquee -->
+	<LinearLayout android:background="#000000"
+		android:layout_width="fill_parent" android:layout_weight="6.0"
+		android:id="@+id/heading">
+	</LinearLayout>
+
+	<!-- Table Container -->
+	<LinearLayout 	
+		android:background="@drawable/risingtree"
+		android:layout_width="fill_parent" android:orientation="vertical"
+		android:layout_weight="94.0" android:weightSum="100.0">
+
+		<!-- Top Opponent -->
+		<LinearLayout android:background="#ff0000"
+			android:layout_width="fill_parent" android:layout_weight="20.0">
+		</LinearLayout>
+
+		<!-- Mid-section -->
+		<LinearLayout android:background="#00ff00"
+			android:layout_width="fill_parent" android:orientation="horizontal"
+			android:layout_weight="55" android:weightSum="100">
+			<LinearLayout android:background="#00aa00"
+				android:layout_height="fill_parent" android:layout_weight="25">
+			</LinearLayout>
+			<LinearLayout android:background="#00cc00"
+				android:layout_height="fill_parent" android:layout_weight="50">
+			</LinearLayout>
+			<LinearLayout android:background="#00ee00"
+				android:layout_height="fill_parent" android:layout_weight="25">
+			</LinearLayout>
+		</LinearLayout>
+
+		<!-- Bottom Player -->
+		<LinearLayout android:background="#0000ff"
+			android:layout_width="fill_parent" android:layout_weight="24">
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>
