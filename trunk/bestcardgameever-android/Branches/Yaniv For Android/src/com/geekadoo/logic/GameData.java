@@ -207,7 +207,7 @@ public class GameData implements Serializable {
 	public void addRoundScores() {
 		for (Hand h : playersInOrder) {
 			if(h.isWasAssaffed()){
-				h.setWasAssaffed(true);
+				h.setWasAssaffed(false);
 				h.addToScoreHistory(ASSAF_PENALTY + h.sumCards());
 			}else{
 				if(h.isWonRound()){
