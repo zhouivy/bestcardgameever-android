@@ -113,14 +113,15 @@ public class MainScreen extends Activity {
 
 				emailIntent.putExtra(
 						android.content.Intent.EXTRA_TEXT,
-						Html.fromHtml("Hi, I found this bug, or request this feature:"
-								+ "<BR>My Device is: (nexus one)"
-								+ "<BR>What steps will reproduce the problem?"
-								+ "<BR>1. (start new game)"
-								+ "<BR>2.(click on deck)"
-								+ "<BR>3.(nothing happens)"
-								+ "<BR>What is the expected output? (cards should be dealt)"
-								+ "<BR>What do you see instead?(nothing, duh!)"
+						Html.fromHtml("Hi, I found this bug, or request this feature:" +
+								"<br><br><br>---<br><br><br>"
+//								+ "<BR>My Device is: (nexus one)"
+//								+ "<BR>What steps will reproduce the problem?"
+//								+ "<BR>1. (start new game)"
+//								+ "<BR>2.(click on deck)"
+//								+ "<BR>3.(nothing happens)"
+//								+ "<BR>What is the expected output? (cards should be dealt)"
+//								+ "<BR>What do you see instead?(nothing, duh!)"
 								+ s));
 
 				MainScreen.this.startActivity(Intent.createChooser(emailIntent,
