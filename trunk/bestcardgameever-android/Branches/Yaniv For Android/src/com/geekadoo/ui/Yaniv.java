@@ -107,7 +107,7 @@ public class Yaniv extends Activity {
 
 	// Misc.
 	private Button nextPlayerBtn;
-	protected MyDialog uhOhDialog1;
+	protected ErrorMessageDialog uhOhDialog1;
 	private Button yanivBtn;
 	private TextView headingView;
 	ScoresDialog scoresDialog;
@@ -128,7 +128,8 @@ public class Yaniv extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.v(LOG_TAG, "onCreate");
-		setContentView(R.layout.main);
+		setContentView(R.layout.table);
+//		setContentView(R.layout.main);
 
 		// Load state given by MainScreen
 		switch ((GameData.GAME_STATES) getIntent().getExtras().get(
@@ -165,7 +166,7 @@ public class Yaniv extends Activity {
 
 		headingView = (TextView) findViewById(id.headingText);
 
-		uhOhDialog1 = new MyDialog(this);
+		uhOhDialog1 = new ErrorMessageDialog(this);
 		scoresDialog = new ScoresDialog(this);
 
 		// Player 1
@@ -420,7 +421,8 @@ public class Yaniv extends Activity {
 	 * I - 1 Drop cards that were previously marked RULE: first you drop, then
 	 * you pickup
 	 */
-	private void dropCards() {
+	private boolean dropCards() {
+		boolean retVal = true;
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
 			if (gameData.getP1Hand().getCanDrop() == true) {
 				try {
@@ -434,14 +436,18 @@ public class Yaniv extends Activity {
 					// player to see the cards he is throwing until they are
 					// down
 				} catch (InvalidDropException e) {
-					basicDialog.setTitle("You Can't Drop This!\nReason: "
+					basicDialog.setTitle("You Can't Drop This!");
+					basicDialog.setMessage("Reason: "
 							+ e.getMessage());
 					basicDialog.show();
+					retVal = false;
 				}
 			} else {
+				Log.v(LOG_TAG, "DropCards");
 				uhOhDialog1.show();
 			}
 		}
+		return retVal;
 	}
 
 	/**
@@ -667,8 +673,9 @@ public class Yaniv extends Activity {
 
 	private void p1Pickup(PickupMethod method) {
 		// Usability fix:
+		boolean wasDropSuccessful = true;
 		if (gameData.getP1Hand().hasSelectedCard()) {
-			dropCards();
+			wasDropSuccessful = dropCards();
 		}
 		Hand currentHand = gameData.getTurn().peek();
 		// First verify that it is the player's turn and that he is
@@ -700,8 +707,9 @@ public class Yaniv extends Activity {
 			redrawHand(gameData.getP1Hand());
 			// and advance a turn
 			gameData.getTurn().next();
-		} else {
+		} else if(wasDropSuccessful){
 			// show a dialog box saying 'cant pick up' or something
+			Log.v(LOG_TAG, "p1Pickup");
 			uhOhDialog1.show();
 		}
 	}
@@ -726,9 +734,9 @@ public class Yaniv extends Activity {
 				// TODO: Disgusting patch, need to fix asap!!!
 				if (hand == gameData.getP1Hand()) {
 					// Show isSelected
-					// when selected, move up 10 pixels
+					// when selected, move up 15 pixels
 					boolean isSelected = hand.isCardSelected(i);
-					((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin = isSelected ? 10
+					((LinearLayout.LayoutParams) cardView[i].getLayoutParams()).bottomMargin = isSelected ? 15
 							: 0;
 				}
 			} else {

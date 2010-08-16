@@ -92,7 +92,8 @@ public class PlayerHand extends Hand {
 			for (PlayingCard card : cardsToCheck) {
 				if(lastCardChecked != null && lastCardChecked.getIntegerValue() != card.getIntegerValue()){
 					//Reject
-					throw new InvalidDropException("(YE001)Cards of different suits must have same value!");
+					throw new InvalidDropException("(YE001)",
+							"Cards of different suits must have same value!");
 				}
 				lastCardChecked = card;
 			}
@@ -101,8 +102,9 @@ public class PlayerHand extends Hand {
 			//4.1 not enough cards
 			if(cardsToCheck.size() < 3 && jokerCount == 0){ //todo:change to cardstochek.size()+jokercount<3
 				//Reject
-				throw new InvalidDropException("(YE002)Cards have same suit, but are not enough to complete a series! " +
-						"(only " + cardsToCheck.size() + " cards dropped and no jokers)");
+				throw new InvalidDropException("(YE002)",
+						"Cards have same suit, but are not enough to complete a series! " +
+						"(You need at least 3 cards to complete a series but only " + cardsToCheck.size() + " cards dropped and no jokers)");
 			}
 			//4.2 ace removal
 			
@@ -126,8 +128,8 @@ public class PlayerHand extends Hand {
 					//4.4.1.2
 					if(differenceBetweenThisAndNextCardVal - 1 > jokerCount){
 						//reject
-						throw new InvalidDropException("(YE003) Cards have same suit, " +
-								"but the difference between them is too big"+ (jokerCount>0? ", even with your jokers. ":".") +
+						throw new InvalidDropException("(YE003)","Cards have same suit but do not complete a series - " +
+								"the difference between them is too big"+ (jokerCount>0? ", even with your jokers. ":".") +
 								"(cards: "+ cardsToCheck.get(i) + " and " + cardsToCheck.get(i+1)+")");
 					}else{
 						jokerCount = jokerCount - (differenceBetweenThisAndNextCardVal - 1);
@@ -153,7 +155,7 @@ public class PlayerHand extends Hand {
 				//OK
 			}else{
 				//reject
-				throw new InvalidDropException("(YE004)Cards have at least one ace that cannot be attached to series.");
+				throw new InvalidDropException("(YE004)","Cards have at least one ace that cannot be attached to series.");
 			}
 			
 		}

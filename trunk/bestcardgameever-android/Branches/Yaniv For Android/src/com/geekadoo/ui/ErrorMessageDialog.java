@@ -14,12 +14,12 @@ import com.geekadoo.R.id;
  * A dialog box to show messages.
  * @author Elad
  */
-public class MyDialog extends Dialog implements OnClickListener {
+public class ErrorMessageDialog extends Dialog implements OnClickListener {
 	private Button okButton;
-	public MyDialog(Context context) {
+	public ErrorMessageDialog(Context context) {
 		super(context);
 		this.setTitle(R.string.msg1Heading);        
-        setContentView(R.layout.dialog1);
+        setContentView(R.layout.yaniv_basic_dialog);
     	
 		okButton =  (Button)findViewById(id.dialogOkButton);
 		okButton.setOnClickListener(this);

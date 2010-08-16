@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:weightSum="100" android:orientation="vertical" android:id="@+id/table"
-	android:background="#ffffff">
+	>
 	<!-- Top marquee -->
 	<LinearLayout android:background="#000000"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
@@ -23,14 +23,14 @@
 
 		<!-- Top Opponent -->
 		<LinearLayout android:layout_width="fill_parent"
-			android:layout_height="0px" android:layout_weight="20" 
+			android:layout_height="0px" android:layout_weight="18" 
 			android:padding="1dip" android:orientation="vertical"
 			android:layout_gravity="center_horizontal" >
 			<TextView android:id="@+id/o2Name" android:layout_height="wrap_content" android:text="@string/Opponent2" android:layout_gravity="center" android:layout_width="wrap_content"/>
 			<LinearLayout android:id="@+id/topRow"
 				android:layout_height="wrap_content"
 				
-				android:background="#ff0000" android:layout_width="wrap_content" android:layout_gravity="center">
+				android:layout_width="wrap_content" android:layout_gravity="center">
 				<ImageView android:id="@+id/o2c1" android:layout_width="wrap_content"
 					android:layout_height="wrap_content" >
 				</ImageView>
@@ -50,13 +50,13 @@
 		</LinearLayout>
 
 		<!-- Mid-section -->
-		<LinearLayout android:background="#00ff00"
+		<LinearLayout 
 			android:layout_width="fill_parent" android:orientation="horizontal"
 			android:weightSum="100" android:layout_height="0px"
-			android:layout_weight="55">
+			android:layout_weight="52">
 			<!-- left opponent -->
 			<LinearLayout android:id="@+id/leftCol"
-				android:orientation="vertical" android:background="#ffffff"
+				android:orientation="vertical" 
 				android:layout_height="fill_parent" android:layout_weight="17.5"
 				android:layout_width="0px" android:padding="4dip"
 				android:layout_gravity="center">
@@ -82,18 +82,44 @@
 
 
 			</LinearLayout>
-			<!-- Deck and discarded -->
+			<!-- Deck and discarded + action buttons -->
 			<LinearLayout android:id="@+id/center"
-				android:background="#00cccc" android:layout_height="fill_parent"
+				android:layout_height="fill_parent"
 				android:orientation="vertical" android:layout_weight="65"
+				android:weightSum = "100"
 				android:layout_width="0px">
-				<ImageView android:id="@+id/deck" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:src="@drawable/deck"
-					android:padding="10px" />
-
+				
+				<LinearLayout android:layout_height="0px" android:layout_width="fill_parent" 
+				android:layout_weight="50" android:weightSum = "100">
+				
+				<ImageView android:id="@+id/deck" android:layout_width="0px"
+					android:layout_height="fill_parent" android:src="@drawable/deck"
+					android:padding="10px"
+					android:layout_weight="50" />
+					<LinearLayout android:id="@+id/ActionButtonContainer"
+						android:clipChildren="true" 
+						android:layout_gravity="center" android:layout_width="0px"
+						android:orientation="vertical" android:layout_height="fill_parent"
+						android:layout_weight="50" >
+						<Button android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:text="@string/PerformYaniv"
+							android:id="@+id/PerformYaniv" 
+							android:layout_gravity="center" android:layout_margin="5dip"
+							style="@style/MyRedButton">
+						</Button>
+						<Button android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:id="@+id/NextPlayer"
+							android:text="@string/NextPlayer"
+							android:layout_gravity="center"
+							android:layout_margin="9dip"></Button>
+					</LinearLayout>
+				</LinearLayout>
 
 				<LinearLayout android:id="@+id/cardsThrown"
-					android:layout_height="wrap_content" android:layout_width="fill_parent"
+					android:layout_height="0px" android:layout_width="fill_parent"
+					android:layout_weight="50"
 					android:padding="5px">
 
 					<ImageView android:layout_width="72px"
@@ -117,7 +143,7 @@
 			</LinearLayout>
 			<!-- right opponent -->
 			<LinearLayout android:id="@+id/rightCol"
-				android:orientation="vertical" android:background="#000000"
+				android:orientation="vertical" 
 				android:layout_height="fill_parent" android:layout_weight="17.5"
 				android:layout_width="0px" android:padding="4dip"
 				android:layout_gravity="center">
@@ -144,65 +170,41 @@
 
 		<!-- Bottom Player -->
 		<LinearLayout android:id="@+id/bottom"
-			android:background="#0000ff" android:layout_width="fill_parent"
+			android:layout_width="fill_parent"
 			android:orientation="vertical" android:weightSum="100"
-			android:layout_weight="25" android:layout_height="0px">
+			android:layout_weight="30" android:layout_height="0px">
 			<TextView android:id="@+id/p1Name" android:layout_width="wrap_content"
 				android:layout_height="wrap_content" android:text="@string/Player"
-				android:layout_gravity="center" android:background="#00ff00"
+				android:layout_gravity="center" 
 				android:layout_weight="7" />
 
-			<!-- review this content -->
-			<TableLayout android:id="@+id/p1CardsAndActionButtonContainer"
-				android:orientation="horizontal" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:layout_weight="93">
-				<TableRow android:layout_height="wrap_content">
-					<LinearLayout android:id="@+id/p1cardscontainer"
-						android:layout_width="wrap_content" android:layout_gravity="center"
-						android:layout_height="70px"
-						android:paddingLeft="4dip">
-
-						<ImageView android:id="@+id/p1c1" android:layout_height="@dimen/cardHeight"
-							android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom"
-							android:layout_marginBottom="0px">
+			<LinearLayout android:id="@+id/p1cardscontainer"
+				android:layout_width="fill_parent"	android:layout_height="0px"
+				android:paddingLeft="2dip" android:paddingRight="2dip"  android:layout_gravity="center"
+				 android:layout_weight="93" android:weightSum="100">
+						<ImageView android:id="@+id/p1c1"
+						 android:layout_height="fill_parent" android:layout_width="0px" android:layout_weight="20" 
+						 android:layout_gravity="bottom"
+							android:layout_margin="1dip">
 						</ImageView>
-						<ImageView android:id="@+id/p1c2" android:layout_height="@dimen/cardHeight"
-							android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom"
-							android:layout_marginBottom="0px">
+						<ImageView android:id="@+id/p1c2" 
+						 android:layout_height="fill_parent" android:layout_width="0px" android:layout_weight="20" 
+						android:layout_gravity="bottom"
+							android:layout_margin="1dip">
 						</ImageView>
-						<ImageView android:id="@+id/p1c3" android:layout_height="@dimen/cardHeight"
-							android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom"
-							android:layout_marginBottom="10px">
+						<ImageView android:id="@+id/p1c3" android:layout_gravity="bottom"
+								 android:layout_height="fill_parent" android:layout_width="0px" android:layout_weight="20" 
+							android:layout_margin="1dip">
 						</ImageView>
-						<ImageView android:id="@+id/p1c4" android:layout_height="@dimen/cardHeight"
-							android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom"
-							android:layout_marginBottom="0px">
+						<ImageView android:id="@+id/p1c4" android:layout_gravity="bottom"
+						android:layout_height="fill_parent" android:layout_width="0px" android:layout_weight="20" 
+							android:layout_margin="1dip">
 						</ImageView>
-						<ImageView android:id="@+id/p1c5" android:layout_height="@dimen/cardHeight"
-							android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom"
-							android:layout_marginBottom="10px">
+						<ImageView android:id="@+id/p1c5"  android:layout_gravity="bottom"
+								 android:layout_height="fill_parent" android:layout_width="0px" android:layout_weight="20" 
+							android:layout_margin="1dip">
 						</ImageView>
-
-					</LinearLayout>
-					<LinearLayout android:id="@+id/ActionButtonContainer"
-						android:clipChildren="true" android:gravity="right"
-						android:layout_gravity="right" android:layout_width="75px"
-						android:orientation="vertical" android:layout_height="fill_parent">
-
-						<Button android:layout_width="wrap_content"
-							android:layout_height="wrap_content" android:text="@string/PerformYaniv"
-							android:id="@+id/PerformYaniv" android:clickable="true"
-							android:gravity="center" android:textScaleX="1"
-							android:layout_gravity="center">
-						</Button>
-						<Button android:layout_width="wrap_content"
-							android:layout_height="wrap_content" android:clickable="true"
-							android:textScaleX="1" android:gravity="center" android:id="@+id/NextPlayer"
-							android:text="@string/NextPlayer" android:layout_gravity="center"></Button>
-					</LinearLayout>
-				</TableRow>
-			</TableLayout>
-			<!-- -->
+			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>

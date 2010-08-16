@@ -28,7 +28,7 @@
 			android:layout_height="wrap_content" android:layout_width="fill_parent" />
 		<Button android:text="@string/BugButton" android:id="@+id/BugButton"
 			android:layout_height="wrap_content" android:layout_width="fill_parent"
-			android:background = "@drawable/custom_button" />
+			style="@style/MyRedButton" />
 		<Button android:text="@string/ExitButton" android:id="@+id/ExitButton"
 			android:layout_height="wrap_content" android:layout_width="fill_parent" />
 	</LinearLayout>

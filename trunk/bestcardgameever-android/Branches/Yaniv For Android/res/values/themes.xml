@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomButton" parent="android:style/Theme.NoTitleBar">
+        <item name="android:buttonStyle">@style/MyButton</item>
+    </style>
+    <style name="CustomButton2" parent="android:style/Theme.NoTitleBar">
+        <item name="android:buttonStyle">@style/MyRedButton</item>
+    </style>
+</resources>
