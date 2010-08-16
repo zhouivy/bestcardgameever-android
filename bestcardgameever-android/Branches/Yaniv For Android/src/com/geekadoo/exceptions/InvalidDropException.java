@@ -5,7 +5,7 @@ package com.geekadoo.exceptions;
  * @author Elad
  */
 public class InvalidDropException extends Exception {
-	public InvalidDropException(String message) {
+	public InvalidDropException(String code, String message) {
 		super(message);
 	}
 	private static final long serialVersionUID = -2690350835355321831L;

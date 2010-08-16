@@ -8,10 +8,9 @@
 	<string name="Opponent1">Sivan</string>
 	<string name="Opponent2">Iddo</string>
 	<string name="Opponent3">Elad</string>
-	<string name="msg1">You can only pick up cards if it\'s your turn
-	</string>
 	<!--  uh-oh dialog -->
-	<string name="msg1Heading">Not Your Turn</string>
+	<string name="msg1">You can only pick up cards if it\'s your turn.\nDon\'t forget, you first need to select a card or cards to drop by tapping them and then click on the either the deck or the discarded cards pile to decide from where to pick up a new card.</string>
+	<string name="msg1Heading">Can\'t pick up yet</string>
 	<string name="dialogOkMsg">Got it!</string>
 
 	<!--  Scores dialog -->
@@ -28,9 +27,6 @@
 	<string name="BugButton">Report an issue</string>
 	<string name="ExitButton">Exit</string>
 	
-	<string name="BugEmail">bugs@geekadoo.com</string>
-	<string name="BugSubject">Please fix this!</string>
-	<string name="BugBody">Hi, I found this bug, or request this feature:/nMy Device is: (nexus one)/nWhat steps will reproduce the problem?/n1. (start new game)/n2.(click on deck)/n3.(nothing happens)/nWhat is the expected output? (cards should be dealt)/n What do you see instead?(nothing, duh!)</string>
 	
 	
 	
