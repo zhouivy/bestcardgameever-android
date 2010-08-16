@@ -25,26 +25,30 @@
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="0px" android:layout_weight="18" 
 			android:padding="1dip" android:orientation="vertical"
-			android:layout_gravity="center_horizontal" >
-			<TextView android:id="@+id/o2Name" android:layout_height="wrap_content" android:text="@string/Opponent2" android:layout_gravity="center" android:layout_width="wrap_content"/>
+			android:layout_gravity="center_horizontal"
+			android:weightSum="100">
+			<TextView android:id="@+id/o2Name" 
+			android:layout_height="wrap_content" android:text="@string/Opponent2" 
+			android:layout_gravity="center" android:layout_width="wrap_content"
+			android:layout_weight="8"/>
 			<LinearLayout android:id="@+id/topRow"
 				android:layout_height="wrap_content"
-				
-				android:layout_width="wrap_content" android:layout_gravity="center">
-				<ImageView android:id="@+id/o2c1" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" >
+				android:layout_width="wrap_content" android:layout_gravity="right"
+				android:layout_weight="92" android:weightSum="100" >
+				<ImageView android:id="@+id/o2c1" android:layout_width="0px"
+					android:layout_height="fill_parent"	android:layout_weight="20" >
 				</ImageView>
-				<ImageView android:id="@+id/o2c2" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" >
+				<ImageView android:id="@+id/o2c2" android:layout_width="0px"
+					android:layout_height="fill_parent" android:layout_weight="20">
 				</ImageView>
-				<ImageView android:id="@+id/o2c3" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" >
+				<ImageView android:id="@+id/o2c3" android:layout_width="0px"
+					android:layout_height="fill_parent" android:layout_weight="20">
 				</ImageView>
-				<ImageView android:id="@+id/o2c4" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" >
+				<ImageView android:id="@+id/o2c4" android:layout_width="0px"
+					android:layout_height="fill_parent" android:layout_weight="20">
 				</ImageView>
-				<ImageView android:id="@+id/o2c5" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" >
+				<ImageView android:id="@+id/o2c5" android:layout_width="0px"
+					android:layout_height="fill_parent" android:layout_weight="20">
 				</ImageView>
 			</LinearLayout>
 		</LinearLayout>
@@ -59,25 +63,31 @@
 				android:orientation="vertical" 
 				android:layout_height="fill_parent" android:layout_weight="17.5"
 				android:layout_width="0px" android:padding="4dip"
-				android:layout_gravity="center">
+				android:layout_gravity="center" android:weightSum="100" >
 				<TextView android:id="@+id/o1Name" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:text="@string/Opponent1"
-					android:layout_gravity="top" />
+					android:layout_height="0px" android:text="@string/Opponent1"
+					android:layout_gravity="top" android:layout_weight="5"
+					android:layout_marginBottom="2dip"/>
 
-				<ImageView android:id="@+id/o1c1" android:layout_width="wrap_content"
-					android:layout_height="wrap_content">
+				<ImageView android:id="@+id/o1c1" android:layout_width="fill_parent"
+					android:layout_height="0px"
+					android:layout_weight="19">
 				</ImageView>
-				<ImageView android:id="@+id/o1c2" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginTop="-30px">
+				<ImageView android:id="@+id/o1c2" android:layout_width="fill_parent"
+					android:layout_height="0px" android:layout_marginTop="-30px"
+					android:layout_weight="19">
 				</ImageView>
-				<ImageView android:id="@+id/o1c3" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginTop="-30px">
+				<ImageView android:id="@+id/o1c3" android:layout_width="fill_parent"
+					android:layout_height="0px" android:layout_marginTop="-30px"
+					android:layout_weight="19">
 				</ImageView>
-				<ImageView android:id="@+id/o1c4" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginTop="-30px">
+				<ImageView android:id="@+id/o1c4" android:layout_width="fill_parent"
+					android:layout_height="0px" android:layout_marginTop="-30px"
+					android:layout_weight="19">
 				</ImageView>
-				<ImageView android:id="@+id/o1c5" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginTop="-30px">
+				<ImageView android:id="@+id/o1c5" android:layout_width="fill_parent"
+					android:layout_height="0px" android:layout_marginTop="-30px"
+					android:layout_weight="19">
 				</ImageView>
 
 
@@ -146,24 +156,32 @@
 				android:orientation="vertical" 
 				android:layout_height="fill_parent" android:layout_weight="17.5"
 				android:layout_width="0px" android:padding="4dip"
-				android:layout_gravity="center">
+				android:layout_gravity="center"
+				android:weightSum="100">
 				<TextView android:id="@+id/o3Name" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:text="@string/Opponent3"
-					android:layout_gravity="top" />
-				<ImageView android:id="@+id/o3c1" android:layout_width="wrap_content"
-					android:layout_height="wrap_content">
+					android:layout_height="0px" android:text="@string/Opponent3"
+					android:layout_gravity="top" 
+					android:layout_weight="5"
+					android:layout_marginBottom="2dip"/>
+				<ImageView android:id="@+id/o3c1" android:layout_width="fill_parent"
+					android:layout_height="0px"
+					android:layout_weight="19">
 				</ImageView>
-				<ImageView android:id="@+id/o3c2" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginTop="-30px">
+				<ImageView android:id="@+id/o3c2" android:layout_width="fill_parent"
+					android:layout_height="0px" android:layout_marginTop="-30px"
+					android:layout_weight="19">
 				</ImageView>
-				<ImageView android:id="@+id/o3c3" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginTop="-30px">
+				<ImageView android:id="@+id/o3c3" android:layout_width="fill_parent"
+					android:layout_height="0px" android:layout_marginTop="-30px"
+					android:layout_weight="19">
 				</ImageView>
-				<ImageView android:id="@+id/o3c4" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginTop="-30px">
+				<ImageView android:id="@+id/o3c4" android:layout_width="fill_parent"
+					android:layout_height="0px" android:layout_marginTop="-30px"
+					android:layout_weight="19">
 				</ImageView>
-				<ImageView android:id="@+id/o3c5" android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginTop="-30px">
+				<ImageView android:id="@+id/o3c5" android:layout_width="fill_parent"
+					android:layout_height="0px" android:layout_marginTop="-30px"
+					android:layout_weight="19">
 				</ImageView>
 			</LinearLayout>
 		</LinearLayout>
