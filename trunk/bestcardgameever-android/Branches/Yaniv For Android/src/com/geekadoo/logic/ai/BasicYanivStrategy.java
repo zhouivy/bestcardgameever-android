@@ -7,6 +7,7 @@ import java.util.Collections;
 
 import android.util.Log;
 
+import com.geekadoo.exceptions.TestDebugException;
 import com.geekadoo.logic.GameData;
 import com.geekadoo.logic.Hand;
 import com.geekadoo.logic.PickupMethod;
@@ -111,7 +112,12 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 			pickUpFrom = PickupMethod.decidePickup;
 		}
 
-
+// Attempted test for ArrayIndexOutOfBoundsException on addCard
+		if(cardsToDrop.isEmpty()){
+			Log.e(LOG_TAG, "This is very bad - nothing was selected...");
+			throw new TestDebugException("BYS", "This is very bad - nothing was selected...");
+		}
+// END Attempted test for ArrayIndexOutOfBoundsException on addCard
 
 		// mark the cards of the best drop option as selected
 		for (PlayingCard card : cardsToDrop) {

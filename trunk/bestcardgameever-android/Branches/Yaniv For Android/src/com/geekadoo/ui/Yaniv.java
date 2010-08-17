@@ -29,6 +29,7 @@ import com.geekadoo.R;
 import com.geekadoo.R.id;
 import com.geekadoo.db.YanivPersistenceAdapter;
 import com.geekadoo.exceptions.InvalidDropException;
+import com.geekadoo.exceptions.TestDebugException;
 import com.geekadoo.exceptions.YanivPersistenceException;
 import com.geekadoo.logic.GameData;
 import com.geekadoo.logic.Hand;
@@ -780,6 +781,10 @@ public class Yaniv extends Activity {
 	private void switchCards(Hand hand) throws InvalidDropException {
 		// Drop
 		tempThrownArr = hand.drop();
+		Log.v(LOG_TAG, "number of cards in thrown " + tempThrownArr.length);
+		if(tempThrownArr.length<1){
+			throw new TestDebugException("YSC","AI didnt drop cards!");
+		}
 		// Mark the cards in the cards to drop as unselected so that if somebody
 		// picks them up they will be unselected
 		for (PlayingCard card : tempThrownArr) {
