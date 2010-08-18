@@ -29,6 +29,7 @@ public class MainScreen extends Activity {
 	Button startBtn;
 	Button resumeBtn;
 	Button tutorialBtn;
+	Button settingsBtn;
 	Button bugBtn;
 	Button exitBtn;
 
@@ -44,6 +45,7 @@ public class MainScreen extends Activity {
 		startBtn = (Button) findViewById(id.StartButton);
 		resumeBtn = (Button) findViewById(id.ResumeButton);
 		tutorialBtn = (Button) findViewById(id.TutorialButton);
+		settingsBtn = (Button) findViewById(id.SettingsButton);
 		bugBtn = (Button) findViewById(id.BugButton);
 		exitBtn = (Button) findViewById(id.ExitButton);
 
@@ -80,6 +82,16 @@ public class MainScreen extends Activity {
 //						.parse("http://yanivtutorial.geekadoo.com/")));
 			}
 		});
+		
+		settingsBtn.setOnClickListener(new Button.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				SettingsDialog dialog = new SettingsDialog(MainScreen.this);
+				dialog.show();
+			}
+		});
+
 
 		bugBtn.setOnClickListener(new Button.OnClickListener() {
 

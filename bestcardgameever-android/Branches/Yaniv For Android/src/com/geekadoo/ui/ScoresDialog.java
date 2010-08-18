@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
