@@ -29,17 +29,17 @@ import com.geekadoo.R;
 import com.geekadoo.R.id;
 import com.geekadoo.db.YanivPersistenceAdapter;
 import com.geekadoo.exceptions.InvalidDropException;
-import com.geekadoo.exceptions.TestDebugException;
 import com.geekadoo.exceptions.YanivPersistenceException;
 import com.geekadoo.logic.GameData;
+import com.geekadoo.logic.GameData.GAME_INPUT_MODE;
 import com.geekadoo.logic.Hand;
+import com.geekadoo.logic.Hand.AttemptYanivListener;
+import com.geekadoo.logic.Hand.SwitchCardsListener;
 import com.geekadoo.logic.PickupMethod;
 import com.geekadoo.logic.PlayingCard;
 import com.geekadoo.logic.Turn;
-import com.geekadoo.logic.GameData.GAME_INPUT_MODE;
-import com.geekadoo.logic.Hand.AttemptYanivListener;
-import com.geekadoo.logic.Hand.SwitchCardsListener;
 import com.geekadoo.ui.ScoresDialog.OkButtonHandler;
+import com.geekadoo.utils.MutableMediaPlayer;
 
 /**
  * The core activity of the application
@@ -52,6 +52,8 @@ public class Yaniv extends Activity {
 	private static final String LOG_TAG = "Yaniv";
 
 	private static final int MENU_VIEW_SCORES = 0;
+	private static final int MENU_SETTINGS = 1;
+	
 
 	// //////////////////////
 	// Deck - UI elements
@@ -169,6 +171,8 @@ public class Yaniv extends Activity {
 
 		uhOhDialog1 = new ErrorMessageDialog(this);
 		scoresDialog = new ScoresDialog(this);
+		// Disable the back button functionality
+		scoresDialog.setCancelable(false);
 
 		// Player 1
 		p1Name = (TextView) findViewById(id.p1Name);
@@ -259,26 +263,27 @@ public class Yaniv extends Activity {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		System.out.println("new config, orientation: " + newConfig.orientation);
+		Log.v(LOG_TAG, "new config, orientation: " + newConfig.orientation);
 
 		if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_YES) {
-			System.out.println("Keyboard open");
+			Log.v(LOG_TAG, "Keyboard open");
 		}
 		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			System.out.println("Orientation Landscape");
+			Log.v(LOG_TAG, "Orientation Landscape");
 		}
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		Log.v(LOG_TAG, "OnSaveInstanceState");
-		saveState();
-		outState.putSerializable(YanivPersistenceAdapter.GAME_DATA, gameData);
+//	@Override
+//	protected void onSaveInstanceState(Bundle outState) {
+//		super.onSaveInstanceState(outState);
+//		Log.v(LOG_TAG, "OnSaveInstanceState");
+//		//TODO: I dont think this is needed, the onPause method does this, looks reduntant here
+//		//		saveState();
+//		//outState.putSerializable(YanivPersistenceAdapter.GAME_DATA, gameData);
+//
+//	}
 
-	}
-
-	private void saveState() {
+	private synchronized void saveState() {
 		try {
 			gameData.save(getApplicationContext());
 			Log.d(LOG_TAG, "Yaniv saving state");
@@ -350,6 +355,8 @@ public class Yaniv extends Activity {
 			}
 		});
 
+		gameData.getTurn().clearOnTurnEndedListenerList();
+		
 		gameData.getTurn().addOnTurnEndedListener(
 				new Turn.OnTurnStartedListener<Hand>() {
 
@@ -541,7 +548,7 @@ public class Yaniv extends Activity {
 										: winningHand.getPlayerName()))
 								+ " performed an Assaf with "
 								+ winningHand.sumCards() + "!!!";
-				dialog.setTitle("An Assaf happend!");
+				dialog.setTitle("An Assaf happened!");
 				dialog.setMessage(assafMessage);
 				yanivingHand.setWasAssaffed(true);
 			}
@@ -552,12 +559,14 @@ public class Yaniv extends Activity {
 						public void onClick(DialogInterface dialog, int which) {
 							nextGame(winningHand);
 							if(winningHand.isHumanPlayer()){
-								MediaPlayer.create(getApplicationContext(), R.raw.yes).start();
+								MutableMediaPlayer.play(getApplicationContext(), R.raw.yes);
 							}else{
-								MediaPlayer.create(getApplicationContext(), R.raw.damnit).start();
+								MutableMediaPlayer.play(getApplicationContext(), R.raw.damnit);
 							}
 						}
 					});
+			// set as Cancelable false to avoid people pressing back and not firing the event
+			dialog.setCancelable(false);
 			dialog.show();
 		}
 	}
@@ -781,10 +790,6 @@ public class Yaniv extends Activity {
 	private void switchCards(Hand hand) throws InvalidDropException {
 		// Drop
 		tempThrownArr = hand.drop();
-		Log.v(LOG_TAG, "number of cards in thrown " + tempThrownArr.length);
-		if(tempThrownArr.length<1){
-			throw new TestDebugException("YSC","AI didnt drop cards!");
-		}
 		// Mark the cards in the cards to drop as unselected so that if somebody
 		// picks them up they will be unselected
 		for (PlayingCard card : tempThrownArr) {
@@ -880,6 +885,8 @@ public class Yaniv extends Activity {
 	/* Creates the menu items */
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MENU_VIEW_SCORES, 0, "View Scores");
+		menu.add(0, MENU_SETTINGS, 0, "Settings");
+		
 		return true;
 	}
 
@@ -889,8 +896,16 @@ public class Yaniv extends Activity {
 		case MENU_VIEW_SCORES:
 			showScores(null, null, false);
 			return true;
+		case MENU_SETTINGS:
+			showSettingsDialog();
+			return true;
 		}
 		return false;
+	}
+
+	private void showSettingsDialog() {
+		SettingsDialog dialog = new SettingsDialog(this);
+		dialog.show();
 	}
 
 	private void showScores(Hand winningHand,

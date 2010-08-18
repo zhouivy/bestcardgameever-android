@@ -67,7 +67,7 @@ public class Turn<T> implements Serializable {
 		turnIndex = (turnIndex + 1) % players.size();
 		if (turnIndex == 0) {
 			roundIdx++;
-			fireTurnEndedEvent();
+			fireRoundEndedEvent(); 
 		}
 
 		T retVal = players.get(turnIndex);
@@ -75,7 +75,7 @@ public class Turn<T> implements Serializable {
 		return retVal;
 	}
 
-	public void fireTurnEndedEvent() {
+	public void fireRoundEndedEvent() {
 		if (roundEndedListenerList != null) {
 			for (OnRoundEndedListener l : roundEndedListenerList) {
 				l.onRoundEnded();
@@ -99,7 +99,9 @@ public class Turn<T> implements Serializable {
 	public T peekNext() {
 		return players.get((turnIndex + 1) % players.size());
 	}
-	
+	public void clearOnTurnEndedListenerList(){
+		this.turnStartListenerList = new ArrayList<OnTurnStartedListener<T>>();
+	}
 	public void addOnTurnEndedListener(OnTurnStartedListener<T> l) {
 		if (turnStartListenerList == null) {
 			// Since turnEndListenerList has to be transient,
