@@ -16,5 +16,7 @@
     <style name="MyRedButton" parent="@MyButton">
         <item name="android:background">@drawable/btn_custom_2</item>
     </style>
-    
+    <style name="SoundToggleButton" parent="@android:style/Widget.Button">
+		<item name="android:background">@drawable/sound_togglebutton</item>
+	</style>    
 </resources>

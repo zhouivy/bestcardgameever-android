@@ -73,7 +73,11 @@ public class MainScreen extends Activity {
 			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://yanivtutorial.geekadoo.com/")));
+						.parse("http://www.youtube.com/watch?v=V4XuZRbbs6M")));
+				//TODO: this doesnt open the youtube app
+				//- think of a way you can do this without having to upgrade the app whenever the tutorial video changes...
+//				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+//						.parse("http://yanivtutorial.geekadoo.com/")));
 			}
 		});
 

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import com.geekadoo.R;
 import com.geekadoo.R.id;
 import com.geekadoo.logic.Hand;
+import com.geekadoo.utils.MutableMediaPlayer;
 
 public class ScoresDialog extends Dialog implements
 		android.view.View.OnClickListener {
@@ -77,13 +78,13 @@ public class ScoresDialog extends Dialog implements
 					findViewById(R.id.scoresDialogMainView)
 							.setBackgroundResource(
 									R.drawable.gamewon);
-					MediaPlayer.create(context, R.raw.applause).start();
+					MutableMediaPlayer.play(context, R.raw.applause);
 				} else {
 					// match lost
 					findViewById(R.id.scoresDialogMainView)
 							.setBackgroundResource(
 									R.drawable.gameover);
-					MediaPlayer.create(context, R.raw.ooooh).start();
+					MutableMediaPlayer.play(context, R.raw.ooooh);
 				}
 			} else {
 				okButton.setText("Proceed to Next Game");

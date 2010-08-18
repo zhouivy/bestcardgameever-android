@@ -71,7 +71,7 @@ public class GameData implements Serializable {
 	private static YanivPersistenceAdapter persistencAdapter;
 
 	private GAME_INPUT_MODE mode;
-
+	
 	private GameData() {
 		if (disableOpponentsYanivAbility) {
 			Log.e(LOG_TAG, "*************************\n disableOpponentsYanivAbility IS TRUE!!!!!\n****************");
