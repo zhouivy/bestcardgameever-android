@@ -29,6 +29,7 @@
 	<string name="ResumeButton">Resume</string>
 	<string name="StartButton">Start</string>
 	<string name="TutorialButton">Tutorial</string>
+	<string name="SettingsButton">Settings</string>
 	<string name="BugButton">Report an issue</string>
 	<string name="ExitButton">Exit</string>
 	

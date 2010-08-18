@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -324,6 +323,7 @@ public class Yaniv extends Activity {
 		// Next player Listener
 		nextPlayerBtn.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
+				MutableMediaPlayer.play(Yaniv.this, R.raw.next);
 				gameData.getTurn().next();
 			}
 		});
@@ -332,7 +332,7 @@ public class Yaniv extends Activity {
 		deckImg.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				deckClickHandler();
-			}
+				}
 		});
 
 		// click listener for each card of player 1
@@ -419,6 +419,7 @@ public class Yaniv extends Activity {
 	private void p1CardsClickHandler(final int cardIndex) {
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
 			if (gameData.getTurn().peek().isHumanPlayer()) {
+				MutableMediaPlayer.play(this, R.raw.pop);
 				gameData.getP1Hand().changeSelectionStateOnCard(cardIndex);
 				redrawHand(gameData.getP1Hand());
 			}// TODO:ELSE (show uhoh dialog)
@@ -466,6 +467,7 @@ public class Yaniv extends Activity {
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
 
 			// When the last thrown card is clicked it is picked up
+			MutableMediaPlayer.play(this, R.raw.pop);
 			p1Pickup(PickupMethod.fromThrown);
 		}
 	}
@@ -480,6 +482,7 @@ public class Yaniv extends Activity {
 				gameData.setFirstDeal(false);
 			} else {
 				p1Pickup(PickupMethod.fromDeck);
+				MutableMediaPlayer.play(this, R.raw.pop);
 			}
 		}
 	}
@@ -645,6 +648,7 @@ public class Yaniv extends Activity {
 	protected void dealCards() {
 
 		int startOffset = 0;
+		MutableMediaPlayer.play(this, R.raw.shuffle);
 		// 5 cards for each player
 		for (int i = 0; i < GameData.YANIV_NUM_CARDS; i++) {
 
