@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="hello">Hello World, Yaniv</string>
+	<string name="app_name">Yan-Droid</string>
+	<string name="Heading">Yaniv - A Card Game </string>
+	<string name="DropSelected">Drop Cards</string>
+	<string name="Player">Player</string>
+	<string name="Opponent1">Sivan</string>
+	<string name="Opponent2">Iddo</string>
+	<string name="Opponent3">Elad</string>
+	<!--  uh-oh dialog -->
+	<string name="msg1">You can only pick up cards if it\'s your turn.\nDon\'t forget, you first need to select a card or cards to drop by tapping them and then click on the either the deck or the discarded cards pile to decide from where to pick up a new card.</string>
+	<string name="msg1Heading">Can\'t pick up yet</string>
+	<string name="dialogOkMsg">Got it!</string>
+
+	<!--  Scores dialog -->
+	<string name="scoresDialogHeading">What\'s The Score?</string>
+	<string name="scoresDialogOkMsg">Return to Game</string>
+
+	<!--  Settings dialog -->
+	<string name="settingsDialogHeading">Settings</string>
+	<string name="settingsDialogOkMsg">Save Changes</string>
+	<string name="settingsDialogCancelMsg">Cancel</string>
+
+	<string name="PerformYaniv">Yaniv!</string>
+	<string name="NextPlayer">Next!</string>
+	<!-- Strings for the main screen -->
+	<string name="MainScreenTitle">Welcome to Yaniv for Android!</string>
+	<string name="ResumeButton">Resume</string>
+	<string name="StartButton">Start</string>
+	<string name="TutorialButton">Tutorial</string>
+	<string name="SettingsButton">Settings</string>
+	<string name="BugButton">Report an issue</string>
+	<string name="ExitButton">Exit</string>
+	
+	
+	
+	
+</resources>
