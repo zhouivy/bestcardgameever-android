@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import com.geekadoo.R;
 import com.geekadoo.R.id;
 import com.geekadoo.logic.Hand;
-import com.geekadoo.utils.MutableMediaPlayer;
+import com.geekadoo.utils.MutableSoundManager;
 
 public class ScoresDialog extends Dialog implements
 		android.view.View.OnClickListener {
@@ -77,13 +77,13 @@ public class ScoresDialog extends Dialog implements
 					findViewById(R.id.scoresDialogMainView)
 							.setBackgroundResource(
 									R.drawable.gamewon);
-					MutableMediaPlayer.play(context, R.raw.applause);
+					MutableSoundManager.getInstance(context).playSound(R.raw.applause);
 				} else {
 					// match lost
 					findViewById(R.id.scoresDialogMainView)
 							.setBackgroundResource(
 									R.drawable.gameover);
-					MutableMediaPlayer.play(context, R.raw.ooooh);
+					MutableSoundManager.getInstance(context).playSound(R.raw.ooooh);
 				}
 			} else {
 				okButton.setText("Proceed to Next Game");

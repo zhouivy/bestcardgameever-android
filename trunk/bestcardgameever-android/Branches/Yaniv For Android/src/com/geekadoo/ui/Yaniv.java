@@ -38,7 +38,7 @@ import com.geekadoo.logic.PickupMethod;
 import com.geekadoo.logic.PlayingCard;
 import com.geekadoo.logic.Turn;
 import com.geekadoo.ui.ScoresDialog.OkButtonHandler;
-import com.geekadoo.utils.MutableMediaPlayer;
+import com.geekadoo.utils.MutableSoundManager;
 
 /**
  * The core activity of the application
@@ -323,7 +323,7 @@ public class Yaniv extends Activity {
 		// Next player Listener
 		nextPlayerBtn.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				MutableMediaPlayer.play(Yaniv.this, R.raw.next);
+				MutableSoundManager.getInstance(Yaniv.this).playSound(R.raw.next);
 				gameData.getTurn().next();
 			}
 		});
@@ -419,7 +419,7 @@ public class Yaniv extends Activity {
 	private void p1CardsClickHandler(final int cardIndex) {
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
 			if (gameData.getTurn().peek().isHumanPlayer()) {
-				MutableMediaPlayer.play(this, R.raw.pop);
+				MutableSoundManager.getInstance(this).playSound(R.raw.pop);
 				gameData.getP1Hand().changeSelectionStateOnCard(cardIndex);
 				redrawHand(gameData.getP1Hand());
 			}// TODO:ELSE (show uhoh dialog)
@@ -467,7 +467,7 @@ public class Yaniv extends Activity {
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
 
 			// When the last thrown card is clicked it is picked up
-			MutableMediaPlayer.play(this, R.raw.pop);
+			MutableSoundManager.getInstance(this).playSound(R.raw.pop);
 			p1Pickup(PickupMethod.fromThrown);
 		}
 	}
@@ -482,7 +482,7 @@ public class Yaniv extends Activity {
 				gameData.setFirstDeal(false);
 			} else {
 				p1Pickup(PickupMethod.fromDeck);
-				MutableMediaPlayer.play(this, R.raw.pop);
+				MutableSoundManager.getInstance(this).playSound(R.raw.pop);
 			}
 		}
 	}
@@ -562,9 +562,9 @@ public class Yaniv extends Activity {
 						public void onClick(DialogInterface dialog, int which) {
 							nextGame(winningHand);
 							if(winningHand.isHumanPlayer()){
-								MutableMediaPlayer.play(getApplicationContext(), R.raw.yes);
+								MutableSoundManager.getInstance(getApplicationContext()).playSound(R.raw.yes);
 							}else{
-								MutableMediaPlayer.play(getApplicationContext(), R.raw.damnit);
+								MutableSoundManager.getInstance(getApplicationContext()).playSound(R.raw.damnit);
 							}
 						}
 					});
@@ -648,7 +648,7 @@ public class Yaniv extends Activity {
 	protected void dealCards() {
 
 		int startOffset = 0;
-		MutableMediaPlayer.play(this, R.raw.shuffle);
+		MutableSoundManager.getInstance(this).playSound(R.raw.shuffle);
 		// 5 cards for each player
 		for (int i = 0; i < GameData.YANIV_NUM_CARDS; i++) {
 
