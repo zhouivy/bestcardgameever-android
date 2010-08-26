@@ -158,7 +158,7 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 		boolean isThrownCardHelpToMakeSetAfterSwitch = (countCards(findHighestSet(cards)) > 0) &&  (findHighestSet(cards).contains(thrown.peekTopCard()));
 
 		// divide cards by suit and make array of series by suits.
-		ArrayList<ArrayList<PlayingCard>> seriesArr = devideCardsBySuits(cards);
+		ArrayList<ArrayList<PlayingCard>> seriesArr = divideCardsBySuits(cards);
 
 		//find highest series after switch
 		boolean isThrownCardHelpToMakeSeriesAfterSwitch = (countCards(findHighestSeries(seriesArr)) > 0) && (findHighestSeries(seriesArr).contains(thrown.peekTopCard()));
@@ -239,7 +239,7 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 		highestValSet = findHighestSet(cardsWithoutNulls);
 
 		// divide cards by suit and make array of series by suits.
-		ArrayList<ArrayList<PlayingCard>> seriesArr = devideCardsBySuits(cardsWithoutNulls);
+		ArrayList<ArrayList<PlayingCard>> seriesArr = divideCardsBySuits(cardsWithoutNulls);
 
 		//find highest series
 		highestValSeries = findHighestSeries(seriesArr);
@@ -271,7 +271,7 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 	}
 
 	private ArrayList<PlayingCard> decideBestDropOption(ArrayList<PlayingCard> highestValSeries, ArrayList<PlayingCard> highestValSet, ArrayList<PlayingCard> highestValCard){
-		int highestValSeriesWorth = countSeries(highestValSeries);;
+		int highestValSeriesWorth = countSeries(highestValSeries);
 		int highestValSetWorth = countCards(highestValSet);
 		int highestValCardWorth = highestValCard.get(0).getCountValue();
 
@@ -416,7 +416,7 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 		return cardsToCheck;
 	}
 
-	private ArrayList<ArrayList<PlayingCard>> devideCardsBySuits(PlayingCard[] cardsWithoutNulls){
+	private ArrayList<ArrayList<PlayingCard>> divideCardsBySuits(PlayingCard[] cardsWithoutNulls){
 		ArrayList<PlayingCard> clubs = new ArrayList<PlayingCard>();
 		ArrayList<PlayingCard> spades = new ArrayList<PlayingCard>();		
 		ArrayList<PlayingCard> hearts = new ArrayList<PlayingCard>();		
@@ -800,7 +800,7 @@ public class BasicYanivStrategy implements YanivStrategy ,Serializable{
 		PlayingCard[] cardsWithThrownCard = new PlayingCard[cards.size()];
 		cards.toArray(cardsWithThrownCard);
 
-		ArrayList<ArrayList<PlayingCard>> seriesArr = devideCardsBySuits(cardsWithThrownCard);
+		ArrayList<ArrayList<PlayingCard>> seriesArr = divideCardsBySuits(cardsWithThrownCard);
 
 		for (int i = 0; i < seriesArr.size(); i++) {
 			ArrayList<PlayingCard> currentSeries = seriesArr.get(i);

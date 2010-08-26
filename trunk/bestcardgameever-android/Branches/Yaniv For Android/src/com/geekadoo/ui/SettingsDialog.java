@@ -12,11 +12,12 @@ import android.widget.ToggleButton;
 
 import com.geekadoo.R;
 import com.geekadoo.R.id;
+import com.geekadoo.utils.MutableSoundManager;
 
 public class SettingsDialog extends Dialog implements
 		android.view.View.OnClickListener {
-	private static final String PREFS_NAME = "YANIV_PREFS";
-	private static final String SILENT_MODE_PROPERTY = "silentMode";
+//	private static final String PREFS_NAME = "YANIV_PREFS";
+//	private static final String SILENT_MODE_PROPERTY = "silentMode";
 
 	Button okButton;
 //	Button cancelButton;
@@ -30,8 +31,8 @@ public class SettingsDialog extends Dialog implements
 //		cancelButton = (Button) findViewById(id.settingsDialogCancelButton);
 //		cancelButton.setOnClickListener(this);
 		final ToggleButton togglebutton = (ToggleButton) findViewById(R.id.soundToggle);
-		SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
-	       boolean silent = settings.getBoolean(SILENT_MODE_PROPERTY, false);
+		SharedPreferences settings = context.getSharedPreferences(MutableSoundManager.PREFS_NAME, 0);
+	       boolean silent = settings.getBoolean(MutableSoundManager.SILENT_MODE_PROPERTY, false);
 
 		togglebutton.setChecked(silent);
 		togglebutton.setOnCheckedChangeListener(new ToggleButton.OnCheckedChangeListener() {
@@ -40,7 +41,7 @@ public class SettingsDialog extends Dialog implements
 							boolean isChecked) {
 						// We need an Editor object to make preference changes.
 					      // All objects are from android.context.Context
-					      SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, 0);
+					      SharedPreferences settings = context.getSharedPreferences(MutableSoundManager.PREFS_NAME, 0);
 					      SharedPreferences.Editor editor = settings.edit();
 					      editor.putBoolean("silentMode", isChecked);
 					      // Commit the edits!
