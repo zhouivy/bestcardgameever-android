@@ -1,6 +1,9 @@
 package com.geekadoo.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
@@ -32,11 +35,47 @@ public class ThrownCards extends PlayingCardsCollection {
 		if(cards.length >GameData.YANIV_NUM_CARDS)
 			throw new RuntimeException("more than "+GameData.YANIV_NUM_CARDS+" cards were thrown " +
 					"(actually " + cards.length + " cards were thrown");
-		for (PlayingCard playingCard : cards) {
+		// So cards will be dropped in the correct order
+		PlayingCard[] sortedCards = sortBeforeDrop(cards);
+		for (PlayingCard playingCard : sortedCards) {
 			push(playingCard);
 		}
 	}
 	
+	private PlayingCard[] sortBeforeDrop(PlayingCard[] cardsToDrop) {
+		PlayingCard[] retArr = cardsToDrop;
+		if (cardsToDrop.length < 3) {
+			// single card or pair, no sort needed, do nothing
+		} else {
+			if (cardsToDrop[0].getValue() == cardsToDrop[1].getValue()
+					&& cardsToDrop[1].getValue() == cardsToDrop[2].getValue()) {
+				// Do nothing, just a set of 3 or more identical cards, no sort needed
+			} else {
+				// 3 cards or more in a series or with a joker
+				//System.arraycopy(cardsToDrop, 0, retArr, 0, cardsToDrop.length);
+				Arrays.sort(retArr, new Comparator<PlayingCard>() {
+					@Override
+					public int compare(PlayingCard card1, PlayingCard card2) {
+						int retVal;
+						if (card1.getValue() == PlayingCard.JOKER
+								&& card2.getValue() == PlayingCard.JOKER) {
+							retVal = 0;
+						} else if (card1.getValue() == PlayingCard.JOKER) {
+							retVal = -1;
+						} else if (card2.getValue() == PlayingCard.JOKER) {
+							retVal = 1;
+						} else {
+							retVal = (card1.getIntegerValue() - card2
+									.getIntegerValue());
+						}
+						return retVal;
+					}
+				});
+			}
+		}
+		return retArr;
+	}
+
 	
 	/**
 	 * returns the last 5 cards thrown where the last one thrown is the first in the array

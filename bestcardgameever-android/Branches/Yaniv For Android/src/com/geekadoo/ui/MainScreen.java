@@ -6,6 +6,8 @@ package com.geekadoo.ui;
  * @author Elad & Sivan
  */
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -49,10 +51,7 @@ public class MainScreen extends Activity {
 		bugBtn = (Button) findViewById(id.BugButton);
 		exitBtn = (Button) findViewById(id.ExitButton);
 
-		if (!YanivPersistenceAdapter
-				.isSavedGameDataValid(getApplicationContext())) {
-			resumeBtn.setEnabled(false);
-		}
+		setResumeButtonEnabledStatus();
 
 		startBtn.setOnClickListener(new Button.OnClickListener() {
 
@@ -74,8 +73,27 @@ public class MainScreen extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://www.youtube.com/watch?v=V4XuZRbbs6M")));
+
+				final CharSequence[] options = {"Video (Opens YouTube)", "Text"};
+				AlertDialog.Builder builder = new AlertDialog.Builder(MainScreen.this);
+				builder.setTitle("Select tutorial method:");
+				builder.setItems(options, new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int item) {
+			        if(item == 0){
+			        	startActivity(new Intent(Intent.ACTION_VIEW, Uri
+								.parse("http://www.youtube.com/watch?v=V4XuZRbbs6M")));
+			        }else{
+			        	startActivity(new Intent(Intent.ACTION_VIEW, Uri
+			        			.parse("http://sites.google.com/a/geekadoo.com/support/how-to-play")));
+			        }
+			    }});
+				AlertDialog alert = builder.create();
+				
+				alert.show();
+				
+//				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+//						.parse("http://www.youtube.com/watch?v=V4XuZRbbs6M")));
+				
 				//TODO: this doesnt open the youtube app
 				//- think of a way you can do this without having to upgrade the app whenever the tutorial video changes...
 //				startActivity(new Intent(Intent.ACTION_VIEW, Uri
@@ -154,6 +172,15 @@ public class MainScreen extends Activity {
 		});
 	}
 
+	private void setResumeButtonEnabledStatus() {
+		if (!YanivPersistenceAdapter
+				.isSavedGameDataValid(getApplicationContext())) {
+			resumeBtn.setEnabled(false);
+		}else{
+			resumeBtn.setEnabled(true);
+		}
+	}
+
 	protected void startYanivHandler() {
 
 		// Create an intent
@@ -185,8 +212,10 @@ public class MainScreen extends Activity {
 		case RESULT_CANCELED:
 			// This is the standard resultCode that is sent back if the
 			// activity crashed or didn't doesn't supply an explicit result.
+			setResumeButtonEnabledStatus();
 			break;
 		default:
+			setResumeButtonEnabledStatus();
 			break;
 		}
 	}

@@ -52,7 +52,6 @@ public class Yaniv extends Activity {
 
 	private static final int MENU_VIEW_SCORES = 0;
 	private static final int MENU_SETTINGS = 1;
-	
 
 	// //////////////////////
 	// Deck - UI elements
@@ -124,14 +123,13 @@ public class Yaniv extends Activity {
 	private GameData gameData;
 	private boolean firstRun;
 
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.v(LOG_TAG, "onCreate");
 		setContentView(R.layout.table);
-//		setContentView(R.layout.main);
+		// setContentView(R.layout.main);
 
 		// Load state given by MainScreen
 		switch ((GameData.GAME_STATES) getIntent().getExtras().get(
@@ -272,23 +270,24 @@ public class Yaniv extends Activity {
 		}
 	}
 
-//	@Override
-//	protected void onSaveInstanceState(Bundle outState) {
-//		super.onSaveInstanceState(outState);
-//		Log.v(LOG_TAG, "OnSaveInstanceState");
-//		//TODO: I dont think this is needed, the onPause method does this, looks reduntant here
-//		//		saveState();
-//		//outState.putSerializable(YanivPersistenceAdapter.GAME_DATA, gameData);
-//
-//	}
+	// @Override
+	// protected void onSaveInstanceState(Bundle outState) {
+	// super.onSaveInstanceState(outState);
+	// Log.v(LOG_TAG, "OnSaveInstanceState");
+	// //TODO: I dont think this is needed, the onPause method does this, looks
+	// reduntant here
+	// // saveState();
+	// //outState.putSerializable(YanivPersistenceAdapter.GAME_DATA, gameData);
+	//
+	// }
 
 	private synchronized void saveState() {
 		try {
+			// save
 			gameData.save(getApplicationContext());
 			Log.d(LOG_TAG, "Yaniv saving state");
 		} catch (YanivPersistenceException e) {
 			// TODO: pop up a sorry box and report this problem... - could not
-			// save
 			Log.e(LOG_TAG, "Yaniv could not save state");
 		}
 	}
@@ -310,6 +309,12 @@ public class Yaniv extends Activity {
 		super.onStart();
 		Log.v(LOG_TAG, "onStart");
 
+		// Check who's turn it is and decide whether or not the 'next' button
+		// should be shown.
+		if(!gameData.getTurn().peek().isHumanPlayer()){
+			nextPlayerBtn.setVisibility(View.VISIBLE);
+		}
+
 		// Perform Yaniv Listener
 		yanivBtn.setOnClickListener(new Button.OnClickListener() {
 
@@ -323,8 +328,15 @@ public class Yaniv extends Activity {
 		// Next player Listener
 		nextPlayerBtn.setOnClickListener(new Button.OnClickListener() {
 			public void onClick(View v) {
-				MutableSoundManager.getInstance(Yaniv.this).playSound(R.raw.next);
-				gameData.getTurn().next();
+				if (!gameData.getTurn().peek().isHumanPlayer()) {
+
+					nextPlayerBtn.setEnabled(false);
+					MutableSoundManager.getInstance(Yaniv.this).playSound(
+							R.raw.next);
+					gameData.getTurn().next();
+				} else {
+					Log.e(LOG_TAG, "Clicked multiple times, ignored");
+				}
 			}
 		});
 
@@ -332,7 +344,7 @@ public class Yaniv extends Activity {
 		deckImg.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				deckClickHandler();
-				}
+			}
 		});
 
 		// click listener for each card of player 1
@@ -355,9 +367,9 @@ public class Yaniv extends Activity {
 			}
 		});
 
-		gameData.getTurn().clearOnTurnEndedListenerList();
-		
-		gameData.getTurn().addOnTurnEndedListener(
+		gameData.getTurn().clearOnTurnStartedListenerList();
+
+		gameData.getTurn().addOnTurnStartedListener(
 				new Turn.OnTurnStartedListener<Hand>() {
 
 					/**
@@ -368,6 +380,8 @@ public class Yaniv extends Activity {
 					@Override
 					public void onTurnStarted(Hand hand) {
 						turnStartedHandler(hand);
+						nextPlayerBtn.setEnabled(true);
+
 					}
 				});
 
@@ -446,8 +460,7 @@ public class Yaniv extends Activity {
 					// down
 				} catch (InvalidDropException e) {
 					basicDialog.setTitle("You Can't Drop This!");
-					basicDialog.setMessage("Reason: "
-							+ e.getMessage());
+					basicDialog.setMessage("Reason: " + e.getMessage());
 					basicDialog.show();
 					retVal = false;
 				}
@@ -465,7 +478,6 @@ public class Yaniv extends Activity {
 	 */
 	private void thrownCardsClickHandler() {
 		if (gameData.getGameInputMode().equals(GAME_INPUT_MODE.running)) {
-
 			// When the last thrown card is clicked it is picked up
 			MutableSoundManager.getInstance(this).playSound(R.raw.pop);
 			p1Pickup(PickupMethod.fromThrown);
@@ -544,13 +556,14 @@ public class Yaniv extends Activity {
 				// yaniv failed, ASSAF occurred
 				String assafMessage = (yanivingHand.isHumanPlayer() ? "You"
 						: yanivingHand.getPlayerName())
-								+ " Attempted a yaniv with a sum of "
-								+ yanivingHand.sumCards()
-								+ " but "
-								+ ((winningHand.isHumanPlayer() ? "You"
-										: winningHand.getPlayerName()))
-								+ " performed an Assaf with "
-								+ winningHand.sumCards() + "!!!";
+						+ " Attempted a yaniv with a sum of "
+						+ yanivingHand.sumCards()
+						+ " but "
+						+ ((winningHand.isHumanPlayer() ? "You" : winningHand
+								.getPlayerName()))
+						+ " performed an Assaf with "
+						+ winningHand.sumCards()
+						+ "!!!";
 				dialog.setTitle("An Assaf happened!");
 				dialog.setMessage(assafMessage);
 				yanivingHand.setWasAssaffed(true);
@@ -561,14 +574,19 @@ public class Yaniv extends Activity {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							nextGame(winningHand);
-							if(winningHand.isHumanPlayer()){
-								MutableSoundManager.getInstance(getApplicationContext()).playSound(R.raw.yes);
-							}else{
-								MutableSoundManager.getInstance(getApplicationContext()).playSound(R.raw.damnit);
+							if (winningHand.isHumanPlayer()) {
+								MutableSoundManager.getInstance(
+										getApplicationContext()).playSound(
+										R.raw.yes);
+							} else {
+								MutableSoundManager.getInstance(
+										getApplicationContext()).playSound(
+										R.raw.damnit);
 							}
 						}
 					});
-			// set as Cancelable false to avoid people pressing back and not firing the event
+			// set as Cancelable false to avoid people pressing back and not
+			// firing the event
 			dialog.setCancelable(false);
 			dialog.show();
 		}
@@ -585,6 +603,7 @@ public class Yaniv extends Activity {
 
 				@Override
 				public void afterScoreShown(Hand hand) {
+					
 					initGraphicComponents();
 					redrawAll();
 					dealCards();
@@ -658,12 +677,12 @@ public class Yaniv extends Activity {
 				// anim
 				int[] handLocation = { 0, 0 };
 				hand.getContainer().getLocationInWindow(handLocation);
-//				Log.e("COOR", "Hand: [" + handLocation[0] + ","
-//						+ handLocation[1] + "]");
+				// Log.e("COOR", "Hand: [" + handLocation[0] + ","
+				// + handLocation[1] + "]");
 				int[] deckLocation = { 0, 0 };
 				deckImg.getLocationInWindow(deckLocation);
-//				Log.e("COOR", "Deck: [" + deckLocation[0] + ","
-//						+ deckLocation[1] + "]");
+				// Log.e("COOR", "Deck: [" + deckLocation[0] + ","
+				// + deckLocation[1] + "]");
 				// move from deck location to hand location
 				TranslateAnimation dealCardAnimation = new TranslateAnimation(
 						Animation.ABSOLUTE, deckLocation[0],
@@ -721,7 +740,7 @@ public class Yaniv extends Activity {
 			redrawHand(gameData.getP1Hand());
 			// and advance a turn
 			gameData.getTurn().next();
-		} else if(wasDropSuccessful){
+		} else if (wasDropSuccessful) {
 			// show a dialog box saying 'cant pick up' or something
 			Log.v(LOG_TAG, "p1Pickup");
 			uhOhDialog1.show();
@@ -876,10 +895,11 @@ public class Yaniv extends Activity {
 			} else {
 				// If it's not a human player turn, show Next Player button
 				// *unless the next player is human (usability fix)
-				if(gameData.getTurn().peekNext().isHumanPlayer()){
+				if (gameData.getTurn().peekNext().isHumanPlayer()) {
 					gameData.getTurn().next();
-				}else{
+				} else {
 					nextPlayerBtn.setVisibility(View.VISIBLE);
+
 				}
 			}
 		}
@@ -890,7 +910,7 @@ public class Yaniv extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(0, MENU_VIEW_SCORES, 0, "View Scores");
 		menu.add(0, MENU_SETTINGS, 0, "Settings");
-		
+
 		return true;
 	}
 

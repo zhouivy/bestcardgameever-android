@@ -21,6 +21,10 @@ public class Turn<T> implements Serializable {
 		void onTurnStarted(T currentPlayer);
 	}
 
+	public interface OnTurnEndedListener<T> extends Serializable {
+		void onTurnEnded(T currentPlayer);
+	}
+	
 	/**
 	 * Will be called after a full iteration of players has ended i.e. if
 	 * player1, opponent1, opponent2, opponent3 have finished playing, this
@@ -36,6 +40,7 @@ public class Turn<T> implements Serializable {
 	private int turnIndex;
 	private int roundIdx;
 	private transient ArrayList<OnTurnStartedListener<T>> turnStartListenerList;
+	private transient ArrayList<OnTurnEndedListener<T>> turnEndListenerList;
 	private transient ArrayList<OnRoundEndedListener> roundEndedListenerList;
 
 	public Turn() {
@@ -63,6 +68,7 @@ public class Turn<T> implements Serializable {
 	}
 
 	public T next() {
+		
 		Log.v(LOG_TAG, "next player");
 		turnIndex = (turnIndex + 1) % players.size();
 		if (turnIndex == 0) {
@@ -72,6 +78,7 @@ public class Turn<T> implements Serializable {
 
 		T retVal = players.get(turnIndex);
 		fireTurnStartEvent(retVal);
+		fireTurnEndEvent(retVal);
 		return retVal;
 	}
 
@@ -90,19 +97,25 @@ public class Turn<T> implements Serializable {
 			}
 		}
 	}
+	public void fireTurnEndEvent(T startingEntity) {
+		if (turnEndListenerList != null) {
+			for (OnTurnEndedListener<T> l : turnEndListenerList) {
+				l.onTurnEnded(startingEntity);
+			}
+		}
+	}
 
 	public T peek() {
-		Log.v(LOG_TAG, "current turn is " + turnIndex);
 		return players.get(turnIndex);
 	}
 
 	public T peekNext() {
 		return players.get((turnIndex + 1) % players.size());
 	}
-	public void clearOnTurnEndedListenerList(){
+	public void clearOnTurnStartedListenerList(){
 		this.turnStartListenerList = new ArrayList<OnTurnStartedListener<T>>();
 	}
-	public void addOnTurnEndedListener(OnTurnStartedListener<T> l) {
+	public void addOnTurnStartedListener(OnTurnStartedListener<T> l) {
 		if (turnStartListenerList == null) {
 			// Since turnEndListenerList has to be transient,
 			// we lazy load it to make sure that it exists even

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.util.Log;
 
 import com.geekadoo.R;
 
@@ -15,8 +16,9 @@ public class MutableSoundManager {
 	private AudioManager mAudioManager;
 	private Context mContext;
 	private static MutableSoundManager mSoundManager;
-	private static final String PREFS_NAME = "YANIV_PREFS";
-	private static final String SILENT_MODE_PROPERTY = "silentMode";
+	public static final String PREFS_NAME = "YANIV_PREFS";
+	public static final String SILENT_MODE_PROPERTY = "silentMode";
+	private static final String LOG_TAG = "MutableSoundManager";
 
 	private MutableSoundManager() {
 
@@ -24,16 +26,17 @@ public class MutableSoundManager {
 
 	// TODO: make proper singleton
 	public static synchronized MutableSoundManager getInstance(Context context) {
-
+		Log.v(LOG_TAG, "in getInstance");
 		if (mSoundManager == null) {
+			Log.v(LOG_TAG, "in getInstance - Initializing for the first time");
 			mSoundManager = new MutableSoundManager();
 			mSoundManager.initSounds(context);
+			mSoundManager.addSound(R.raw.shuffle, R.raw.shuffle);
 			mSoundManager.addSound(R.raw.applause, R.raw.applause);
 			mSoundManager.addSound(R.raw.ooooh, R.raw.ooooh);
 			mSoundManager.addSound(R.raw.damnit, R.raw.damnit);
 			mSoundManager.addSound(R.raw.next, R.raw.next);
 			mSoundManager.addSound(R.raw.pop, R.raw.pop);
-			mSoundManager.addSound(R.raw.shuffle, R.raw.shuffle);
 			mSoundManager.addSound(R.raw.yes, R.raw.yes);
 		}
 		return mSoundManager;
@@ -52,8 +55,10 @@ public class MutableSoundManager {
 	}
 
 	public void playSound(int index) {
+		Log.v(LOG_TAG, "in playSound");
 
 		if (!(mContext.getSharedPreferences(PREFS_NAME,0).getBoolean(SILENT_MODE_PROPERTY, false))) {
+			Log.v(LOG_TAG, "in playSound, not muted");
 			int streamVolume = mAudioManager
 					.getStreamVolume(AudioManager.STREAM_MUSIC);
 			mSoundPool.play(mSoundPoolMap.get(index), streamVolume,
