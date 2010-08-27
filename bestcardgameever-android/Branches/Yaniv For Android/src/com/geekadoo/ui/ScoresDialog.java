@@ -141,8 +141,8 @@ public class ScoresDialog extends Dialog implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.scoresDialogOkButton:
-			okButton.setEnabled(false);
 			if (handler != null) {
+				okButton.setEnabled(false);
 				handler.afterScoreShown(hand);
 			}
 			dismiss();
