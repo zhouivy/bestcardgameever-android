@@ -4,6 +4,10 @@
 	<string name="app_name">Yan-Droid</string>
 	<string name="Heading">Yaniv - A Card Game </string>
 	<string name="DropSelected">Drop Cards</string>
+	
+	<string name="pNameDefVal">Player</string>
+	<string name="pName">Player Name:</string>
+	<string name="pDefName">Default Player Name:</string>
 	<string name="Player">Player</string>
 	<string name="Opponent1">Sivan</string>
 	<string name="Opponent2">Iddo</string>
@@ -32,6 +36,12 @@
 	<string name="SettingsButton">Settings</string>
 	<string name="BugButton">Report an issue</string>
 	<string name="ExitButton">Exit</string>
+	
+	<!-- Start new game dialog -->
+	<string name="startNewGameDialogHeading">Start New Match</string>
+	<string name="startNewGameDialogOkMsg">Start!</string>
+	<string name="startNewGameDialogCancelMsg">Cancel</string>
+	<string name="gameAlreadyInProgress">There is a game in progress, if you click on start you will override it and start a new one!</string>
 	
 	
 	

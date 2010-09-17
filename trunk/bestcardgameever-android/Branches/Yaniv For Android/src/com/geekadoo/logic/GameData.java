@@ -33,7 +33,9 @@ public class GameData implements Serializable {
 
 	private static final int WIN_SCORE = 0;
 
-	private static final Integer MATCH_LOSING_SCORE = 200; 
+	private static final Integer MATCH_LOSING_SCORE = 200;
+
+	public static final String PLAYER_NAME = "playerName"; 
 
 	/** This flag is used for debugging the game */
 	private final boolean disableOpponentsYanivAbility = false;
@@ -50,6 +52,7 @@ public class GameData implements Serializable {
 
 	// Player 1 - Logic elements
 	private PlayerHand p1Hand;
+	private String p1SelectedName;
 	// Opponent 1 - Logic elements
 	private OpponentHand o1Hand;
 	// Opponent 2 - Logic elements
@@ -267,5 +270,13 @@ public class GameData implements Serializable {
 			retVal = hand.getSumScores() > MATCH_LOSING_SCORE;
 		}
 		return retVal;
+	}
+
+	public void setP1SelectedName(String p1SelectedName) {
+		this.p1SelectedName = p1SelectedName;
+	}
+
+	public String getP1SelectedName() {
+		return p1SelectedName;
 	}
 }

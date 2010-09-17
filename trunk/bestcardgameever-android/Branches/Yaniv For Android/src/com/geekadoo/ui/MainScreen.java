@@ -182,13 +182,15 @@ public class MainScreen extends Activity {
 	}
 
 	protected void startYanivHandler() {
-
-		// Create an intent
-		Intent yanivIntent = new Intent(this, Yaniv.class);
-		// Transfer information to the yaniv (such as state and game attributes)
-		yanivIntent.putExtra(GameData.STATE, GameData.GAME_STATES.start);
-
-		startActivityForResult(yanivIntent, GameData.START_GAME);
+		StartNewGameDialog dialog = new StartNewGameDialog(MainScreen.this);
+		dialog.show();
+//		
+//		// Create an intent
+//		Intent yanivIntent = new Intent(this, Yaniv.class);
+//		// Transfer information to the yaniv (such as state and game attributes)
+//		yanivIntent.putExtra(GameData.STATE, GameData.GAME_STATES.start);
+//
+//		startActivityForResult(yanivIntent, GameData.START_GAME);
 	}
 
 	protected void resumeYanivHandler() {

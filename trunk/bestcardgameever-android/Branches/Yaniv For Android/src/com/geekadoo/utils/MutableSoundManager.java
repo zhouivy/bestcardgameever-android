@@ -8,6 +8,7 @@ import android.media.SoundPool;
 import android.util.Log;
 
 import com.geekadoo.R;
+import com.geekadoo.ui.Yaniv;
 
 public class MutableSoundManager {
 
@@ -16,7 +17,6 @@ public class MutableSoundManager {
 	private AudioManager mAudioManager;
 	private Context mContext;
 	private static MutableSoundManager mSoundManager;
-	public static final String PREFS_NAME = "YANIV_PREFS";
 	public static final String SILENT_MODE_PROPERTY = "silentMode";
 	private static final String LOG_TAG = "MutableSoundManager";
 
@@ -57,7 +57,7 @@ public class MutableSoundManager {
 	public void playSound(int index) {
 		Log.v(LOG_TAG, "in playSound");
 
-		if (!(mContext.getSharedPreferences(PREFS_NAME,0).getBoolean(SILENT_MODE_PROPERTY, false))) {
+		if (!(mContext.getSharedPreferences(Yaniv.PREFS_NAME,0).getBoolean(SILENT_MODE_PROPERTY, false))) {
 			Log.v(LOG_TAG, "in playSound, not muted");
 			int streamVolume = mAudioManager
 					.getStreamVolume(AudioManager.STREAM_MUSIC);

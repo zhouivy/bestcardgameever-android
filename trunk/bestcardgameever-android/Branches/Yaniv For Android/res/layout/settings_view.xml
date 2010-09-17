@@ -1,49 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:orientation="vertical" android:weightSum="100" android:gravity="center">
+	android:layout_width="fill_parent" android:orientation="vertical" android:weightSum="100" android:layout_height="fill_parent" android:gravity="top|center_vertical">
 	<!-- Sounds -->
-<!-- 
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="0px" android:padding="1dip" android:layout_weight="40"
-		android:weightSum="100">
-
-		<ImageView android:id="@+id/icon" android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:layout_margin="2dip"
-			android:src="@drawable/sound_icon" />
-
-		<RadioGroup android:id="@+id/soundGroup"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_gravity="right|center_vertical" android:padding="3dip"
-			android:orientation="horizontal">
-			<RadioButton android:id="@+id/soundOn" android:text="On">
-			</RadioButton>
-			<RadioButton android:id="@+id/soundOff" android:text="Off">
-			</RadioButton>
-		</RadioGroup>
-	</LinearLayout>
- -->
-	<LinearLayout android:layout_width="wrap_content"
-		android:layout_height="fill_parent" android:padding="1dip" android:layout_weight="70"
-		android:weightSum="100" >
+	<LinearLayout android:layout_height="wrap_content" android:weightSum="0" android:layout_width="fill_parent" android:gravity="center">
 
 		<ToggleButton android:id="@+id/soundToggle"
 			android:layout_width="128dip" android:layout_height="128dip"
-			android:layout_weight="30" android:textOn=""
-			android:textOff="" style="@style/SoundToggleButton" />
+			android:textOn="" android:textOff=""
+			style="@style/SoundToggleButton" android:layout_gravity="center"/>
 
 	</LinearLayout>
+	<!-- PlayerName -->
+	<LinearLayout 
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:weightSum="100" android:padding="5dip">
+		<TextView android:id="@+id/DefaultPlayerNameTv" android:layout_width="wrap_content"
+			android:layout_weight="30"
+			android:layout_height="wrap_content" android:text="@string/pDefName"
+			android:textSize="18sp">
+		</TextView>
+		<EditText android:id="@+id/PlayerNameEt" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/pNameDefVal"
+			android:layout_weight="70"
+			android:textSize="18sp"
+			android:maxLength="20">
+		</EditText>
+	</LinearLayout>
+	<!-- OK Button -->
 	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="0px" android:layout_weight="30" android:gravity="center_horizontal|bottom"
-		android:paddingTop="2px">
+		android:layout_height="0px" android:layout_weight="30"
+		android:gravity="center_horizontal|bottom" android:paddingTop="2px" android:layout_gravity="bottom">
 		<Button android:id="@+id/settingsDialogOkButton"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:text="Back" />
-<!--
-android:text="@string/settingsDialogOkMsg" />
- 		<Button android:id="@+id/settingsDialogCancelButton"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:text="@string/settingsDialogCancelMsg" />
-	-->
+			android:text="@string/settingsDialogOkMsg" />
 	</LinearLayout>
 </LinearLayout>

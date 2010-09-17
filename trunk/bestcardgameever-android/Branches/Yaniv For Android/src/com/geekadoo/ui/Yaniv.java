@@ -52,6 +52,8 @@ public class Yaniv extends Activity {
 
 	private static final int MENU_VIEW_SCORES = 0;
 	private static final int MENU_SETTINGS = 1;
+	public static final String PREFS_NAME = "YANIV_PREFS";
+	public static final String PREFS_PLAYER_NAME_PROPERTY = "playerName";
 
 	// //////////////////////
 	// Deck - UI elements
@@ -150,7 +152,9 @@ public class Yaniv extends Activity {
 						.getSerializable(YanivPersistenceAdapter.GAME_DATA);
 
 		if (gameData == null) {
+			String p1Name = (String) getIntent().getExtras().get(GameData.PLAYER_NAME);
 			gameData = GameData.getInstance(firstRun, getApplicationContext());
+			gameData.setP1SelectedName(p1Name);
 			initGraphicComponents();
 		}
 	}
@@ -294,7 +298,7 @@ public class Yaniv extends Activity {
 
 	private void populateGameData() {
 		gameData.getP1Hand().bindGraphicComponents(p1Container, p1Cards,
-				p1Name, GameData.PLAYER_NAMES[0]);
+				p1Name, gameData.getP1SelectedName());
 		gameData.getO1Hand().bindGraphicComponents(o1Container, o1Cards,
 				o1Name, GameData.PLAYER_NAMES[1]);
 		gameData.getO2Hand().bindGraphicComponents(o2Container, o2Cards,
