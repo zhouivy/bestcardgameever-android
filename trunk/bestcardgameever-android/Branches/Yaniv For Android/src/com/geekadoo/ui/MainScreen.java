@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -16,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
@@ -23,6 +26,12 @@ import com.geekadoo.R;
 import com.geekadoo.R.id;
 import com.geekadoo.db.YanivPersistenceAdapter;
 import com.geekadoo.logic.GameData;
+import com.scoreloop.android.coreui.HighscoresActivity;
+import com.scoreloop.android.coreui.ProfileActivity;
+import com.scoreloop.android.coreui.ScoreloopManager;
+import com.scoreloop.client.android.core.controller.UserController;
+import com.scoreloop.client.android.core.model.Session;
+import com.scoreloop.client.android.core.model.User;
 
 public class MainScreen extends Activity {
 
@@ -31,9 +40,11 @@ public class MainScreen extends Activity {
 	Button startBtn;
 	Button resumeBtn;
 	Button tutorialBtn;
+	Button highScoreBtn;
 	Button settingsBtn;
 	Button bugBtn;
 	Button exitBtn;
+	private UserController myUserController;
 
 	public MainScreen() {
 		super();
@@ -43,10 +54,35 @@ public class MainScreen extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_screen);
+		
+        //evaluate if we will show changelog
+	    try {
+	        //current version
+	        PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+	        int versionCode = packageInfo.versionCode; 
 
+	        //version where changelog has been viewed
+	        SharedPreferences settings = getSharedPreferences(Yaniv.PREFS_NAME, 0);
+	        int viewedChangelogVersion = settings.getInt(Yaniv.PREFS_KEY_CHANGELOG_VERSION_VIEWED, 0);
+
+	        if(viewedChangelogVersion < versionCode) {
+	            Editor editor=settings.edit();
+	            editor.putInt(Yaniv.PREFS_KEY_CHANGELOG_VERSION_VIEWED, versionCode);
+	            editor.commit();
+	            displayChangeLog();
+	        }
+	    } catch (NameNotFoundException e) {
+	        Log.e(LOG_TAG,"Unable to get version code. Will not show changelog", e);
+	    }
+
+		
+		// ScoreLoop
+		initializeScoreloop();
+	    
 		startBtn = (Button) findViewById(id.StartButton);
 		resumeBtn = (Button) findViewById(id.ResumeButton);
 		tutorialBtn = (Button) findViewById(id.TutorialButton);
+		highScoreBtn = (Button) findViewById(id.HighScoreButton);
 		settingsBtn = (Button) findViewById(id.SettingsButton);
 		bugBtn = (Button) findViewById(id.BugButton);
 		exitBtn = (Button) findViewById(id.ExitButton);
@@ -98,6 +134,53 @@ public class MainScreen extends Activity {
 				//- think of a way you can do this without having to upgrade the app whenever the tutorial video changes...
 //				startActivity(new Intent(Intent.ACTION_VIEW, Uri
 //						.parse("http://yanivtutorial.geekadoo.com/")));
+			}
+		});
+		
+		
+		highScoreBtn.setOnClickListener(new Button.OnClickListener() {
+			
+			private boolean userWantsHighScore;
+
+			@Override
+			public void onClick(View v) {
+				User u = Session.getCurrentSession().getUser();
+				ScoreloopManager.getScore();
+				userWantsHighScore = true;
+				if(u.getLogin()==null && userWantsHighScore){
+					Log.e(LOG_TAG,"in");
+					// User has not registered yet
+					AlertDialog.Builder builder = new AlertDialog.Builder(MainScreen.this);
+					builder.setMessage(R.string.highscoreUserLogin)
+					       .setCancelable(false)
+					       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					           public void onClick(DialogInterface dialog, int id) {
+					        	   startActivity(new Intent(MainScreen.this, ProfileActivity.class));
+					           }
+					       })
+					       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+					           public void onClick(DialogInterface dialog, int id) {
+					        	   userWantsHighScore = false; 
+					        	   dialog.cancel();
+					           }
+					       });
+					AlertDialog alert = builder.create();
+					Log.e(LOG_TAG,"about to show");
+					alert.show();
+				}else{
+				Log.e(LOG_TAG,"out1");
+//				if(userWantsHighScore){
+					startActivity(new Intent(MainScreen.this, HighscoresActivity.class));
+					Log.e(LOG_TAG,"in 2");
+				}
+				Log.e(LOG_TAG,"out2");
+//				Log.e(LOG_TAG, "User="+u.getDisplayName());
+//				Log.e(LOG_TAG, "User active="+u.isActive());
+//				Log.e(LOG_TAG, "User login="+u.getLogin());
+//				Log.e(LOG_TAG, "User isAuth="+u.isAuthenticated());
+//				Log.e(LOG_TAG, "User detail="+u.getDetail().toString());
+				
+				
 			}
 		});
 		
@@ -170,6 +253,55 @@ public class MainScreen extends Activity {
 				System.exit(0);
 			}
 		});
+	}
+
+	private void displayChangeLog() {
+        //load some kind of a view
+	    LayoutInflater li = LayoutInflater.from(this);
+	    View view = li.inflate(R.layout.changelog_view, null);
+
+	    new AlertDialog.Builder(this)
+	    .setTitle("Changelog")
+	    .setIcon(android.R.drawable.ic_menu_info_details)
+	    .setView(view)
+	    .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+	      public void onClick(DialogInterface dialog, int whichButton) {
+	          //
+	      }
+	    }).show();
+		
+	}
+
+	private void initializeScoreloop() {
+		String GAME_ID = "a0d2f0df-071b-448f-9d95-98f40756be87";
+		String GAME_SECRET = "Pb9sf2VjkR4pFWom4o8/ArC4uKyihh5DWk1LC7WHPAJy3nT3bcl7+w==";
+		ScoreloopManager.init(this, GAME_ID, GAME_SECRET);
+		
+		myUserController = new UserController(new MyUserControllerObserver(MainScreen.this));
+
+
+		SharedPreferences settings = getSharedPreferences(Yaniv.PREFS_NAME, 0);
+		// makes sure that whenever the shared prefs change, the login will change as well
+		settings.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+			
+			@Override
+			public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+					String key) {
+				if(key.equals(Yaniv.PREFS_PLAYER_NAME_PROPERTY)){
+					setScoreloopUserLoginAccordingToPrefs(sharedPreferences);
+				}
+			}
+		});
+		// and do it for this initialization
+		setScoreloopUserLoginAccordingToPrefs(settings);
+	}
+
+	private void setScoreloopUserLoginAccordingToPrefs(SharedPreferences settings) {
+
+		final String name = settings.getString(Yaniv.PREFS_PLAYER_NAME_PROPERTY, getString(R.string.pNameDefVal));
+		Session.getCurrentSession().getUser().setLogin(name);
+		myUserController.submitUser();
+		
 	}
 
 	private void setResumeButtonEnabledStatus() {

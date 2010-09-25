@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:background="@color/sl_color_background">
+
+	<include layout="@layout/sl_status_bar"/>
+	
+	<include layout="@layout/sl_heading"/>
+	
+	<FrameLayout android:layout_width="fill_parent"
+		android:layout_height="@dimen/sl_medium_height"
+		android:background="@drawable/sl_low_background"
+		android:id="@+id/layout_mode">
+		
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/mode_text"
+			android:textColor="@color/sl_color_background"
+			android:layout_gravity="center"
+			android:singleLine="true"
+			android:ellipsize="marquee"/>
+		
+		<ImageView android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@drawable/sl_arrow_down"
+			android:layout_marginRight="5dp"
+			android:layout_gravity="right|center_vertical"/>
+			
+	</FrameLayout>
+
+    <com.scoreloop.android.coreui.SegmentedView android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/search_list_segments">
+    	
+        	<Button android:layout_width="wrap_content"
+        		android:layout_height="@dimen/sl_clickable_height"
+        		android:layout_weight="1"
+				android:text="@string/sl_global"
+				android:textColor="@color/sl_selector_tab_text_color"
+				android:background="@drawable/sl_tab_background_selector"/>
+				
+        	<Button android:layout_width="wrap_content"
+        		android:layout_height="@dimen/sl_clickable_height"
+        		android:layout_weight="1"
+				android:text="@string/sl_twentyfour"
+				android:textColor="@color/sl_selector_tab_text_color"
+				android:background="@drawable/sl_tab_background_selector"/>
+				
+        	<Button android:layout_width="wrap_content"
+        		android:layout_height="@dimen/sl_clickable_height"
+        		android:layout_weight="1"
+				android:text="@string/sl_friends"
+				android:textColor="@color/sl_selector_tab_text_color"
+				android:background="@drawable/sl_tab_background_selector"/>
+				
+    </com.scoreloop.android.coreui.SegmentedView>
+
+	<ListView android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:divider="@drawable/sl_divider"
+		android:dividerHeight="1dp"
+		android:layout_weight="1"
+		android:id="@+id/list_view"
+		android:fadingEdge="none"
+		android:cacheColorHint="#00000000"
+		android:listSelector="@drawable/sl_list_selector"/>
+
+	<View android:layout_width="fill_parent"
+		android:layout_height="3dp"
+		android:background="@drawable/sl_divider"
+		android:id="@+id/divider"/>
+
+	<include android:id="@+id/myscore_view"
+		layout="@layout/sl_list_item"/>
+
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- this part is included in the ScoreloopCoreUI doc -->
+<resources>
+	<string-array name="sl_game_modes">
+		<!-- Change "Mode A" to your game mode eg: "Easy", "Difficult" -->
+		<item>Mode A</item>
+		<item>Mode B</item>
+		<item>Mode C</item>
+		<!-- Add more mode entries if your game has more modes -->
+	</string-array>
+
+</resources>

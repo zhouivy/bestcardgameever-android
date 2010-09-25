@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.geekadoo.exceptions.YanivPersistenceException;
 import com.geekadoo.logic.GameData;
+import com.geekadoo.logic.GameData.GameDifficultyEnum;
 
 public class YanivPersistenceAdapter {
 	public static final String GAME_DATA = "gamedata";
@@ -29,7 +30,7 @@ public class YanivPersistenceAdapter {
 
 	}
 
-	public GameData getSavedGameData() throws YanivPersistenceException {
+	public GameData getSavedGameData(GameDifficultyEnum difficulty) throws YanivPersistenceException {
 		FileInputStream file = null;
 		GameData gd = null;
 		try {
@@ -38,7 +39,7 @@ public class YanivPersistenceAdapter {
 			} catch (FileNotFoundException e) {
 				Log.i(LOG_TAG, "File " + FILE_NAME
 						+ " does not exist, probably a first run");
-				setSavedGameData(GameData.createNewGame());
+				setSavedGameData(GameData.createNewGame(difficulty));
 				Log.i(LOG_TAG, "File " + FILE_NAME + " Created Succesfuly");
 				file = appCtx.openFileInput(FILE_NAME);
 			}

@@ -8,6 +8,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import com.geekadoo.exceptions.InvalidDropException;
 import com.geekadoo.exceptions.YanivPersistenceException;
 import com.geekadoo.logic.GameData;
 import com.geekadoo.logic.GameData.GAME_INPUT_MODE;
+import com.geekadoo.logic.GameData.GameDifficultyEnum;
 import com.geekadoo.logic.Hand;
 import com.geekadoo.logic.Hand.AttemptYanivListener;
 import com.geekadoo.logic.Hand.SwitchCardsListener;
@@ -39,6 +41,10 @@ import com.geekadoo.logic.PlayingCard;
 import com.geekadoo.logic.Turn;
 import com.geekadoo.ui.ScoresDialog.OkButtonHandler;
 import com.geekadoo.utils.MutableSoundManager;
+import com.scoreloop.android.coreui.PostScoreActivity;
+import com.scoreloop.android.coreui.ScoreloopManager;
+import com.scoreloop.client.android.core.controller.RequestController;
+import com.scoreloop.client.android.core.controller.RequestControllerObserver;
 
 /**
  * The core activity of the application
@@ -54,6 +60,8 @@ public class Yaniv extends Activity {
 	private static final int MENU_SETTINGS = 1;
 	public static final String PREFS_NAME = "YANIV_PREFS";
 	public static final String PREFS_PLAYER_NAME_PROPERTY = "playerName";
+	public static final String PREFS_KEY_CHANGELOG_VERSION_VIEWED = "changelogVersionViewed";
+
 
 	// //////////////////////
 	// Deck - UI elements
@@ -152,8 +160,12 @@ public class Yaniv extends Activity {
 						.getSerializable(YanivPersistenceAdapter.GAME_DATA);
 
 		if (gameData == null) {
-			String p1Name = (String) getIntent().getExtras().get(GameData.PLAYER_NAME);
-			gameData = GameData.getInstance(firstRun, getApplicationContext());
+			String p1Name = (String) getIntent().getExtras().get(
+					GameData.PLAYER_NAME);
+			GameDifficultyEnum difficulty = (GameDifficultyEnum) getIntent()
+					.getExtras().get(GameData.DIFFICULTY_LEVEL);
+			gameData = GameData.getInstance(firstRun, difficulty,
+					getApplicationContext());
 			gameData.setP1SelectedName(p1Name);
 			initGraphicComponents();
 		}
@@ -315,7 +327,7 @@ public class Yaniv extends Activity {
 
 		// Check who's turn it is and decide whether or not the 'next' button
 		// should be shown.
-		if(!gameData.getTurn().peek().isHumanPlayer()){
+		if (!gameData.getTurn().peek().isHumanPlayer()) {
 			nextPlayerBtn.setVisibility(View.VISIBLE);
 		}
 
@@ -607,7 +619,7 @@ public class Yaniv extends Activity {
 
 				@Override
 				public void afterScoreShown(Hand hand) {
-					
+
 					initGraphicComponents();
 					redrawAll();
 					dealCards();
@@ -640,6 +652,110 @@ public class Yaniv extends Activity {
 			public void afterScoreShown(Hand hand) {
 				Yaniv.this.setResult(MainScreen.MATCH_OVER);
 				Yaniv.this.finish();
+				// Calculate score, Add to high score table and show it
+				int scoreValue = calculateScoresForMatch();
+				ScoreloopManager.submitScore(scoreValue,
+						new RequestControllerObserver() {
+
+							@Override
+							public void requestControllerDidReceiveResponse(
+									RequestController arg0) {
+								Log.v(LOG_TAG, "ScoreLoop Succeeded");
+								startActivity(new Intent(Yaniv.this,
+										PostScoreActivity.class));
+							}
+
+							@Override
+							public void requestControllerDidFail(
+									RequestController arg0, Exception arg1) {
+								Log.e(LOG_TAG, "ScoreLoop Failed", arg1);
+							}
+						});
+			}
+
+			/**
+			 * The high scores model is one where the player gets a high number
+			 * that represents how well he or she played the game. This means
+			 * that the better they played the higher the score which goes
+			 * <b>against</b> the way the scoring in the game is. When a match
+			 * ends there are 4 parameters that determine how well the player
+			 * played the game (<i>lower is better</i>): 1) their position
+			 * (1,2,3 or 4) 2) their score when the match ends (0* to 250)
+			 * (*always add 1 to avoid zero) 3) the difficulty level (hardest =1
+			 * ,normal=2 easiest =3) 4) the number of rounds they played (4 to
+			 * theoretical 267) (- if every round was won by a joker, the rest
+			 * of the players got 1 and every round was won by a different
+			 * player in a round robin fashion so the last round was
+			 * [200,199,199,199] the formula for getting the max rounds is
+			 * ceil(NUM_PLAYERS * WIN_SUM / (NUM_PLAYERS - 1)) )
+			 * 
+			 * Multiplying these 4 highest values gives you the highest possible
+			 * score you can theoretically get, and multiplying the lowest
+			 * values gives you the minimal score but since the score you can
+			 * have at the end is always 0, and we are multiplying, we can
+			 * always assume the lowest score is zero
+			 * 
+			 * Once we get the highest value (according to aforementioned
+			 * formula) we can use it to determine how well the player played by
+			 * subtracting his multiplication product from the max result thus
+			 * getting a higher score the better they perform
+			 * 
+			 * @return a numeric representation of how well the player performed
+			 *         this match
+			 */
+			private int calculateScoresForMatch() {
+				ArrayList<Hand> playersInOrder = gameData.getPlayersInOrder();
+
+				int numPlayers = playersInOrder.size();
+				int maxPlayerMatchEndScore = GameData.MATCH_LOSING_SCORE + 50;
+				int maxNumberOfMatchEndRounds = (int) Math.ceil(playersInOrder
+						.size()
+						* GameData.MATCH_LOSING_SCORE
+						/ (playersInOrder.size() - 1));
+				int difficultyMax = GameData.GameDifficultyEnum.values().length;
+				int maxPossibleHighScore = (/* position max */numPlayers
+						* /* score max */maxPlayerMatchEndScore *
+						/* difficulty max */difficultyMax * /* rounds max */maxNumberOfMatchEndRounds);
+
+				// Player position at match end
+				int playerPos = 1;
+				Hand human = null;
+				for (Hand hand : playersInOrder) {
+					if (hand.isHumanPlayer()) {
+						human = hand;
+						break;
+					} else {
+						playerPos++;
+					}
+				}
+				// Player score at match end
+				int playerScore = human.getSumScores() + 1;
+				// Difficulty FIXME
+
+				int playerDifficulty;
+				switch (gameData.getGameDifficulty()) {
+				case EASY:
+					playerDifficulty = 1;
+					break;
+				case NORMAL:
+					playerDifficulty = 2;
+					break;
+				case HARD:
+					playerDifficulty = 3;
+					break;
+				default:
+					Log.e(LOG_TAG, "no difficulty, choosing Normal");
+					playerDifficulty = 2;
+					break;
+				}
+				// Rounds played
+				int playerRoundsPlayed = gameData.getCurrentGameNumber() + 1;
+
+				int playerPerformance = playerPos * playerScore
+						* playerDifficulty * playerRoundsPlayed;
+
+				return maxPossibleHighScore - playerPerformance;
+
 			}
 		}, true);
 

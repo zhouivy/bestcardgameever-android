@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="26dp"
+	android:background="@drawable/sl_status_bar_background">
+	
+	<ImageView android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:background="@drawable/sl_logo"
+		android:layout_gravity="center_vertical"
+		android:layout_marginRight="5dp"
+		android:layout_marginLeft="5dp"/>
+
+	<ImageView android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/progress_indicator"
+		android:background="@drawable/sl_progress"
+		android:visibility="invisible"
+		android:layout_marginRight="5dp"
+		android:layout_gravity="center_vertical"/>	
+	
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:layout_gravity="center_vertical"
+		android:id="@+id/login_text"
+		style="@style/sl_title_bar"
+		android:layout_marginRight="5dp"
+		android:gravity="right"
+		android:singleLine="true"
+		android:ellipsize="marquee"/>
+		
+</LinearLayout>

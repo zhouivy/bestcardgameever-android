@@ -15,6 +15,9 @@ public class OpponentHand extends Hand {
 		// Start the game with cards hidden
 		setShouldCardsBeShown(false);
 		this.strategy = basicYanivStrategy;
+
+		//TODO: REMOVE THIS!!!
+//		addToScoreHistory(170);
 	}
 
 	@Override

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent"
+	android:layout_width="fill_parent"
+	android:orientation="vertical"
+	android:background="@color/sl_color_background"
+	android:padding="5dp">
+
+	<TableLayout 
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:padding="20dp"
+		android:layout_gravity="center">
+		
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:layout_marginBottom="10dp">
+			
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/sl_login"
+				android:layout_gravity="right|center_vertical"
+				style="@style/sl_normal"
+				android:layout_marginRight="5dp"/>
+				
+			<EditText android:layout_width="wrap_content" 
+				android:layout_height="@dimen/sl_edit_text_height"
+				android:layout_weight="1"
+				android:inputType="text"
+				android:minWidth="160dp"
+				style="@style/sl_normal"
+				android:id="@+id/login_edit"
+				android:text="@string/sl_loading"
+				android:background="@drawable/sl_edit_background"/>
+				
+		</TableRow>
+		
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:layout_marginBottom="10dp">
+			
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/sl_email"
+				android:layout_gravity="right|center_vertical"
+				style="@style/sl_normal"
+				android:layout_marginRight="5dp"/>
+				
+			<EditText android:layout_width="wrap_content" 
+				android:layout_height="@dimen/sl_edit_text_height"
+				android:layout_weight="1"
+				android:id="@+id/email_edit"
+				android:inputType="text"
+				android:minWidth="160dp"
+				style="@style/sl_normal"
+				android:text="@string/sl_loading"
+				android:background="@drawable/sl_edit_background"/>
+				
+		</TableRow>
+		
+		<TableRow android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical|right">
+			
+			<Button android:layout_width="wrap_content"
+				android:layout_height="@dimen/sl_clickable_height"
+				android:text="@string/sl_update_profile"
+				android:layout_span="2"
+				android:layout_gravity="right"
+				android:textColor="@color/sl_selector_button_text_color"
+				android:background="@drawable/sl_button_background_selector"
+				style="@style/sl_normal"
+				android:id="@+id/update_button"
+				android:minWidth="130dp"/>
+				
+		</TableRow>
+			
+	</TableLayout>
+
+	<TextView android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="@string/sl_disclaimer"
+			android:gravity="center_horizontal"
+			style="@style/sl_normal"
+			android:textSize="12sp"
+			android:layout_marginBottom="10dp"/>
+			
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:orientation="vertical"
+		android:id="@+id/slapp_button"
+		android:gravity="center_horizontal">
+		
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/sl_get_slapp"
+			style="@style/sl_normal"
+			android:gravity="center_horizontal"/>
+			
+			<ImageButton android:layout_width="wrap_content"
+				android:layout_height="@dimen/sl_clickable_height"
+				android:layout_span="2"
+				android:layout_gravity="center_horizontal"
+				android:background="@drawable/sl_button_background_selector"
+				style="@style/sl_normal"
+				android:src="@drawable/sl_icon_slapp"				
+				android:adjustViewBounds="false"
+				android:id="@+id/slapp_download_button"
+				android:minWidth="130dp"/>
+		
+	</LinearLayout>
+	
+</LinearLayout>

@@ -26,6 +26,8 @@
 			android:layout_height="wrap_content" android:layout_width="fill_parent" />
 		<Button android:text="@string/TutorialButton" android:id="@+id/TutorialButton"
 			android:layout_height="wrap_content" android:layout_width="fill_parent" />
+		<Button android:text="@string/HighScoreButton" android:id="@+id/HighScoreButton"
+			android:layout_height="wrap_content" android:layout_width="fill_parent" />
 		<Button android:text="@string/SettingsButton" android:id="@+id/SettingsButton"
 			android:layout_height="wrap_content" android:layout_width="fill_parent" />
 		<Button android:text="@string/BugButton" android:id="@+id/BugButton"

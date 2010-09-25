@@ -67,10 +67,10 @@ public class ScoresDialog extends Dialog implements
 			this.handler = handler;
 			this.hand = winningHand;
 			if (matchOver) {
-				this.setTitle("Match Over, "
-						+ (winningHand.isHumanPlayer() ? "You" : winningHand
-								.getPlayerName()) + " won!");
-				okButton.setText("Start a New Match");
+				this.setTitle(context.getString(R.string.scoresDialogMatchOver)
+						+ (winningHand.isHumanPlayer() ? context.getString(R.string.scoresDialogYou) : winningHand
+								.getPlayerName()) + context.getString(R.string.scoresDialogWon));
+				okButton.setText(R.string.scoresDialogMatchOverOkButton);
 
 				if (winningHand.isHumanPlayer()) {
 					// match won by player
@@ -86,7 +86,7 @@ public class ScoresDialog extends Dialog implements
 					MutableSoundManager.getInstance(context).playSound(R.raw.ooooh);
 				}
 			} else {
-				okButton.setText("Proceed to Next Game");
+				okButton.setText(R.string.scoresDialogOkMsg);
 
 				if (winningHand.isHumanPlayer()) {
 					// game won by player
@@ -106,7 +106,7 @@ public class ScoresDialog extends Dialog implements
 					R.drawable.whitebubblesback480x800);
 			this.handler = null;
 			this.hand = null;
-			okButton.setText("Got it!");
+			okButton.setText(R.string.scoresDialogGotIt);
 		}
 		show();
 	}

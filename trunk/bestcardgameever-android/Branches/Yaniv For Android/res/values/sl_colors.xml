@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<color name="sl_color_background">#ffffffff</color>
+	<color name="sl_color_background_clickable">#ffc0c0c0</color>
+	<color name="sl_color_foreground">#ff202020</color>
+	<color name="sl_color_foreground_lite">#ff808080</color>
+	<color name="sl_color_sl">#ff379fd0</color>
+	<color name="sl_color_divider">#ff808080</color>
+</resources>

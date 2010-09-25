@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="hello">Hello World, Yaniv</string>
-	<string name="app_name">Yan-Droid</string>
-	<string name="Heading">Yaniv - A Card Game </string>
+	<string name="app_name">Best Card Game Ever - Yaniv</string>
+	<string name="Heading">Yaniv - The Best Card Game Ever!</string>
 	<string name="DropSelected">Drop Cards</string>
 	
 	<string name="pNameDefVal">Player</string>
-	<string name="pName">Player Name:</string>
-	<string name="pDefName">Default Player Name:</string>
+	<string name="pName">Your Name:</string>
+	<string name="pDefName">Highscore Player Name:</string>
 	<string name="Player">Player</string>
 	<string name="Opponent1">Sivan</string>
 	<string name="Opponent2">Iddo</string>
@@ -19,31 +19,54 @@
 
 	<!--  Scores dialog -->
 	<string name="scoresDialogHeading">What\'s The Score?</string>
+	<string name="scoresDialogMatchOver">Match Over, </string>
+	<string name="scoresDialogYou">You</string>
+	<string name="scoresDialogWon"> won!</string>
+	<string name="scoresDialogMatchOverOkButton">Main Menu</string>
+	<string name="scoresDialogProceed">Proceed to Next Game</string>
+	<string name="scoresDialogGotIt">Got it!</string>
 	<string name="scoresDialogOkMsg">Return to Game</string>
 
 	<!--  Settings dialog -->
 	<string name="settingsDialogHeading">Settings</string>
 	<string name="settingsDialogOkMsg">Save Changes</string>
 	<string name="settingsDialogCancelMsg">Cancel</string>
-
 	<string name="PerformYaniv">Yaniv!</string>
 	<string name="NextPlayer">Next!</string>
+	
 	<!-- Strings for the main screen -->
 	<string name="MainScreenTitle">Welcome to Yaniv for Android!</string>
 	<string name="ResumeButton">Resume</string>
 	<string name="StartButton">Start</string>
 	<string name="TutorialButton">Tutorial</string>
+	<string name="HighScoreButton">High Scores</string>
 	<string name="SettingsButton">Settings</string>
 	<string name="BugButton">Report an issue</string>
 	<string name="ExitButton">Exit</string>
 	
 	<!-- Start new game dialog -->
 	<string name="startNewGameDialogHeading">Start New Match</string>
+	<string name="startNewGameDialogDifficultyDesc">Choose Difficulty</string>
+	<string name="startNewGameDialogDifficultyEasy">Easy - Great for beginners</string>
+	<string name="startNewGameDialogDifficultyNormal">Moderate - Played a couple of games</string>
+	<string name="startNewGameDialogDifficultyHard">Hard - Got what it takes?</string>
 	<string name="startNewGameDialogOkMsg">Start!</string>
 	<string name="startNewGameDialogCancelMsg">Cancel</string>
 	<string name="gameAlreadyInProgress">There is a game in progress, if you click on start you will override it and start a new one!</string>
 	
+	<!-- high score -->
+	<string name="highscoreUserLogin">To enable global high score tracking, you must first login. Do you wish to login now?</string>
+	<string name="highscoreLoginSuccessful">Login to global high score tracker successful.</string>
+	<string name="highscoreLoginAlreadyExists">Login to global high score tracker was not successful, name already exists, please choose another.</string>
+	<string name="highscoreLoginUnsuccessful">Login to global high score tracker failed!</string>
+	<string name="highscoreReportThis">Report This!</string>
+	<string name="highscoreDontReportThis">Cancel</string>
+	<string name="highscoreBugReportSubject">Failed to connect to scoreloop!</string>
 	
-	
+	<!-- Changelog -->
+	<string name="ChangelogHeading1">Welcome to Yaniv!</string>
+	<string name="ChangelogHeading2">Here\'s what\'s been keeping me busy: </string>
+	<string name="ChangelogRevisionNumber">Version 0.5.0</string>
+	<string name="ChangelogRevisionDetails">Hi there.\nVersion 0.5.0 is a milestone release, it has many of the features that you guys have been asking for such as global high score, varying difficulty levels and some other new features.\nI\'d first like to thank all the people who took the time to send bug reports, you guys are making the game much better!\nI\'ve also noticed that a lot of people are having a hard time getting how the game works and what are the rules, so I ask you all to take the 3 minutes it takes to watch the tutorial or read through the instructions, it really is going to be worth it!\nI also want to draw your attention to the new settings menu, it has the high score user name that will appear when you achieve a high score, please take the time to set it so you will get recognition for your achievement\nI\'m going to let you get to the fun, but before, PLEASE keep reporting, all the features I add are based on users clicking the "report an issue" button.\nLast thing: If you want to join the Yaniv project, please know that it is open source and I am looking for people who can help so if you have skills in java, android, graphics design or just have ideas, please click the report an issue button and let me know!\nEnjoy the game! </string>
 	
 </resources>

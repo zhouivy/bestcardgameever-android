@@ -46,7 +46,6 @@ public class TextAdapter extends BaseAdapter{
 		TextView textView;
 		LinearLayout container;
 		
-//        if (convertView == null) {  // if it's not recycled, initialize some attributes
         	container = new LinearLayout(mContext);
             textView = new TextView(mContext);
             textView.setBackgroundColor(Color.BLACK);
@@ -66,10 +65,6 @@ public class TextAdapter extends BaseAdapter{
         	if (position % mNumColumns == 0){
             	container.setPadding(1, container.getPaddingTop(), container.getPaddingRight(), container.getPaddingBottom());
         	}
-//        } else {
-//        	container = (LinearLayout)convertView;
-//        	Log.e("ELAD","here");
-//        }
 
         return container;
     }
