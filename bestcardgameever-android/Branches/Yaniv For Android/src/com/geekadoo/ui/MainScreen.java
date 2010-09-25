@@ -27,7 +27,6 @@ import com.geekadoo.R.id;
 import com.geekadoo.db.YanivPersistenceAdapter;
 import com.geekadoo.logic.GameData;
 import com.scoreloop.android.coreui.HighscoresActivity;
-import com.scoreloop.android.coreui.ProfileActivity;
 import com.scoreloop.android.coreui.ScoreloopManager;
 import com.scoreloop.client.android.core.controller.UserController;
 import com.scoreloop.client.android.core.model.Session;
@@ -145,17 +144,18 @@ public class MainScreen extends Activity {
 			@Override
 			public void onClick(View v) {
 				User u = Session.getCurrentSession().getUser();
-				ScoreloopManager.getScore();
+//				ScoreloopManager.getScore();
 				userWantsHighScore = true;
 				if(u.getLogin()==null && userWantsHighScore){
-					Log.e(LOG_TAG,"in");
 					// User has not registered yet
 					AlertDialog.Builder builder = new AlertDialog.Builder(MainScreen.this);
 					builder.setMessage(R.string.highscoreUserLogin)
 					       .setCancelable(false)
 					       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					           public void onClick(DialogInterface dialog, int id) {
-					        	   startActivity(new Intent(MainScreen.this, ProfileActivity.class));
+//					        	   startActivity(new Intent(MainScreen.this, ProfileActivity.class));
+					       		SettingsDialog sDialog = new SettingsDialog(MainScreen.this);
+					    		sDialog.show();
 					           }
 					       })
 					       .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -165,15 +165,11 @@ public class MainScreen extends Activity {
 					           }
 					       });
 					AlertDialog alert = builder.create();
-					Log.e(LOG_TAG,"about to show");
 					alert.show();
 				}else{
-				Log.e(LOG_TAG,"out1");
 //				if(userWantsHighScore){
 					startActivity(new Intent(MainScreen.this, HighscoresActivity.class));
-					Log.e(LOG_TAG,"in 2");
 				}
-				Log.e(LOG_TAG,"out2");
 //				Log.e(LOG_TAG, "User="+u.getDisplayName());
 //				Log.e(LOG_TAG, "User active="+u.isActive());
 //				Log.e(LOG_TAG, "User login="+u.getLogin());
