@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:background="@color/sl_color_background">
+
+	<include layout="@layout/sl_status_bar"/>
+	
+	<include layout="@layout/sl_heading"/>
+	
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="@dimen/sl_medium_height"
+		android:background="@drawable/sl_low_background">
+					
+		<ImageView android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:background="@drawable/sl_user"
+			android:layout_gravity="center_vertical"/>
+		
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/sl_color_background"
+			android:text="[login]"
+			android:textStyle="bold"
+			android:id="@+id/name_text"
+			android:layout_gravity="center_vertical"
+			android:singleLine="true"
+			android:ellipsize="marquee"/>
+									
+	</LinearLayout>
+
+    <com.scoreloop.android.coreui.SegmentedView android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/segments">
+    	
+        	<Button android:layout_width="wrap_content"
+        		android:layout_height="@dimen/sl_clickable_height"
+        		android:layout_weight="1"
+				android:text="@string/sl_details"
+				android:textColor="@color/sl_selector_tab_text_color"
+				android:background="@drawable/sl_tab_background_selector"/>
+				
+        	<Button android:layout_width="wrap_content"
+        		android:layout_height="@dimen/sl_clickable_height"
+        		android:layout_weight="1"
+				android:text="@string/sl_games"
+				android:textColor="@color/sl_selector_tab_text_color"
+				android:background="@drawable/sl_tab_background_selector"/>
+								
+    </com.scoreloop.android.coreui.SegmentedView>
+    
+    <LinearLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="vertical"
+		android:id="@+id/details_layout"
+		android:padding="5dp">
+    
+	  	<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/sl_color_foreground"
+			android:textStyle="bold"
+			android:text="@string/sl_friends_number_format"
+			android:id="@+id/friends_number_text"
+			android:layout_marginBottom="10dp"/>
+		
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/sl_color_foreground"
+			android:textStyle="bold"
+			android:text="sl_last_active_format"
+			android:id="@+id/last_active_text"
+			android:layout_marginBottom="10dp"/>
+		
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:id="@+id/recent_games_layout"
+			android:visibility="gone"
+			android:layout_marginBottom="10dp">
+			
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/sl_color_foreground"
+				android:textStyle="bold"
+				android:text="@string/sl_recent_games"
+				android:layout_marginBottom="10dp"/>
+			
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				
+				<ImageView android:layout_width="@dimen/sl_list_image_size"
+					android:layout_height="@dimen/sl_list_image_size"
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="10dp"
+					android:id="@+id/image_view_0"/>
+				
+				<ImageView android:layout_width="@dimen/sl_list_image_size"
+					android:layout_height="@dimen/sl_list_image_size"
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="10dp"
+					android:id="@+id/image_view_1"/>
+				
+				<ImageView android:layout_width="@dimen/sl_list_image_size"
+					android:layout_height="@dimen/sl_list_image_size"
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="10dp"
+					android:id="@+id/image_view_2"/>
+				
+			</LinearLayout>
+						
+		</LinearLayout>
+		
+		<!-- push the button to the bottom -->
+		<TextView android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_weight="1"
+			android:textColor="@color/sl_color_background"
+			android:text=" "/>
+				
+		<Button android:layout_width="wrap_content"
+			android:layout_height="@dimen/sl_clickable_height"
+			android:text="@string/sl_loading"
+			android:textColor="@color/sl_selector_button_text_color"
+			android:background="@drawable/sl_button_background_selector"
+			style="@style/sl_normal"
+			android:id="@+id/buddy_button"
+			android:minWidth="130dp"
+			android:layout_gravity="bottom|center_horizontal"/>
+			
+    </LinearLayout>
+    
+	<ListView android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:divider="@drawable/sl_divider"
+		android:dividerHeight="1dp"
+		android:layout_weight="1"
+		android:id="@+id/list_view"
+		android:fadingEdge="none"
+		android:cacheColorHint="#00000000"
+		android:listSelector="@drawable/sl_list_selector"
+		android:visibility="gone"/>
+
+</LinearLayout>

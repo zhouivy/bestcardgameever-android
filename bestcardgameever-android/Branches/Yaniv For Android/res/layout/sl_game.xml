@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:background="@color/sl_color_background">
+
+	<include layout="@layout/sl_status_bar"/>
+	
+	<include layout="@layout/sl_heading"/>
+	
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="@dimen/sl_medium_height"
+		android:background="@drawable/sl_low_background">
+					
+		<ImageView android:layout_width="@dimen/sl_list_image_size"
+			android:layout_height="@dimen/sl_list_image_size"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:id="@+id/image_view"
+			android:layout_gravity="center_vertical"/>
+		
+		<LinearLayout android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:orientation="vertical"
+			android:layout_gravity="center_vertical">
+
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/sl_color_background"
+				android:text="[GameName]"
+				android:textStyle="bold"
+				android:id="@+id/name_text"
+				android:singleLine="true"
+				android:ellipsize="marquee"/>
+				
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/sl_color_background"
+				android:text="[GamePublisher]"
+				android:id="@+id/publisher_text"
+				android:singleLine="true"
+				android:ellipsize="marquee"/>
+		
+		</LinearLayout>		
+					
+	</LinearLayout>
+
+    <com.scoreloop.android.coreui.SegmentedView android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/segments">
+    	
+        	<Button android:layout_width="wrap_content"
+        		android:layout_height="@dimen/sl_clickable_height"
+        		android:layout_weight="1"
+				android:text="@string/sl_details"
+				android:textColor="@color/sl_selector_tab_text_color"
+				android:background="@drawable/sl_tab_background_selector"/>
+				
+        	<Button android:layout_width="wrap_content"
+        		android:layout_height="@dimen/sl_clickable_height"
+        		android:layout_weight="1"
+				android:text="@string/sl_friends_playing"
+				android:textColor="@color/sl_selector_tab_text_color"
+				android:background="@drawable/sl_tab_background_selector"/>
+								
+    </com.scoreloop.android.coreui.SegmentedView>
+    
+    <LinearLayout android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="vertical"
+		android:id="@+id/details_layout"
+		android:padding="5dp">
+		
+	  	<TextView android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:textColor="@color/sl_color_foreground"
+			android:text="@string/sl_no_details"
+			android:id="@+id/description_text"
+			android:layout_weight="1"
+			android:gravity="center_vertical"
+			android:padding="5dp"/>
+			
+		<Button android:layout_width="wrap_content"
+			android:layout_height="@dimen/sl_clickable_height"
+			android:text="@string/sl_get_game"
+			android:textColor="@color/sl_selector_button_text_color"
+			android:background="@drawable/sl_button_background_selector"
+			style="@style/sl_normal"
+			android:id="@+id/get_game_button"
+			android:minWidth="130dp"
+			android:layout_gravity="center"/>
+			
+	</LinearLayout>	
+    
+	<ListView android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:divider="@drawable/sl_divider"
+		android:dividerHeight="1dp"
+		android:layout_weight="1"
+		android:id="@+id/list_view"
+		android:fadingEdge="none"
+		android:cacheColorHint="#00000000"
+		android:listSelector="@drawable/sl_list_selector"
+		android:visibility="gone"/>
+
+</LinearLayout>

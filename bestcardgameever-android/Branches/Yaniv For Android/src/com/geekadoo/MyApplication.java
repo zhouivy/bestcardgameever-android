@@ -2,8 +2,6 @@ package com.geekadoo;
 
 import org.acra.CrashReportingApplication;
 
-import android.util.Log;
-
 public class MyApplication extends CrashReportingApplication {
 
 	@Override

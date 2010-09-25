@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<dimen name="sl_edit_text_height">42dp</dimen>
+	<dimen name="sl_clickable_height">40dp</dimen> 
+	<dimen name="sl_medium_height">52dp</dimen>
+	<dimen name="sl_list_item_height">60dp</dimen>
+	<dimen name="sl_list_image_size">48dp</dimen>
+	
+</resources>

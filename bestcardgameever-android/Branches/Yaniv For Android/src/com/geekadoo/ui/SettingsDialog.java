@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -16,10 +15,13 @@ import android.widget.ToggleButton;
 import com.geekadoo.R;
 import com.geekadoo.R.id;
 import com.geekadoo.utils.MutableSoundManager;
+import com.scoreloop.client.android.core.controller.UserController;
+import com.scoreloop.client.android.core.model.Session;
 
 public class SettingsDialog extends Dialog implements
 		android.view.View.OnClickListener {
 
+	protected static final String LOG_TAG = "SettingsDialog";
 	Button okButton;
 	private Context context;
 
@@ -89,16 +91,23 @@ public class SettingsDialog extends Dialog implements
 	}
 
 	private void saveSettings() {
+		String newName = ((EditText) findViewById(R.id.PlayerNameEt)).getText().toString();
+		
 		// We need an Editor object to make preference changes.
 		// All objects are from android.context.Context
 		SharedPreferences settings = context.getSharedPreferences(
 				Yaniv.PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString(Yaniv.PREFS_PLAYER_NAME_PROPERTY,
-				((EditText) findViewById(R.id.PlayerNameEt)).getText()
-						.toString());
+				newName);
 		// Commit the edits!
 		editor.commit();
+
+		
+		// Verify that name is not in use
+		UserController myUserController = new UserController(new MyUserControllerObserver(context));
+		Session.getCurrentSession().getUser().setLogin(newName);
+		myUserController.submitUser();
 
 	}
 }

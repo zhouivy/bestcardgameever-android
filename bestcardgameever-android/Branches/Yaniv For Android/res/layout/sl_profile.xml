@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:background="@color/sl_color_background">
+
+	<include layout="@layout/sl_status_bar"/>
+	
+	<include layout="@layout/sl_heading"/>
+		
+    <com.scoreloop.android.coreui.SegmentedView android:id="@+id/segmented_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        	<Button android:layout_width="wrap_content"
+        		android:layout_height="@dimen/sl_clickable_height"
+        		android:layout_weight="1"
+				android:text="@string/sl_account"
+				android:textColor="@color/sl_selector_tab_text_color"
+				android:background="@drawable/sl_tab_background_selector"/>
+        	<Button android:layout_width="wrap_content"
+        		android:layout_height="@dimen/sl_clickable_height"
+        		android:layout_weight="1"
+				android:text="@string/sl_friends"
+				android:textColor="@color/sl_selector_tab_text_color"
+				android:background="@drawable/sl_tab_background_selector"/>
+    </com.scoreloop.android.coreui.SegmentedView>
+    
+     <LinearLayout android:layout_width="fill_parent"
+     	android:layout_height="wrap_content"
+    	android:id="@+id/activity_container"
+    	android:layout_weight="1"/>
+	
+</LinearLayout>
