@@ -16,14 +16,24 @@ public class MyUserControllerObserver implements UserControllerObserver {
 
 	private static final String LOG_TAG = "MyUserControllerObserver";
 	private Context context;
+	private boolean handshake = false;
 
 	public MyUserControllerObserver(Context context) {
 		super();
 		this.context = context;
 	}
+	
+	public boolean gotHandshake() {
+		return handshake;
+	}
 
 	@Override
 	public void requestControllerDidReceiveResponse(RequestController arg0) {
+		if (handshake == false) {
+			handshake = true;
+			return;
+		}
+
 		// show a toast that says "user registered successfully"
 		Toast toast = Toast.makeText(context,
 				context.getString(R.string.highscoreLoginSuccessful),
@@ -34,7 +44,9 @@ public class MyUserControllerObserver implements UserControllerObserver {
 	@Override
 	public void requestControllerDidFail(RequestController arg0,
 			final Exception arg1) {
-		Log.e(LOG_TAG, "requestControllerDidFail", arg1);
+		if (handshake == false) {
+			return;
+		}
 		// show a dialog that says "user was not registered" and the exception +
 		// send it with acra or something
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -69,27 +81,34 @@ public class MyUserControllerObserver implements UserControllerObserver {
 
 	@Override
 	public void userControllerDidFailOnUsernameAlreadyTaken(UserController arg0) {
-		Log.e(LOG_TAG, "ELAD in userControllerDidFailOnUsernameAlreadyTaken");
-
+		if (handshake == false) {
+			return;
+		}
 		// say user already exists and popup the settings page
 		Toast toast = Toast.makeText(context,
 				context.getString(R.string.highscoreLoginAlreadyExists),
 				Toast.LENGTH_LONG);
 		toast.show();
 
-		SettingsDialog dialog = new SettingsDialog(context);
-		dialog.show();
+		//Elad Oct/6/10, no need for this, will get back to setting screen
+//		context.startActivity(new Intent(context, YanivPreferencesScreen.class));
 
 	}
 
 	@Override
 	public void userControllerDidFailOnInvalidEmailFormat(UserController arg0) {
+		if (handshake == false) {
+			return;
+		}
 		// shouldn't happen, not giving email
 		Log.e(LOG_TAG, "userControllerDidFailOnInvalidEmailFormat");
 	}
 
 	@Override
 	public void userControllerDidFailOnEmailAlreadyTaken(UserController arg0) {
+		if (handshake == false) {
+			return;
+		}
 		// shouldn't happen, not giving email
 		Log.e(LOG_TAG, "userControllerDidFailOnEmailAlreadyTaken");
 	}

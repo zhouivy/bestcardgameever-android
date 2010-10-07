@@ -3,12 +3,13 @@ package com.geekadoo.utils;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.geekadoo.R;
-import com.geekadoo.ui.Yaniv;
 
 public class MutableSoundManager {
 
@@ -17,7 +18,6 @@ public class MutableSoundManager {
 	private AudioManager mAudioManager;
 	private Context mContext;
 	private static MutableSoundManager mSoundManager;
-	public static final String SILENT_MODE_PROPERTY = "silentMode";
 	private static final String LOG_TAG = "MutableSoundManager";
 
 	private MutableSoundManager() {
@@ -56,9 +56,9 @@ public class MutableSoundManager {
 
 	public void playSound(int index) {
 		Log.v(LOG_TAG, "in playSound");
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
 
-		if (!(mContext.getSharedPreferences(Yaniv.PREFS_NAME,0).getBoolean(SILENT_MODE_PROPERTY, false))) {
-			Log.v(LOG_TAG, "in playSound, not muted");
+		if (!(settings.getBoolean(mContext.getString(R.string.enableGameSoundsPref), false))) {
 			int streamVolume = mAudioManager
 					.getStreamVolume(AudioManager.STREAM_MUSIC);
 			mSoundPool.play(mSoundPoolMap.get(index), streamVolume,
