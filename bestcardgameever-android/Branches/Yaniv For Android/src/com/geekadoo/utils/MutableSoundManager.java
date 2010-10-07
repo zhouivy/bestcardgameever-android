@@ -55,10 +55,8 @@ public class MutableSoundManager {
 	}
 
 	public void playSound(int index) {
-		Log.v(LOG_TAG, "in playSound");
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-		if (!(settings.getBoolean(mContext.getString(R.string.enableGameSoundsPref), false))) {
+		if ((settings.getBoolean(mContext.getString(R.string.enableGameSoundsPref), false))) {
 			int streamVolume = mAudioManager
 					.getStreamVolume(AudioManager.STREAM_MUSIC);
 			mSoundPool.play(mSoundPoolMap.get(index), streamVolume,
