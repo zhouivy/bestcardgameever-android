@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -58,9 +59,6 @@ public class Yaniv extends Activity {
 
 	private static final int MENU_VIEW_SCORES = 0;
 	private static final int MENU_SETTINGS = 1;
-	public static final String PREFS_NAME = "YANIV_PREFS";
-	public static final String PREFS_PLAYER_NAME_PROPERTY = "playerName";
-	public static final String PREFS_KEY_CHANGELOG_VERSION_VIEWED = "changelogVersionViewed";
 
 
 	// //////////////////////
@@ -654,15 +652,25 @@ public class Yaniv extends Activity {
 				Yaniv.this.finish();
 				// Calculate score, Add to high score table and show it
 				int scoreValue = calculateScoresForMatch();
-				ScoreloopManager.submitScore(scoreValue,
+
+				if(PreferenceManager.getDefaultSharedPreferences(Yaniv.this).getBoolean(getString(R.string.enableSlPref), false)){
+					
+					ScoreloopManager.submitScore(scoreValue,
 						new RequestControllerObserver() {
 
 							@Override
 							public void requestControllerDidReceiveResponse(
 									RequestController arg0) {
 								Log.v(LOG_TAG, "ScoreLoop Succeeded");
-								startActivity(new Intent(Yaniv.this,
-										PostScoreActivity.class));
+									if (PreferenceManager
+											.getDefaultSharedPreferences(
+													Yaniv.this)
+											.getBoolean(
+													getString(R.string.enableSlSharePref),
+													false)) {
+										startActivity(new Intent(Yaniv.this,
+												PostScoreActivity.class));
+									}
 							}
 
 							@Override
@@ -671,6 +679,9 @@ public class Yaniv extends Activity {
 								Log.e(LOG_TAG, "ScoreLoop Failed", arg1);
 							}
 						});
+				}else{
+					//TODO: Consider showing dialog with score and recommend posting score
+				}
 			}
 
 			/**
@@ -1048,8 +1059,7 @@ public class Yaniv extends Activity {
 	}
 
 	private void showSettingsDialog() {
-		SettingsDialog dialog = new SettingsDialog(this);
-		dialog.show();
+		startActivity(new Intent(this, YanivPreferencesScreen.class));
 	}
 
 	private void showScores(Hand winningHand,

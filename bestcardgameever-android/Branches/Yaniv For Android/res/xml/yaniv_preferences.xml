@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+     <PreferenceCategory android:title="Basic Preferences">
+                 <CheckBoxPreference  
+                android:key="@string/enableGameSoundsPref"
+                android:defaultValue="true"
+                android:title="Enable Game Sounds?" />                                  
+                
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="Online Experience">
+    
+        <CheckBoxPreference
+                android:key="@string/enableSlPref"
+                android:title="@string/EnableHighscoreCBText"
+                android:defaultValue="false"
+                android:summary="Enable tracking of high scores online (requires data connection)"/>
+                
+
+     
+        <CheckBoxPreference
+                android:dependency="@string/enableSlPref"
+                android:key="@string/enableSlSharePref"
+                android:defaultValue="false"
+                android:title="@string/EnableShareScoresCBText" />               
+                 
+        <EditTextPreference  android:dependency="@string/enableSlPref"
+        					 android:dialogTitle="@string/pDefName"
+                             android:dialogMessage="Enter Name for Global High Score Tracking"
+                             android:key="@string/highscoreUserNamePref"
+                             android:title="@string/pDefName"
+                             android:summary="The Name to be Used for Global High Score Tracking"
+                             android:defaultValue="@string/pNameDefVal"/>      
+                             
+                              
+                                                              
+    </PreferenceCategory>
+</PreferenceScreen>

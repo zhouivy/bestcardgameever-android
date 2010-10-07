@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -38,11 +39,10 @@ public class StartNewGameDialog extends Dialog implements
 		cancelButton = (Button) findViewById(id.startNewGameDialogCancelButton);
 		cancelButton.setOnClickListener(this);
 		// Settings
-		SharedPreferences settings = context.getSharedPreferences(
-				Yaniv.PREFS_NAME, 0);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 		// PlayerName
 		EditText pName = (EditText) findViewById(R.id.PlayerNameEt);
-		pName.setText(settings.getString(Yaniv.PREFS_PLAYER_NAME_PROPERTY,
+		pName.setText(settings.getString(context.getString(R.string.highscoreUserNamePref),
 				context.getString(R.string.pNameDefVal)));
 		// Game in progress
 		TextView gameInProgressTv = (TextView) findViewById(id.GameExistsTv);
