@@ -1,262 +1,350 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-android:id="@+id/table"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:layout_weight="8"
-android:orientation="vertical"
-xmlns:android="http://schemas.android.com/apk/res/android" android:background="@drawable/risingtree">
-<LinearLayout android:id="@+id/heading"
- android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-android:layout_weight="0">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/table"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="8"
+    android:background="@drawable/risingtree"
+    android:orientation="vertical" >
 
-  <TextView 
-  android:id="@+id/headingText"
-   android:text="@string/Heading" android:textColor="#ffffff" 
-   android:layout_height="fill_parent" android:layout_width="fill_parent"
-   android:ellipsize="marquee"
-	android:singleLine="true"
-	android:scrollHorizontally="true"
-	android:marqueeRepeatLimit="marquee_forever"
-	android:focusable="true"
-	android:focusableInTouchMode="true"
-	/>
-     
-     
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" >
 
-<LinearLayout
-android:id="@+id/topRow"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content" android:layout_weight="0">
+        <TextView
+            android:id="@+id/headingText"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/Heading"
+            android:textColor="#ffffff" />
+    </LinearLayout>
 
-<TextView  
-	android:id="@+id/o2Name"
-    android:layout_width="wrap_content" 
-    android:layout_height="wrap_content" 
-    android:text="@string/Opponent2" android:gravity="top|left"/>
-    
-     <ImageView android:id="@+id/o2c1"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content" android:layout_gravity="center">
-  	</ImageView>
-     <ImageView android:id="@+id/o2c2"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content" android:layout_gravity="center">
-  	</ImageView>
-     <ImageView android:id="@+id/o2c3"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content" android:layout_gravity="center">
-  	</ImageView>
-     <ImageView android:id="@+id/o2c4"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content" android:layout_gravity="center">
-  	</ImageView>
-     <ImageView android:id="@+id/o2c5"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content" android:layout_gravity="center">
-  	</ImageView>
+    <LinearLayout
+        android:id="@+id/topRow"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" >
 
+        <TextView
+            android:id="@+id/o2Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            android:text="@string/Opponent2" />
 
-</LinearLayout>
-<TableRow
-android:id="@+id/middleRow"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:orientation="horizontal"
-android:layout_weight="3"
-android:layout_gravity="center_horizontal"
->
-	<LinearLayout
-	android:id="@+id/leftCol"
-	android:orientation="vertical"
-	android:layout_weight="1"
-	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<TextView
-		android:id="@+id/o1Name"  
-	    android:layout_width="wrap_content" 
-	    android:layout_height="wrap_content" 
-	    android:text="@string/Opponent1"
-	    android:layout_gravity="bottom|center"/>
-	
-	<ImageView android:id="@+id/o1c1"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-	<ImageView android:id="@+id/o1c2"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-	<ImageView android:id="@+id/o1c3"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-	<ImageView android:id="@+id/o1c4"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-	<ImageView android:id="@+id/o1c5"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-	
-	</LinearLayout>
-	
-	<RelativeLayout
-	android:id="@+id/center"
-	android:layout_height="wrap_content"
-	android:layout_gravity="center"
-	android:layout_weight="2"
-	android:layout_width="wrap_content" 
+        <ImageView
+            android:id="@+id/o2c1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" >
+        </ImageView>
 
-	>
-	    	 
-	    		<ImageView
-	    			android:id="@+id/deck"
-	    			android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-	    			
+        <ImageView
+            android:id="@+id/o2c2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" >
+        </ImageView>
 
-    			android:src="@drawable/deck" android:paddingRight="15px"/>
-	    		
-	
-	<LinearLayout
-	android:id="@+id/cardsThrown"
-	android:layout_toRightOf="@+id/deck" android:layout_height="96px" android:layout_width="130px">
-	    		 
-	    		<ImageView
-	    			android:layout_width="72px"
-					android:layout_height="96px"
-					
-	    			
-	    			android:id="@+id/card5"
-	    		/>
-	    		<ImageView
-	    			android:layout_width="72px"
-					android:layout_height="96px"
-	    			
-	    			android:id="@+id/card4" android:layout_marginLeft="-60px"/>
-	    		<ImageView
-	    			android:layout_width="72px"
-					android:layout_height="96px"
-	    			android:id="@+id/card3" android:layout_marginLeft="-60px"/>
-	    		<ImageView
-	    			android:layout_width="72px"
-					android:layout_height="96px"
-	    			
-	    			android:id="@+id/card2" android:layout_marginLeft="-60px"/>
-	    		<ImageView
-	    			android:layout_width="72px"
-					android:layout_height="96px"
-						    			
-	    			android:id="@+id/card1" android:layout_marginLeft="-60px"/>
-	    		
-	    		 
-	</LinearLayout>
-	</RelativeLayout>
-	<LinearLayout
-	android:id="@+id/rightCol"
-	android:orientation="vertical"
-	android:layout_weight="1"
-	android:layout_width="fill_parent" android:layout_height="wrap_content">
-	<TextView
-		android:id="@+id/o3Name"  
-	    android:layout_width="wrap_content" 
-	    android:layout_height="wrap_content" 
-	    android:text="@string/Opponent3"
-	    />
-	         <ImageView android:id="@+id/o3c1"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-     <ImageView android:id="@+id/o3c2"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-     <ImageView android:id="@+id/o3c3"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-     <ImageView android:id="@+id/o3c4"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-     <ImageView android:id="@+id/o3c5"
-	 	android:layout_width="wrap_content"
-  		android:layout_height="wrap_content">
-  	</ImageView>
-	    
-	</LinearLayout>
-</TableRow>
-<LinearLayout
-android:id="@+id/bottom"
-android:orientation="vertical"
-android:layout_width="fill_parent"
-android:gravity="center"
-   android:layout_gravity="bottom" android:layout_height="wrap_content" android:layout_weight="1">
-<TextView
-	android:id="@+id/p1Name"  
-    android:layout_width="wrap_content" 
-    android:layout_height="wrap_content" 
-    android:text="@string/Player"
-    android:gravity="center_horizontal" android:layout_gravity="left|center_vertical"/>
-    
-    
-<TableLayout android:id="@+id/p1CardsAndActionButtonContainer"
- android:layout_width="wrap_content" android:layout_height="wrap_content" 
- android:orientation="horizontal" >	    		
-<TableRow>
-<LinearLayout 
-android:id="@+id/p1cardscontainer" 
-android:layout_width="wrap_content" 
-android:layout_gravity = "left" android:gravity="left" android:layout_height="70px">
-	    		
-<ImageView android:id="@+id/p1c1"
- android:layout_height="@dimen/cardHeight"
-  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="0px">
-  </ImageView>
-<ImageView android:id="@+id/p1c2"
- android:layout_height="@dimen/cardHeight"
-  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="0px">
-  </ImageView>
-<ImageView android:id="@+id/p1c3"
- android:layout_height="@dimen/cardHeight"
-  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="10px">
-  </ImageView>
-<ImageView android:id="@+id/p1c4"
- android:layout_height="@dimen/cardHeight"
-  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="0px">
-  </ImageView>
-<ImageView android:id="@+id/p1c5"
- android:layout_height="@dimen/cardHeight"
-  					android:layout_width="@dimen/cardWidth" android:layout_gravity="bottom" android:layout_marginBottom="10px" >
-  </ImageView>
+        <ImageView
+            android:id="@+id/o2c3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" >
+        </ImageView>
 
-</LinearLayout>
-	<LinearLayout android:id="@+id/ActionButtonContainer" android:layout_height="wrap_content" android:clipChildren="true" android:gravity="right" android:layout_gravity="right" android:orientation="vertical" android:layout_width="75px">
+        <ImageView
+            android:id="@+id/o2c4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" >
+        </ImageView>
 
-		<Button android:id="@+id/DropCards"
-			android:layout_height="wrap_content"
-			android:text="@string/DropSelected" 
-			android:clickable="true" 
-			android:layout_width="wrap_content"
-			android:soundEffectsEnabled="true"
-			android:gravity="center" 
-			android:layout_gravity="top" android:textScaleX="1">
-		</Button>
-		<Button android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" 
-			android:text="@string/PerformYaniv" 
-			android:id="@+id/PerformYaniv" 
-			android:clickable="true" 
-			android:gravity="center" android:textScaleX="1" android:layout_gravity="center">
-		</Button>
-	<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="true" android:textScaleX="1" android:layout_gravity="bottom" android:gravity="center" android:id="@+id/NextPlayer" android:text="@string/NextPlayer"></Button>
-</LinearLayout>
-</TableRow>
+        <ImageView
+            android:id="@+id/o2c5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" >
+        </ImageView>
+    </LinearLayout>
+
+    <TableRow
+        android:id="@+id/middleRow"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="3"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/leftCol"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/o1Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:text="@string/Opponent1" />
+
+            <ImageView
+                android:id="@+id/o1c1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/o1c2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/o1c3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/o1c4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/o1c5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="2" >
+
+            <ImageView
+                android:id="@+id/deck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="15px"
+                android:src="@drawable/deck" />
+
+            <LinearLayout
+                android:id="@+id/cardsThrown"
+                android:layout_width="130px"
+                android:layout_height="96px"
+                android:layout_toRightOf="@+id/deck" >
+
+                <ImageView
+                    android:id="@+id/card5"
+                    android:layout_width="72px"
+                    android:layout_height="96px" />
+
+                <ImageView
+                    android:id="@+id/card4"
+                    android:layout_width="72px"
+                    android:layout_height="96px"
+                    android:layout_marginLeft="-60px" />
+
+                <ImageView
+                    android:id="@+id/card3"
+                    android:layout_width="72px"
+                    android:layout_height="96px"
+                    android:layout_marginLeft="-60px" />
+
+                <ImageView
+                    android:id="@+id/card2"
+                    android:layout_width="72px"
+                    android:layout_height="96px"
+                    android:layout_marginLeft="-60px" />
+
+                <ImageView
+                    android:id="@+id/card1"
+                    android:layout_width="72px"
+                    android:layout_height="96px"
+                    android:layout_marginLeft="-60px" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/rightCol"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/o3Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Opponent3" />
+
+            <ImageView
+                android:id="@+id/o3c1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/o3c2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/o3c3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/o3c4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/o3c5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </ImageView>
+        </LinearLayout>
+    </TableRow>
+
+    <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/p1Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:gravity="center_horizontal"
+            android:text="@string/Player" />
+
+        <TableLayout
+            android:id="@+id/p1CardsAndActionButtonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:id="@+id/p1cardscontainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="70px"
+                    android:layout_gravity="left"
+                    android:gravity="left" >
+
+                    <ImageView
+                        android:id="@+id/p1c1"
+                        android:layout_width="@dimen/cardWidth"
+                        android:layout_height="@dimen/cardHeight"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="0px" >
+                    </ImageView>
+
+                    <ImageView
+                        android:id="@+id/p1c2"
+                        android:layout_width="@dimen/cardWidth"
+                        android:layout_height="@dimen/cardHeight"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="0px" >
+                    </ImageView>
+
+                    <ImageView
+                        android:id="@+id/p1c3"
+                        android:layout_width="@dimen/cardWidth"
+                        android:layout_height="@dimen/cardHeight"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="10px" >
+                    </ImageView>
+
+                    <ImageView
+                        android:id="@+id/p1c4"
+                        android:layout_width="@dimen/cardWidth"
+                        android:layout_height="@dimen/cardHeight"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="0px" >
+                    </ImageView>
+
+                    <ImageView
+                        android:id="@+id/p1c5"
+                        android:layout_width="@dimen/cardWidth"
+                        android:layout_height="@dimen/cardHeight"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="10px" >
+                    </ImageView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ActionButtonContainer"
+                    android:layout_width="75px"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:clipChildren="true"
+                    android:gravity="right"
+                    android:orientation="vertical" >
+
+                    <Button
+                        android:id="@+id/DropCards"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:soundEffectsEnabled="true"
+                        android:text="@string/DropSelected"
+                        android:textScaleX="1" >
+                    </Button>
+
+                    <Button
+                        android:id="@+id/PerformYaniv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:text="@string/PerformYaniv"
+                        android:textScaleX="1" >
+                    </Button>
+
+                    <Button
+                        android:id="@+id/NextPlayer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:text="@string/NextPlayer"
+                        android:textScaleX="1" >
+                    </Button>
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
 </TableLayout>
-</LinearLayout>
-
-</TableLayout>
-
