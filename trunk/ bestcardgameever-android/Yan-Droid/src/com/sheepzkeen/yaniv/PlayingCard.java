@@ -33,6 +33,7 @@ public class PlayingCard implements Comparable<PlayingCard> , Serializable{
 	protected static final char JOKER = 'o';
 	protected static final char ACE = '1';
 	protected static final char ACE_AS_FOURTEEN = 'f';
+	private static final String TAG = PlayingCard.class.getCanonicalName();
 	
 
 
@@ -68,7 +69,7 @@ public class PlayingCard implements Comparable<PlayingCard> , Serializable{
 	}
 
 	public String getPngName() {
-		return new String(new char[]{suit,value});
+		return new String(new char[]{suit,'_',value});
 	}
 
 	public PlayingCard(char suit, char value) {
@@ -82,7 +83,8 @@ public class PlayingCard implements Comparable<PlayingCard> , Serializable{
 		Field f;
 		int id = -1;
 		try {
-			f = R.drawable.class.getDeclaredField(getPngName());
+			String pngName = getPngName();
+			f = R.drawable.class.getDeclaredField(pngName);
 			id = f.getInt(null);
 			//TODO: Add logging!
 		} catch (SecurityException e) {

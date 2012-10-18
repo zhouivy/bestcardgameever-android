@@ -28,7 +28,6 @@ public class MainScreen extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.yaniv_main_screen);
 		
@@ -83,6 +82,7 @@ public class MainScreen extends Activity {
 		
 		startActivityForResult(yanivIntent, Yaniv.START_GAME);
 	}
+	
 	protected void resumeYanivHandler() {
 		// Create an intent 
 		Intent yanivIntent = new Intent(this, Yaniv.class);
