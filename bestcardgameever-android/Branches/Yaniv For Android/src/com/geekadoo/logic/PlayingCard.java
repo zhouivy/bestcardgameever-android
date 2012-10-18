@@ -69,7 +69,7 @@ public class PlayingCard implements Comparable<PlayingCard> , Serializable{
 	}
 
 	public String getPngName() {
-		return new String(new char[]{suit,value});
+		return new String(new char[]{suit,'_',value});
 	}
 
 	public PlayingCard(char suit, char value) {
