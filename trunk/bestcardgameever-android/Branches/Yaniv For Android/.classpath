@@ -5,5 +5,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="lib" path="lib/acra-2.0.3.jar"/>
 	<classpathentry kind="lib" path="H:/Dev/Android/ScoreLoop/ScoreloopCore/jar/scoreloop-core.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
