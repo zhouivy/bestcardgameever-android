@@ -137,7 +137,6 @@ public class Yaniv extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.v(LOG_TAG, "onCreate");
 		setContentView(R.layout.table);
-		// setContentView(R.layout.main);
 
 		// Load state given by MainScreen
 		switch ((GameData.GAME_STATES) getIntent().getExtras().get(
