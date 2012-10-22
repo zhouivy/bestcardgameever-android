@@ -4,36 +4,44 @@
 	android:gravity="center_horizontal" android:orientation="vertical"
 	android:background="@drawable/risingtree">
 
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	<LinearLayout
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:orientation="vertical" android:gravity="top"
-		android:paddingTop="10px">
+		>
 		<TextView android:text="@string/MainScreenTitle" android:id="@+id/MainScreenTitle"
-			android:layout_width="wrap_content" android:layout_height="wrap_content" />
-		<!-- <TextView android:text="BETA" android:id="@+id/MainScreenTitle" android:layout_width="wrap_content" 
-			android:layout_height="wrap_content" android:textColor ="#FF8040" android:textSize="36px" 
-			android:textStyle="bold" android:layout_gravity="center_vertical|center_horizontal"/> -->
+		    android:layout_gravity="center_horizontal" android:gravity="center_horizontal"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" 
+			android:textSize="24sp"
+			android:minLines="2"
+			android:paddingLeft="44dp" android:paddingRight="44dp"
+			android:paddingBottom="20dp" android:paddingTop="20dp"
+			android:textColor="#ddc70000"
+			android:textStyle="bold"
+			android:background="@android:drawable/screen_background_light_transparent"/>
 	</LinearLayout>
 
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	<LinearLayout
 		android:orientation="vertical" android:layout_height="fill_parent"
 		android:gravity="center_vertical|center_horizontal"
-		android:layout_width="wrap_content">
+		android:layout_width="fill_parent"
+		android:paddingLeft="60dp" android:paddingRight="60dp"
+		>
 
 		<Button android:text="@string/StartButton" android:id="@+id/StartButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent" />
+			android:layout_height="45dp" android:layout_width="fill_parent"
+			 />
 		<Button android:text="@string/ResumeButton" android:id="@+id/ResumeButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent" />
+			android:layout_height="45dp" android:layout_width="fill_parent" />
 		<Button android:text="@string/TutorialButton" android:id="@+id/TutorialButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent" />
+			android:layout_height="45dp" android:layout_width="fill_parent" />
 		<Button android:text="@string/HighScoreButton" android:id="@+id/HighScoreButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent" />
+			android:layout_height="45dp" android:layout_width="fill_parent" />
 		<Button android:text="@string/SettingsButton" android:id="@+id/SettingsButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent" />
+			android:layout_height="45dp" android:layout_width="fill_parent" />
 		<Button android:text="@string/BugButton" android:id="@+id/BugButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent"
+			android:layout_height="45dp" android:layout_width="fill_parent"
 			style="@style/MyRedButton" />
 		<Button android:text="@string/ExitButton" android:id="@+id/ExitButton"
-			android:layout_height="wrap_content" android:layout_width="fill_parent" />
+			android:layout_height="45dp" android:layout_width="fill_parent" />
 	</LinearLayout>
 </LinearLayout>
