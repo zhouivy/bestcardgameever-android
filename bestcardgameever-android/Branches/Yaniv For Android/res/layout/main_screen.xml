@@ -15,7 +15,7 @@
 			android:minLines="2"
 			android:paddingLeft="44dp" android:paddingRight="44dp"
 			android:paddingBottom="20dp" android:paddingTop="20dp"
-			android:textColor="#ddc70000"
+			android:textColor="#c7000000"
 			android:textStyle="bold"
 			android:background="@android:drawable/screen_background_light_transparent"/>
 	</LinearLayout>
